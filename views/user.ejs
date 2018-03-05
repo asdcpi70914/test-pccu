@@ -1,0 +1,20 @@
+<% if (!loginStatus) { %>
+<div class="hero-unit">
+	<h1>歡迎來到 Kevin的英文教學網站</h1>
+	<p>這是一個幫助英文學習的網站</p>
+	<p>
+		<a class="btn btn-primary btn-large" href="/login">登入</a>
+		<a class="btn btn-large" href="/reg">立即註冊</a>
+	</p>
+</div>
+<% } else { %>
+	<div class="container">
+	<!-- row 1: navigation -->
+    <nav class="row">
+    	<ul class="nav navbar-inverse nav-bar">
+        	<li class="active"><a href="/reg"><b>國小文法</b></a></li>
+        	<li><a href="/newentry">國中文法</a></li>
+        	<li><a href="/about">關於我</a></li>  
+        </ul>  
+    </nav>
+<%} %>
