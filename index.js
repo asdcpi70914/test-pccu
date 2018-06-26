@@ -10,11 +10,11 @@ var bot = linebot({
   channelSecret:"3f13593deab6b469ca88c258be7562e8",
   channelAccessToken:"gDw6ceHuZKIxwvFg720tlcB5A6Pm0AA/Qn7IA1M5pD68w1Lw1JKeIDDc7Kul3M+uu45zG3AJp1jX9WM5iiilJG0Aw7lW+Z7D4IJf9nstcNTAmdRcwDjLMkFSZFtaEeTYgk3kySvleqoL7J1Q6pjOMQdB04t89/1O/w1cDnyilFU="
 });
+
 /**
  * 拼音库，来源于[在线汉语字典](http://zi.artx.cn/zi/)
  * 在 pinyin_dict_all_old.js 基础上增加了酿、铽等21个汉字，add by @liuxianan
  */
- 
 var pinyin_dict_all = {
 	"吖": "yā,ā",
 	"阿": "ā,à,ē",
@@ -20925,7 +20925,7 @@ const app = express();
 const linebotParser = bot.parser();
 app.post('/', linebotParser);
 //因為 express 預設走 port 3000，而 heroku 上預設卻不是，要透過下列程式轉換
-var server = app.listen(process.env.PORT || 3000, function() {
+var server = app.listen(process.env.PORT || 8080, function() {
   var port = server.address().port;
   console.log("App now running on port", port);
 });
@@ -20933,7 +20933,7 @@ var server = app.listen(process.env.PORT || 3000, function() {
  bot.on('message', function(event) {
   if(event.message.type == "text"){
     var msg = event.message.text;
-    if(msg.indexOf("選單") != -1){
+    if(msg.indexOf("學校資訊") != -1){
       event.reply({
         type: 'template',
         altText: 'this is a buttons template',
@@ -21076,12 +21076,12 @@ j = "還有" + min + "抵達" + response.data[0].StopName.Zh_tw;
 });
 
 bot.on("postback",function(event){
-axios.get("https://mobi.pccu.edu.tw/weather.json", { // 欲呼叫之API網址(此範例為台鐵車站資料)
-})
-.then(function(response){
          var msg = event.postback.data;
       var replyMsg1 = "";
     if(msg.indexOf("天氣") != -1){
+    	axios.get("https://mobi.pccu.edu.tw/weather.json", { // 欲呼叫之API網址(此範例為台鐵車站資料)
+})
+.then(function(response){
     var replyMsg1 = "";
     	// // body=toString(body);
       // console.log(typeof(body))
@@ -21093,14 +21093,13 @@ axios.get("https://mobi.pccu.edu.tw/weather.json", { // 欲呼叫之API網址(�
 //         console.log(typeof obj)
 // console.log(obj[0].Location)
       replyMsg1 ="氣溫: "+obj[0].Tempature+"℃"+"\n"+"濕度: "+obj[0].Humidity+"%"+"\n"+"風向: "+obj[0].WindDirection+"\n"+"累積雨量: "+obj[0].RainFall+"%"+"\n"+"天氣情況: "+obj[0].WeatherDesciption;
- 	 }
       event.reply(replyMsg1).then(function(data){
           console.log(replyMsg1);
-
           }).catch(function(error){
         console.log("error")
-      });
-    });
+      		});
+    	});
+	}
 });
 
 bot.on("postback",function(event){
@@ -21198,23 +21197,14 @@ j = "還有" + min + "抵達" + response.data[0].StopName.Zh_tw;
 });
 
 bot.on("postback",function(event){
-axios.get("http://mobi.pccu.edu.tw/DataAPI/announcement/", { // 欲呼叫之API網址(此範例為台鐵車站資料)
-})
-.then(function(response){
          var msg = event.postback.data;
       var replyMsg1 = "";
     if(msg.indexOf("公告") != -1){
+    	axios.get("http://mobi.pccu.edu.tw/DataAPI/announcement/", { // 欲呼叫之API網址(此範例為台鐵車站資料)
+})
+.then(function(response){
     var replyMsg1 = "";
-      // // body=toString(body);
-      // console.log(typeof(body))
-        // var newbody=body.substring(1);
-        //  //console.log(body.substring(1)) // Print the json response
-        // var obj = JSON.parse(newbody);
-        // var newbody=response.data;
-        // obj = JSON.parse(newbody)
-// console.log(obj[0].Location)
       replyMsg1 = response.data[0].Title+"\n"+"https://ap2.pccu.edu.tw/pccupost/post/content.asp?Num="+response.data[0].SerialNo + "\n" +"\n" + response.data[1].Title+"\n"+"https://ap2.pccu.edu.tw/pccupost/post/content.asp?Num="+response.data[1]. SerialNo+ "\n" +"\n" + response.data[2].Title+"\n"+"https://ap2.pccu.edu.tw/pccupost/post/content.asp?Num="+response.data[2]. SerialNo;
-   }
       event.reply(replyMsg1).then(function(data){
           console.log(replyMsg1);
 
@@ -21222,6 +21212,7 @@ axios.get("http://mobi.pccu.edu.tw/DataAPI/announcement/", { // 欲呼叫之API�
         console.log("error")
       });
     });
+}
 });
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
@@ -21438,8 +21429,8 @@ bot.on('message', function(event) {
         template: {
         type: 'buttons',
         //thumbnailImageUrl: 'https://example.com/bot/images/image.jpg',
-        title: '選單',
-        text: '選單',
+        title: '學生成績清單',
+        text: '師生可以透過此選單來查看成績',
         actions: [{
           type: 'postback',
           label: '成績',
@@ -22258,8 +22249,9 @@ var ag = [];
 //a[0]="";
   bot.on("message",function(event){
 msg = event.message.text;
+console.log(event)
 var replyMsg2 = "";
-	if(msg.length < 3 || msg == "登記完成")
+	if(msg.length < 3 || msg == "登記完成" || msg == "學校資訊")
 		return;
 ag = compare(names,msg,event);
 console.log("a外")
@@ -22285,7 +22277,6 @@ console.log(typeof(ag))
 
 if(typeof(ag) == 'object'){
 	var bb = ag;
-	console.log("修")
 	console.log(ag[0]);
 	//if(ag[0] == '修改'){
 		bot.on('postback', function(event) {
