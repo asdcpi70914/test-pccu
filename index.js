@@ -22343,59 +22343,35 @@ if(msg6.indexOf("前5筆") != -1){
       });
     }      
  });
-
-function database(instr){
-	var a_instr,b_instr;                //輸入分割成名字和分數2部分
-	var fraction;                   //分數
-	if(instr.length < 3)
-			return;
-    for(var i = 0 ; i < number.length ; i++){
-        var num = instr.indexOf(number[i]);
-        if(num != -1){
-          	a_instr = instr.substring(0,num);
-          	b_instr = instr.substring(num,instr.length);
-          	fraction = number[i];
-          	break;
-        }
-    }
-var mysql = require('mysql');
-var connection = mysql.createConnection({
-  host     : '104.199.175.90',
-  user     : 'root',
-  password : 'asdcpi14'
-});
- 
-connection.connect(function(err) {
-  if (err) {
-    console.error('error connecting: ' + err.stack);
-    return;
-  }
- 
-  console.log('connected as id ' + connection.threadId);
-});
-	connection.connect();
-
-	var data = {
-    Sname: a_instr,
-    Grade: b_instr
-	};
-	connection.query('INSERT INTO `table` SET ?', data, function(error){
-    	if(error){
-        	console.log('寫入資料失敗！');
-        	throw error;
-        	return '寫入資料失敗！';
-    	}
-    	else{
-			return "資料已寫入";
-    	}
-	});
-	connection.end();
-    	}
+	var mysql = require('mysql');
 bot.on("message",function(event){
 	var msg7 = event.message.text;
 	var replyMsg5 = "";
 	if(msg7.indexOf("登記完成") != -1){
-		var replyMsg5 = database(msg);
+var connection = mysql.createConnection({
+  host     : '104.199.190.196',
+  user     : 'root',
+  password : 'asdcpi14',
+});
+ 
+connection.connect();
+	for (var i = 1; i < names2.length; i++) {
+	var data = {
+    Sname: names2[i][0],
+    Grade: names2[0][i]
+	};
+}
+	connection.query('INSERT INTO `table` SET ?', data, function(error){
+    	if(error){
+        	console.log('寫入資料失敗！');
+        	throw error;
+        	
+    	}
+    	else{
+    		console.log('資料已寫入');
+    	}
+	});
+	connection.end();
 	event.reply(replyMsg5).then(function(data){
           }).catch(function(error){
         console.log("error")
