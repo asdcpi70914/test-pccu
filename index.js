@@ -10,7 +10,6 @@ var bot = linebot({
   channelSecret:"3f13593deab6b469ca88c258be7562e8",
   channelAccessToken:"gDw6ceHuZKIxwvFg720tlcB5A6Pm0AA/Qn7IA1M5pD68w1Lw1JKeIDDc7Kul3M+uu45zG3AJp1jX9WM5iiilJG0Aw7lW+Z7D4IJf9nstcNTAmdRcwDjLMkFSZFtaEeTYgk3kySvleqoL7J1Q6pjOMQdB04t89/1O/w1cDnyilFU="
 });
-
 /**
  * 拼音库，来源于[在线汉语字典](http://zi.artx.cn/zi/)
  * 在 pinyin_dict_all_old.js 基础上增加了酿、铽等21个汉字，add by @liuxianan
@@ -22318,6 +22317,57 @@ if(typeof(ag) == 'object'){
 // });
 // 	}
 // }); 
+function database(instr){
+	var a_instr,b_instr;                //輸入分割成名字和分數2部分
+	var fraction;                   //分數
+	if(instr.length < 3)
+			return;
+    for(var i = 0 ; i < number.length ; i++){
+        var num = instr.indexOf(number[i]);
+        if(num != -1){
+          	a_instr = instr.substring(0,num);
+          	b_instr = instr.substring(num,instr.length);
+          	fraction = number[i];
+          	break;
+        }
+    }
+
+	var mysql = require('mysql');
+	var connection = mysql.createConnection({
+  		host     : '104.199.175.90',
+  		user     : 'linebot',
+  		password : 'asdcpi14',
+  		database : 'linesql'
+	});
+	connection.connect();
+
+	var data = {
+    Sname: a_instr,
+    Grade: b_instr
+	};
+	connection.query('INSERT INTO `table` SET ?', data, function(error){
+    	if(error){
+        	console.log('寫入資料失敗！');
+        	throw error;
+    	}
+	});
+	connection.end();
+
+	return "資料已寫入";
+}
+
+bot.on("message",function(event)){
+	var msg7 = event.message.data;
+	if(msg7.indexOf("登記完成") != -1){
+		var a = database(msg);
+	event.reply(replyMsg3).then(function(data){
+          }).catch(function(error){
+        console.log("error")
+      });
+    }      
+ });
+
+
 
    bot.on("postback",function(event){
 var msg4 = event.postback.data;
