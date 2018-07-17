@@ -22391,10 +22391,6 @@ connection.connect(function(err) {
 	});
 	connection.end();
     	}
-
-	
-}
-
 bot.on("message",function(event){
 	var msg7 = event.message.text;
 	var replyMsg5 = "";
