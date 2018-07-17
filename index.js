@@ -22358,9 +22358,10 @@ function database(instr){
 
 bot.on("message",function(event){
 	var msg7 = event.message.text;
+	var replyMsg5 = "";
 	if(msg7.indexOf("登記完成") != -1){
-		var a = database(msg);
-	event.reply(replyMsg3).then(function(data){
+		var replyMsg5 = database(msg);
+	event.reply(replyMsg5).then(function(data){
           }).catch(function(error){
         console.log("error")
       });
