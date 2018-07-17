@@ -22356,7 +22356,7 @@ function database(instr){
 	return "資料已寫入";
 }
 
-bot.on("message",function(event)){
+bot.on("message",function(event){
 	var msg7 = event.message.data;
 	if(msg7.indexOf("登記完成") != -1){
 		var a = database(msg);
