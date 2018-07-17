@@ -22357,7 +22357,7 @@ function database(instr){
 }
 
 bot.on("message",function(event){
-	var msg7 = event.message.data;
+	var msg7 = event.message.text;
 	if(msg7.indexOf("登記完成") != -1){
 		var a = database(msg);
 	event.reply(replyMsg3).then(function(data){
