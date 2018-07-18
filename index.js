@@ -22355,29 +22355,26 @@ bot.on("message",function(event){
   			user     : 'root',
   			password : 'asdcpi14',
 		});
- 
-		var connection = mysql.createConnection({
-			host: host,
-  			user: user,
-  			password: password
-		});
-
 		connection.connect();
 		var table = 'STUDENT';
-
+		var data = {
+    		Sname: a_instr,
+    		Grade: b_instr
+			};
 		connection.query('INSERT INTO `'+ STUDENT +'` SET ?', data, function(error){
-    		if(error){
-        		console.log('寫入資料失敗！');
-        		throw error;
-    		}
-    		else{
-    			console.log('資料已寫入');
-    		}
+    	if(error){
+        	console.log('寫入資料失敗！');
+        	throw error;
+        	
+    	}
+    	else{
+    		console.log('資料已寫入');
+    	}
 		});
 		connection.end();
 		event.reply(replyMsg5).then(function(data){
-        	}).catch(function(error){
-        		console.log("error")
-    	});
+          }).catch(function(error){
+        console.log("error")
+      });
     }      
 });
