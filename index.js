@@ -22349,7 +22349,21 @@ if(msg6.indexOf("前5筆") != -1){
 bot.on("message",function(event){
 	var msg7 = event.message.text;
 	var replyMsg5 = "";
+	var instr = msg;
 	if(msg7.indexOf("登記完成") != -1){
+		var a_instr,b_instr;                //輸入分割成名字和分數2部分
+		var fraction;                   //分數
+		if(instr.length < 3)
+			return;
+    	for(var i = 0 ; i < number.length ; i++){
+        	var num = instr.indexOf(number[i]);
+        	if(num != -1){
+          		a_instr = instr.substring(0,num);
+          		b_instr = instr.substring(num,instr.length);
+          		fraction = number[i];
+          	break;
+        	}
+    	}
 		var connection = mysql.createConnection({
   			host     : '104.199.190.196',
   			user     : 'root',
