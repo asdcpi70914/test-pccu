@@ -22361,7 +22361,7 @@ connection.connect();
     Grade: names2[0][i]
 	};
 }
-	connection.query('INSERT INTO `table` SET ?', data, function(error){
+	connection.query('INSERT INTO `STUDENT` SET ?', data, function(error){
     	if(error){
         	console.log('寫入資料失敗！');
         	throw error;
