@@ -4,6 +4,7 @@ var request = require("request");
 var getJSON = require('get-json');
 var path = require('path');
 var fs= require('fs');
+var mysql = require('mysql');
 require('events').EventEmitter.prototype._maxListeners = 100;
 var bot = linebot({
   channelId:"1564803662",
@@ -22244,34 +22245,78 @@ function Display(inarray){
    }
    return display_str;
 }
+function Sname(instr){
+		var a_instr
+		if(instr.length < 3 || instr.indexOf("登記完成")!= -1)
+			return;
+    	for(var i = 0 ; i < number.length ; i++){
+        	var num = instr.indexOf(number[i]);
+        	if(num != -1){
+          		a_instr = instr.substring(0,num);
+          		
+          	break;
+        	}
+    	}
+    	return a_instr;
+}
+
+function Grade(instr){
+		var b_instr;                //輸入分割成名字和分數2部分                  //分數
+		if(instr.length < 3 || instr == "登記完成")
+			return;
+    	for(var i = 0 ; i < number.length ; i++){
+        	var num = instr.indexOf(number[i]);
+        	if(num != -1){
+          		b_instr = instr.substring(num,instr.length);
+          		
+          	break;
+        	}
+    	}
+
+    	return b_instr;
+}
+
+
+
 var ag = [];
 //a[0]="";
   bot.on("message",function(event){
 msg = event.message.text;
 console.log(event)
 var replyMsg2 = "";
+var aaaa ;
+var bbbb ;
+var j = 0;
 	if(msg.length < 3 || msg == "登記完成" || msg == "學校資訊")
 		return;
 ag = compare(names,msg,event);
 console.log("a外")
 console.log(ag);
+		aaaa = Sname(msg);
+		bbbb = Grade(msg)
 console.log(typeof(ag))
-//console.log(a);
- // if(a == "已覆蓋"){
- 
- //  	replyMsg2 = "已覆蓋";
-	//   event.reply(replyMsg2).then(function(data){
- //          }).catch(function(error){
- //        console.log("error")
- //      });
- //    }
- //    else if(a == "音差太多,查無此人"){
- //    	replyMsg2 = "音差太多,查無此人";
-	// 	event.reply(replyMsg2).then(function(data){
- //          }).catch(function(error){
- //        console.log("error")
- //      });
- //    }
+
+var connection = mysql.createConnection({
+  			host     : '104.199.190.196',
+  			user     : 'root',
+  			password : 'asdcpi14',
+  			database : 'line'
+		});
+		connection.connect();
+		var data = {
+    		Sname: aaaa,
+    		Grade: bbbb
+			};
+		connection.query('INSERT INTO STUDENT SET ?', data, function(error){
+    	if(error){
+        	console.log('寫入資料失敗！');
+        	throw error;
+    	}
+    	else{
+    		console.log('資料已寫入');
+    	}
+		});
+		connection.end();
 });
 
 if(typeof(ag) == 'object'){
@@ -22344,52 +22389,44 @@ if(msg6.indexOf("前5筆") != -1){
     }      
  });
 
+// 	var mysql = require('mysql');
 
-	var mysql = require('mysql');
-bot.on("message",function(event){
-	var msg7 = event.message.text;
-	var replyMsg5 = "";
-	var instr = msg;
-	if(msg7.indexOf("登記完成") != -1){
-		var a_instr,b_instr;                //輸入分割成名字和分數2部分
-		var fraction;                   //分數
-		if(instr.length < 3)
-			return;
-    	for(var i = 0 ; i < number.length ; i++){
-        	var num = instr.indexOf(number[i]);
-        	if(num != -1){
-          		a_instr = instr.substring(0,num);
-          		b_instr = instr.substring(num,instr.length);
-          		fraction = number[i];
-          	break;
-        	}
-    	}
-		var connection = mysql.createConnection({
-  			host     : '104.199.190.196',
-  			user     : 'root',
-  			password : 'asdcpi14',
-  			database : 'line'
-		});
-		connection.connect();
-		var data = {
-    		Sname: a_instr,
-    		Grade: b_instr
-			};
-		connection.query('INSERT INTO STUDENT SET ?', data, function(error){
-    	if(error){
-    		console.log(a_instr);
-    		console.log(b_instr);
-        	console.log('寫入資料失敗！');
-        	throw error;
-    	}
-    	else{
-    		console.log('資料已寫入');
-    	}
-		});
-		connection.end();
-		event.reply(replyMsg5).then(function(data){
-          }).catch(function(error){
-        console.log("error")
-      });
-    }      
-});
+// bot.on("message",function(event){
+// 	var msg7 = event.message.text;
+// 	var replyMsg5 = "";
+// 	var aaaa ;
+// 	var bbbb ;
+// 	var j = 0;
+// 	if(msg7.indexOf("登記完成") != -1){
+// 		aaaa = Sname(msg);
+// 		bbbb = Grade(msg)
+//     	console.log(aaaa[j]);
+//     	console.log(bbbb[j]);
+//     	j++;
+// 		var connection = mysql.createConnection({
+//   			host     : '104.199.190.196',
+//   			user     : 'root',
+//   			password : 'asdcpi14',
+//   			database : 'line'
+// 		});
+// 		connection.connect();
+// 		var data = {
+//     		Sname: a_instr,
+//     		Grade: b_instr
+// 			};
+// 		connection.query('INSERT INTO STUDENT SET ?', data, function(error){
+//     	if(error){
+//         	console.log('寫入資料失敗！');
+//         	throw error;
+//     	}
+//     	else{
+//     		console.log('資料已寫入');
+//     	}
+// 		});
+// 		connection.end();
+// 		event.reply(replyMsg5).then(function(data){
+//           }).catch(function(error){
+//         console.log("error")
+//       });
+//     }      
+// });
