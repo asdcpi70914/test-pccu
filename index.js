@@ -22343,41 +22343,41 @@ if(msg6.indexOf("前5筆") != -1){
       });
     }      
  });
+
+
 	var mysql = require('mysql');
 bot.on("message",function(event){
 	var msg7 = event.message.text;
 	var replyMsg5 = "";
 	if(msg7.indexOf("登記完成") != -1){
-var connection = mysql.createConnection({
-  host     : '104.199.190.196',
-  user     : 'root',
-  password : 'asdcpi14',
-});
+		var connection = mysql.createConnection({
+  			host     : '104.199.190.196',
+  			user     : 'root',
+  			password : 'asdcpi14',
+		});
  
-var connection = mysql.createConnection({
-  host: host,
-  user: user,
-  password: password
-});
+		var connection = mysql.createConnection({
+			host: host,
+  			user: user,
+  			password: password
+		});
 
-connection.connect();
-var table = 'STUDENT';
+		connection.connect();
+		var table = 'STUDENT';
 
-	connection.query('INSERT INTO `'+ STUDENT +'` SET ?', data, function(error){
-    	if(error){
-        	console.log('寫入資料失敗！');
-        	throw error;
-        	
-    	}
-    	else{
-    		console.log('資料已寫入');
-    	}
-	});
-}
-	connection.end();
-	event.reply(replyMsg5).then(function(data){
-          }).catch(function(error){
-        console.log("error")
-      });
+		connection.query('INSERT INTO `'+ STUDENT +'` SET ?', data, function(error){
+    		if(error){
+        		console.log('寫入資料失敗！');
+        		throw error;
+    		}
+    		else{
+    			console.log('資料已寫入');
+    		}
+		});
+		connection.end();
+		event.reply(replyMsg5).then(function(data){
+        	}).catch(function(error){
+        		console.log("error")
+    	});
     }      
- });
+});
