@@ -22354,14 +22354,21 @@ var connection = mysql.createConnection({
   password : 'asdcpi14',
 });
  
+var connection = mysql.createConnection({
+  host: host,
+  user: user,
+  password: password
+});
+
 connection.connect();
+var table = 'STUDENT';
 	for (var i = 1; i < names2.length; i++) {
 	var data = {
     Sname: names2[i][0],
     Grade: names2[0][i]
 	};
 }
-	connection.query('INSERT INTO `STUDENT` SET ?', data, function(error){
+	connection.query('INSERT INTO `'+ STUDENT +'` SET ?', data, function(error){
     	if(error){
         	console.log('寫入資料失敗！');
         	throw error;
