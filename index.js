@@ -22377,9 +22377,10 @@ bot.on("message",function(event){
 			};
 		connection.query('INSERT INTO STUDENT SET ?', data, function(error){
     	if(error){
+    		console.log(a_instr);
+    		console.log(b_instr);
         	console.log('寫入資料失敗！');
         	throw error;
-        	
     	}
     	else{
     		console.log('資料已寫入');
