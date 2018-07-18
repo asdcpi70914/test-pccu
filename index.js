@@ -22368,6 +22368,7 @@ bot.on("message",function(event){
   			host     : '104.199.190.196',
   			user     : 'root',
   			password : 'asdcpi14',
+  			database : 'line'
 		});
 		connection.connect();
 		var table = 'STUDENT';
