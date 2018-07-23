@@ -22310,6 +22310,7 @@ var connection = mysql.createConnection({
 		connection.query('SELECT Sname FROM  STUDENT where Sname is null', function SQLselect(results) {
   			
   			console.log(results);
+  			return results;
 		});
 		var results = "";
 		bool = SQLselect(results)
