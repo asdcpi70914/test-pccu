@@ -22307,13 +22307,14 @@ var connection = mysql.createConnection({
     		Sname: aaaa,
     		Grade: bbbb
 			};
-		connection.query('SELECT Sname FROM  STUDENT where Sname is null', function(err, results, fields) {
+		connection.query('SELECT Sname FROM  STUDENT where Sname is null', function (err, results, fields) {
   			if (err) {
    				 throw err;
   			}
-  			console.log(results);
-  			bool= results;
+  			bool = results;
+  			console.log(bool);
 		});
+
 		if(bool == null){	
 			connection.query('INSERT INTO STUDENT SET ?', data, function(error){
     			if(error){
