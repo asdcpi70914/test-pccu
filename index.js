@@ -22307,15 +22307,36 @@ var connection = mysql.createConnection({
     		Sname: aaaa,
     		Grade: bbbb
 			};
-		connection.query('INSERT INTO STUDENT SET ?', data, function(error){
-    	if(error){
-        	console.log('寫入資料失敗！');
-        	throw error;
-    	}
-    	else{
-    		console.log('資料已寫入');
-    	}
+		connection.query('SELECT Sname FROM  STUDENT where Sname is null', function(err, results, fields) {
+  			if (err) {
+   				 throw err;
+  			}
+  			console.log(results);
 		});
+		if(results == null){	
+			connection.query('INSERT INTO STUDENT SET ?', data, function(error){
+    			if(error){
+        			console.log('寫入資料失敗！');
+        			throw error;
+    			}
+    			else{
+    				console.log('資料已寫入');
+    			}
+    	
+			});
+		}
+		else{
+			var data1 = {
+  				Sname: aaaa,
+    			Grade: bbbb
+			};
+			connection.query('UPDATE table  SET ? WHERE Sname = :Sname', data1, function(err, results) {
+  				if (err) {
+    				throw err;
+ 				 }
+  					console.log(results);
+			});
+		}
 		connection.end();
 });
 
