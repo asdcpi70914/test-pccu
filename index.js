@@ -22312,8 +22312,9 @@ var connection = mysql.createConnection({
    				 throw err;
   			}
   			console.log(results);
+  			bool= results;
 		});
-		if(results == null){	
+		if(bool == null){	
 			connection.query('INSERT INTO STUDENT SET ?', data, function(error){
     			if(error){
         			console.log('寫入資料失敗！');
