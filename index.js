@@ -22275,9 +22275,6 @@ function Grade(instr){
 
     	return b_instr;
 }
-
-
-
 var ag = [];
 //a[0]="";
   bot.on("message",function(event){
@@ -22303,39 +22300,16 @@ var connection = mysql.createConnection({
   			database : 'line'
 		});
 		connection.connect();
-		var data = {
-    		Sname: aaaa,
-    		Grade: bbbb
-			};
-		connection.query('SELECT Sname FROM  STUDENT where Sname is null', function (results) {
-  			bool = results;
-  			console.log(bool);
-
-		if(bool == null){	
-			connection.query('INSERT INTO STUDENT SET ?', data, function(error){
-    			if(error){
-        			console.log('寫入資料失敗！');
-        			throw error;
-    			}
-    			else{
-    				console.log('資料已寫入');
-    			}
-    	
-			});
-		}
-	});
-		else{
 			var data1 = {
-  				Sname: aaaa,
-    			Grade: bbbb
+				Grade: bbbb,
+  				Sname: aaaa
 			};
-			connection.query('UPDATE table  SET ? WHERE Sname = :Sname', data1, function(err, results) {
+			connection.query('UPDATE STUDENT  SET GRADE = ? WHERE Sname = ?', data1, function(err, results) {
   				if (err) {
     				throw err;
  				 }
   					console.log(results);
 			});
-		}
 		connection.end();
 });
 
