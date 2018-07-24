@@ -22300,11 +22300,7 @@ var connection = mysql.createConnection({
   			database : 'line'
 		});
 		connection.connect();
-			var data1 = {
-				Grade: bbbb,
-  				Sname: aaaa
-			};
-			connection.query('UPDATE STUDENT  SET GRADE = ? WHERE Sname = ?', data1, function(err, results) {
+			connection.query('UPDATE STUDENT  SET GRADE = ? WHERE Sname = ?',[bbbb,aaaa], function(err, results) {
   				if (err) {
     				throw err;
  				 }
