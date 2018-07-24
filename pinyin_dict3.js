@@ -20897,3 +20897,4 @@ var pinyin_dict_all = {
 "鋱": "tè",
 "铽": "tè"
 };
+module.exports = pinyin_dict_all;
