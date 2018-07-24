@@ -4,6 +4,7 @@ var request = require("request");
 var getJSON = require('get-json');
 var path = require('path');
 var fs= require('fs');
+var pinyin_dict_all = require("./pinyin_dict3.js")
 var mysql = require('mysql');
 require('events').EventEmitter.prototype._maxListeners = 100;
 var bot = linebot({
@@ -15,7 +16,7 @@ var bot = linebot({
  * 拼音库，来源于[在线汉语字典](http://zi.artx.cn/zi/)
  * 在 pinyin_dict_all_old.js 基础上增加了酿、铽等21个汉字，add by @liuxianan
  */
-var pinyin_dict_all = fs.readFileSync('pinyin_dict3.js','utf8');
+ var pinyin_dict3 = fs.readFileSync('pinyin_dict3.js','utf8');
 var util = require('util');
 var log_file = fs.createWriteStream(__dirname + '/debug.log', {flags : 'w'});
 var log_stdout = process.stdout;
