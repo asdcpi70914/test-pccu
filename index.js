@@ -652,7 +652,7 @@ bot.on('message', function(event) {
       					return temp2;
       					//console.log(temp2);
     				}
-		}else if(ans.length > 1){           //名單中找到多人，回傳給使用者選擇
+		else if(ans.length > 1){           //名單中找到多人，回傳給使用者選擇
         	var str_select ="";
 
         	for(var i = 0; i < ans.length ; i++){
@@ -1289,28 +1289,12 @@ bot.on("postback",function(event){
 var msg4 = event.postback.data;
 var replyMsg3 = "";
 if(msg4.indexOf("成績") != -1){
-
-
-var connection = mysql.createConnection({
-  			host     : '104.199.190.196',
-  			user     : 'root',
-  			password : 'asdcpi14',
-  			database : 'line'
-		});
-		connection.connect();
-			connection.query('SELECT * FROM STUDENT', function (err, result, fields) {
-    // if any error while executing above query, throw error
-    if (err) throw err;
-    // if there is no error, you have the result
-    replyMsg3 = result;
-  });
-		connection.end();
-	//replyMsg3 = Display_all();
-}
+	replyMsg3 = Display_all();
       event.reply(replyMsg3).then(function(data){
           }).catch(function(error){
         console.log("error")
-      });     
+      });
+    }      
  });
 
    bot.on("postback",function(event){
