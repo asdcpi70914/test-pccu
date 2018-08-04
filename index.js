@@ -16,7 +16,6 @@ var bot = linebot({
  * 拼音库，来源于[在线汉语字典](http://zi.artx.cn/zi/)
  * 在 pinyin_dict_all_old.js 基础上增加了酿、铽等21个汉字，add by @liuxianan
  */
- var pinyin_dict3 = fs.readFileSync('pinyin_dict3.js','utf8');
 var util = require('util');
 var log_file = fs.createWriteStream(__dirname + '/debug.log', {flags : 'w'});
 var log_stdout = process.stdout;
@@ -167,7 +166,7 @@ else{
 min = Math.floor(response.data[0].EstimateTime/60) + "分鐘";
 j = "還有" + min + "抵達" + response.data[0].StopName.Zh_tw;
 }
-      if(msg.indexOf("劍潭") != -1){
+      if(msg.indexOf("紅5(劍潭)") != -1){
           replyMsg  = a+"\n"+f+"\n"+b+"\n"+g+"\n"+c+"\n"+h+"\n"+d+"\n"+i+"\n"+e+"\n"+j;
       }
 
@@ -183,7 +182,7 @@ j = "還有" + min + "抵達" + response.data[0].StopName.Zh_tw;
 bot.on("postback",function(event){
          var msg = event.postback.data;
       var replyMsg1 = "";
-    if(msg.indexOf("天氣") != -1){
+    if(msg.indexOf("天氣資訊") != -1){
     	axios.get("https://mobi.pccu.edu.tw/weather.json", { // 欲呼叫之API網址(此範例為台鐵車站資料)
 })
 .then(function(response){
@@ -288,7 +287,7 @@ else{
 min = Math.floor(response.data[0].EstimateTime/60) + "分鐘";
 j = "還有" + min + "抵達" + response.data[0].StopName.Zh_tw;
 }
-      if(msg.indexOf("陽明山") != -1){
+      if(msg.indexOf("紅5(陽明山)") != -1){
           replyMsg  = a+"\n"+f+"\n"+b+"\n"+g+"\n"+c+"\n"+h+"\n"+d+"\n"+i+"\n"+e+"\n"+j;
       }
 
@@ -362,36 +361,6 @@ bot.on("postback",function(event){
 
     }
     */
-
-// function tttPinyin(instr){
-//       //pinyin_dict_all
-//       str = JSON.stringify(pinyin_dict_all);        //取得拼音對照字串
-//       n = instr.length;                 //取得輸入的字串長度
-//       str3 = '["';
-//       for (var i = 0; i < n; i++) {
-//         str2 = instr[i];
-//         n1 = str.indexOf(",",str.indexOf(str2)+4);
-//         n2 = str.indexOf('"',str.indexOf(str2)+4);
-//         if (n2 < n1)
-//           n1 = n2
-//         //if (i > 0)
-//           str3 = str3 + '","' + str.substring(str.indexOf(str2)+4,n1);
-//         //else
-//         //  str3 = str3 + '"' + str.substring(str.indexOf(str2)+4,n1);
-        
-//       }
-//       document.form1.answer.value = str3 + '"],';
-//       return document.form1.answer.value;
-//       //str.indexOf(str2)
-//       //alert(str.indexOf(str2));
-//       //document.form1.answer.value(str.indexOf("阿"));
-//       //document.form1.answer.value(str.indexOf("呵"));
-//       //document.form1.answer.value(str.substring(13,24));
-//       //document.form1.answer.value = str.substring(str.indexOf(str2)+4,str.indexOf(",",str.indexOf(str2)+4));
-      
-//       //document.form1.answer.value = str.indexOf(",",str.indexOf(str2)+4)
-
-//     }
     //名單拼音
 var names = [["liú","jiā","háo"],
       ["chén","yǔ","tíng"],
@@ -586,17 +555,9 @@ bot.on('message', function(event) {
               personrecord.push(record[k]);
               break;
             }
-            //b_instr = instr.substring(num,record[k].length);
-            //fraction2 = number[i];
-            //break;
           }
         }
       }
-
-      //a = record.indexOf(instr_name);
-      // document.getElementById("aaa2").value = personrecord;
-      // document.getElementById("aaa6").value = ArrayReverse(personrecord);
-      // document.getElementById("aaa5").value = Last_N_in(ArrayReverse(personrecord),2);
       return personrecord;
     }
 
@@ -617,34 +578,16 @@ bot.on('message', function(event) {
           	break;
         	}
     	}
-      //var inname = toPinyin(a_instr);
-      //var a_inname,b_inname,c_inname,d_inname;
-      //document.form1.answer.value = inname;
-      //document.form1.a1.value = fraction;
    		var ans = names_cmp_instr(a_instr)
       	var innameL = a_instr.length;
       	console.log(ans);
-      // if(typeof(ans) == 'number'){
-      //  document.getElementById("myTable").rows[1].cells[ans+1]. innerHTML = fraction;
-      // }
-      //alert(typeof(ans))
-      //alert(ans)
-      //alert(ans)
       	if(ans.length == 1){              //名單中只找到一人
         	if(names2[ans[0]+1][1] == ""){        //此人成績還未輸入過，輸入成績    
-          // document.getElementById("myTable").rows[1].cells[ans[0]+1].innerHTML = fraction;
         	 	names2[ans[0]+1][1] = fraction;
         	 	recordStr = names2[ans[0]+1][0]+"    "+fraction;     //儲存每筆紀錄
         	 	record.push(recordStr);
-          // document.getElementById("answer").value = record;
         	 	ArrayReverse(record);
-        	 	                 //反轉紀錄
-          // document.getElementById("aaa3").value = ArrayReverse(record); //反轉紀錄顯示
-          // document.getElementById("aaa4").value = Last_N_in(ArrayReverse(record),3); //前3筆紀錄顯示
-          //alert(repin.length);
         	}else{
-//				bot.on('message', function(event) {
-					//var msg = event.message.text;
 					console.log(instr)
 					if(instr.length < 3)
 						return;
@@ -657,7 +600,6 @@ bot.on('message', function(event) {
           					break;
         				}
     				}
-					// console.log(innameL);
 					var j = 0;
 					if(c_instr.length == 3){
 						var name4 = " "+names[j][0]+" "+names[j][1]+" "+names[j][2];
@@ -679,16 +621,8 @@ bot.on('message', function(event) {
 							break;
 						}
 					}
-    				// console.log(msg2)
 					msg3 = toPinyin(a_instr);
 					c_instr = toPinyin(c_instr)
-					// console.log(event);
-					// console.log("------");
-					// console.log(event.message.text);
-					// console.log("--------------");
-					// console.log("msg2:"+msg2)
-					// console.log("msg3:"+msg3)
-					// console.log("name4:"+name4)
     				if(msg2.indexOf(name4) != -1 && msg3 == c_instr){
     					var egg = '是';
     					event.reply({
@@ -718,99 +652,6 @@ bot.on('message', function(event) {
       					return temp2;
       					//console.log(temp2);
     				}
-    	// 			console.log(event);
-					// console.log("========");
-					// event.message.text = "666";
-					// console.log(event.message.text);
-					// console.log("=================");
-					// console.log("T上names2[ans[0]+1][1]:"+names2[ans[0]+1][1])
-					// console.log("T上fraction:"+fraction.toString())
-					// var temp = [];
-					// temp[0] = names2[ans[0]+1][1];
-					// temp[1] = fraction;
-					// console.log("T下names2[ans[0]+1][1]:"+names2[ans[0]+1][1])
-					// console.log("T下fraction:"+fraction.toString())
-					// bot.on('postback', function(event) {
-					// 	msg3 = event.postback.data;
-
-					// 	// console.log("msg2:"+msg2)
-					// 	// console.log("msg3:"+msg3)
-					// 	// console.log("name4:"+name4)
-					// 	// console.log("-=-=-=-=-=-=-")
-						
-					// 	// console.log(event.postback.data)
-					// 	if(msg3.indexOf("是") != -1){
-					// 		// document.getElementById("myTable").rows[1].cells[ans[0]+1].innerHTML = fraction;
-					// 		console.log("是改前names2[ans[0]+1][1]:"+names2[ans[0]+1][1])
-					// 		console.log("是改前fraction:"+fraction)
-				 //            names2[ans[0]+1][1] = fraction;				            
-				 //            recordStr = names2[ans[0]+1][0]+"    "+fraction;     //儲存每筆紀錄
-				 //            console.log("是改後names2[ans[0]+1][1]:"+names2[ans[0]+1][1])
-					// 		console.log("是改後fraction:"+fraction)
-				 //            record.push(recordStr);
-				 //            // document.getElementById("answer").value = record;
-				 //            ArrayReverse(record);                 //反轉紀錄
-				 //            event.reply("已覆蓋").then(function(data){
-     //      					}).catch(function(error){
-     //    					console.log("error")
-     //  						});
-				 //            // document.getElementById("aaa3").value = ArrayReverse(record); //反轉紀錄顯示
-				 //            // document.getElementById("aaa4").value = Last_N_in(ArrayReverse(record),3); //前3筆紀錄顯示  
-				 //  	// 		event.reply({
-					// 		// 	"type": "template",
-					// 		// 	"altText": "this is a confirm template",
-					// 		// 	"template": {
-				 //  	// 				"type": "confirm",
-				 //  	// 				"text": "是否覆蓋?",
-				 //  	// 				"actions": [{
-				 //   //      				"type": "postback",
-				 //   //      				"label": "是",
-				 //   //      				"data": "是"
-				 //   //  				},{
-				 //   //      				"type": "postback",
-				 //   //      				"label": "否",
-				 //   //      				"data": "否"
-				 //   //    				}]
-					// 		// 	}
-					// 		// })
-					// 	}
-					// 	if(msg3.indexOf("否") != -1){
-					// 		console.log("否改前names2[ans[0]+1][1]:"+names2[ans[0]+1][1])
-					// 		console.log("否改前temp[0]:"+temp[0])
-				 //            names2[ans[0]+1][1] = temp[0];				            
-				 //            recordStr = names2[ans[0]+1][0]+"    "+temp[0]     //儲存每筆紀錄
-				 //            record.push(recordStr);
-				 //            console.log("否改後names2[ans[0]+1][1]:"+names2[ans[0]+1][1])
-					// 		console.log("否改後temp[0]:"+temp[0])
-				 //            // document.getElementById("answer").value = record;
-				 //            ArrayReverse(record);                 //反轉紀錄
-				 //            event.reply("已取消覆蓋").then(function(data){
-     //      					}).catch(function(error){
-     //    					console.log("error")
-     //  						});
-				 //            // document.getElementById("aaa3").value = ArrayReverse(record); //反轉紀錄顯示
-				 //            // document.getElementById("aaa4").value = Last_N_in(ArrayReverse(record),3); //前3筆紀錄顯示  
-
-					// 	}
-     //    				// if(event.postback.data == "是"){    //此人成績已輸入過，檢查是否覆蓋
-			  //        //    	// document.getElementById("myTable").rows[1].cells[ans[0]+1].innerHTML = fraction;
-				 //        //     names2[ans[0]+1][1] = fraction;				            
-				 //        //     recordStr = names2[ans[0]+1][0]+"    "+fraction;     //儲存每筆紀錄
-				 //        //     record.push(recordStr);
-				 //        //     // document.getElementById("answer").value = record;
-				 //        //     ArrayReverse(record);                 //反轉紀錄
-				 //        //     // document.getElementById("aaa3").value = ArrayReverse(record); //反轉紀錄顯示
-				 //        //     // document.getElementById("aaa4").value = Last_N_in(ArrayReverse(record),3); //前3筆紀錄顯示  
-			  //        //    return "已覆蓋";   
-     //    				// }else{
-     //    				// 	return;   
-     //        //           //不覆蓋，不動作
-     //    				// }
-    	// 			});
-    			//});
-			}
-        //alert(names2[ans[0]+1][0])
-        // document.form1.selection.value = "";
 		}else if(ans.length > 1){           //名單中找到多人，回傳給使用者選擇
         	var str_select ="";
 
@@ -1352,7 +1193,7 @@ function Display(inarray){
 }
 function Sname(instr){
 		var a_instr
-		if(instr.length < 3 || instr.indexOf("登記完成")!= -1)
+		if(instr.length < 3)
 			return;
     	for(var i = 0 ; i < number.length ; i++){
         	var num = instr.indexOf(number[i]);
@@ -1367,7 +1208,7 @@ function Sname(instr){
 
 function Grade(instr){
 		var b_instr;                //輸入分割成名字和分數2部分                  //分數
-		if(instr.length < 3 || instr == "登記完成")
+		if(instr.length < 3)
 			return;
     	for(var i = 0 ; i < number.length ; i++){
         	var num = instr.indexOf(number[i]);
@@ -1394,11 +1235,10 @@ var j = 0;
 ag = compare(names,msg,event);
 console.log("a外")
 console.log(ag);
-		aaaa = Sname(msg);
-		bbbb = Grade(msg)
 console.log(typeof(ag))
-
-var connection = mysql.createConnection({
+		aaaa = Sname(msg);
+		bbbb = Grade(msg);
+		var connection = mysql.createConnection({
   			host     : '104.199.190.196',
   			user     : 'root',
   			password : 'asdcpi14',
@@ -1409,7 +1249,7 @@ var connection = mysql.createConnection({
   				if (err) {
     				throw err;
  				 }
-  					console.log(results);
+ 				 console.log("資料已修改");
 			});
 		connection.end();
 });
@@ -1444,32 +1284,33 @@ if(typeof(ag) == 'object'){
 	     		});
 			}
     	});
-	//}
 }
-// bot.on('message',function(event){
-// 	msg5 = event.message.text;
-// 	if(msg5.indexOf("登記完成") != -1){
-// 		var a = Display_all();
-// 		fs.writeFile(__dirname + '/content.txt', a, function(err){
-//      if (err) {
-//           console.error(err)
-//      }
-// });
-// 	}
-// }); 
-
-
-
 bot.on("postback",function(event){
 var msg4 = event.postback.data;
 var replyMsg3 = "";
 if(msg4.indexOf("成績") != -1){
-	replyMsg3 = Display_all();
+
+
+var connection = mysql.createConnection({
+  			host     : '104.199.190.196',
+  			user     : 'root',
+  			password : 'asdcpi14',
+  			database : 'line'
+		});
+		connection.connect();
+			connection.query('SELECT * FROM STUDENT', function (err, result, fields) {
+    // if any error while executing above query, throw error
+    if (err) throw err;
+    // if there is no error, you have the result
+    replyMsg3 = result;
+  });
+		connection.end();
+	//replyMsg3 = Display_all();
+}
       event.reply(replyMsg3).then(function(data){
           }).catch(function(error){
         console.log("error")
-      });
-    }      
+      });     
  });
 
    bot.on("postback",function(event){
@@ -1483,45 +1324,3 @@ if(msg6.indexOf("前5筆") != -1){
       });
     }      
  });
-
-// 	var mysql = require('mysql');
-
-// bot.on("message",function(event){
-// 	var msg7 = event.message.text;
-// 	var replyMsg5 = "";
-// 	var aaaa ;
-// 	var bbbb ;
-// 	var j = 0;
-// 	if(msg7.indexOf("登記完成") != -1){
-// 		aaaa = Sname(msg);
-// 		bbbb = Grade(msg)
-//     	console.log(aaaa[j]);
-//     	console.log(bbbb[j]);
-//     	j++;
-// 		var connection = mysql.createConnection({
-//   			host     : '104.199.190.196',
-//   			user     : 'root',
-//   			password : 'asdcpi14',
-//   			database : 'line'
-// 		});
-// 		connection.connect();
-// 		var data = {
-//     		Sname: a_instr,
-//     		Grade: b_instr
-// 			};
-// 		connection.query('INSERT INTO STUDENT SET ?', data, function(error){
-//     	if(error){
-//         	console.log('寫入資料失敗！');
-//         	throw error;
-//     	}
-//     	else{
-//     		console.log('資料已寫入');
-//     	}
-// 		});
-// 		connection.end();
-// 		event.reply(replyMsg5).then(function(data){
-//           }).catch(function(error){
-//         console.log("error")
-//       });
-//     }      
-// });
