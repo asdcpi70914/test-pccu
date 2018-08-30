@@ -4,6 +4,7 @@ var request = require("request");
 var getJSON = require('get-json');
 var path = require('path');
 var fs= require('fs');
+var mysql = require('mysql');
 var pinyin_dict_all = require("./pinyin_dict3.js")
 require('events').EventEmitter.prototype._maxListeners = 100;
 var bot = linebot({
