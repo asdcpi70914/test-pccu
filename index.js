@@ -1497,7 +1497,7 @@ bot.on("message",function(event){
   			database : 'line'
 		});
 		connection.connect();
-			connection.query('INSERT INTO test (name,Grade1) VALUES (aaaa,bbbb)', function(err, results) {
+			connection.query('INSERT INTO test SET name = ? SET Grade1 = ?',[aaaa,bbbb], function(err, results) {
   				if (err) {
     				throw err;
  				 }
