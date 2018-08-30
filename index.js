@@ -5,13 +5,13 @@ var getJSON = require('get-json');
 var path = require('path');
 var fs= require('fs');
 var pinyin_dict_all = require("./pinyin_dict3.js")
-var mysql = require('mysql');
 require('events').EventEmitter.prototype._maxListeners = 100;
 var bot = linebot({
   channelId:"1564803662",
   channelSecret:"3f13593deab6b469ca88c258be7562e8",
   channelAccessToken:"gDw6ceHuZKIxwvFg720tlcB5A6Pm0AA/Qn7IA1M5pD68w1Lw1JKeIDDc7Kul3M+uu45zG3AJp1jX9WM5iiilJG0Aw7lW+Z7D4IJf9nstcNTAmdRcwDjLMkFSZFtaEeTYgk3kySvleqoL7J1Q6pjOMQdB04t89/1O/w1cDnyilFU="
 });
+
 /**
  * 拼音库，来源于[在线汉语字典](http://zi.artx.cn/zi/)
  * 在 pinyin_dict_all_old.js 基础上增加了酿、铽等21个汉字，add by @liuxianan
@@ -166,7 +166,7 @@ else{
 min = Math.floor(response.data[0].EstimateTime/60) + "分鐘";
 j = "還有" + min + "抵達" + response.data[0].StopName.Zh_tw;
 }
-      if(msg.indexOf("紅5(劍潭)") != -1){
+      if(msg.indexOf("劍潭") != -1){
           replyMsg  = a+"\n"+f+"\n"+b+"\n"+g+"\n"+c+"\n"+h+"\n"+d+"\n"+i+"\n"+e+"\n"+j;
       }
 
@@ -182,7 +182,7 @@ j = "還有" + min + "抵達" + response.data[0].StopName.Zh_tw;
 bot.on("postback",function(event){
          var msg = event.postback.data;
       var replyMsg1 = "";
-    if(msg.indexOf("天氣資訊") != -1){
+    if(msg.indexOf("天氣") != -1){
     	axios.get("https://mobi.pccu.edu.tw/weather.json", { // 欲呼叫之API網址(此範例為台鐵車站資料)
 })
 .then(function(response){
@@ -287,7 +287,7 @@ else{
 min = Math.floor(response.data[0].EstimateTime/60) + "分鐘";
 j = "還有" + min + "抵達" + response.data[0].StopName.Zh_tw;
 }
-      if(msg.indexOf("紅5(陽明山)") != -1){
+      if(msg.indexOf("陽明山") != -1){
           replyMsg  = a+"\n"+f+"\n"+b+"\n"+g+"\n"+c+"\n"+h+"\n"+d+"\n"+i+"\n"+e+"\n"+j;
       }
 
@@ -361,6 +361,36 @@ bot.on("postback",function(event){
 
     }
     */
+
+// function tttPinyin(instr){
+//       //pinyin_dict_all
+//       str = JSON.stringify(pinyin_dict_all);        //取得拼音對照字串
+//       n = instr.length;                 //取得輸入的字串長度
+//       str3 = '["';
+//       for (var i = 0; i < n; i++) {
+//         str2 = instr[i];
+//         n1 = str.indexOf(",",str.indexOf(str2)+4);
+//         n2 = str.indexOf('"',str.indexOf(str2)+4);
+//         if (n2 < n1)
+//           n1 = n2
+//         //if (i > 0)
+//           str3 = str3 + '","' + str.substring(str.indexOf(str2)+4,n1);
+//         //else
+//         //  str3 = str3 + '"' + str.substring(str.indexOf(str2)+4,n1);
+        
+//       }
+//       document.form1.answer.value = str3 + '"],';
+//       return document.form1.answer.value;
+//       //str.indexOf(str2)
+//       //alert(str.indexOf(str2));
+//       //document.form1.answer.value(str.indexOf("阿"));
+//       //document.form1.answer.value(str.indexOf("呵"));
+//       //document.form1.answer.value(str.substring(13,24));
+//       //document.form1.answer.value = str.substring(str.indexOf(str2)+4,str.indexOf(",",str.indexOf(str2)+4));
+      
+//       //document.form1.answer.value = str.indexOf(",",str.indexOf(str2)+4)
+
+//     }
     //名單拼音
 var names = [["liú","jiā","háo"],
       ["chén","yǔ","tíng"],
@@ -555,9 +585,17 @@ bot.on('message', function(event) {
               personrecord.push(record[k]);
               break;
             }
+            //b_instr = instr.substring(num,record[k].length);
+            //fraction2 = number[i];
+            //break;
           }
         }
       }
+
+      //a = record.indexOf(instr_name);
+      // document.getElementById("aaa2").value = personrecord;
+      // document.getElementById("aaa6").value = ArrayReverse(personrecord);
+      // document.getElementById("aaa5").value = Last_N_in(ArrayReverse(personrecord),2);
       return personrecord;
     }
 
@@ -578,16 +616,34 @@ bot.on('message', function(event) {
           	break;
         	}
     	}
+      //var inname = toPinyin(a_instr);
+      //var a_inname,b_inname,c_inname,d_inname;
+      //document.form1.answer.value = inname;
+      //document.form1.a1.value = fraction;
    		var ans = names_cmp_instr(a_instr)
       	var innameL = a_instr.length;
       	console.log(ans);
+      // if(typeof(ans) == 'number'){
+      //  document.getElementById("myTable").rows[1].cells[ans+1]. innerHTML = fraction;
+      // }
+      //alert(typeof(ans))
+      //alert(ans)
+      //alert(ans)
       	if(ans.length == 1){              //名單中只找到一人
         	if(names2[ans[0]+1][1] == ""){        //此人成績還未輸入過，輸入成績    
+          // document.getElementById("myTable").rows[1].cells[ans[0]+1].innerHTML = fraction;
         	 	names2[ans[0]+1][1] = fraction;
         	 	recordStr = names2[ans[0]+1][0]+"    "+fraction;     //儲存每筆紀錄
         	 	record.push(recordStr);
+          // document.getElementById("answer").value = record;
         	 	ArrayReverse(record);
+        	 	                 //反轉紀錄
+          // document.getElementById("aaa3").value = ArrayReverse(record); //反轉紀錄顯示
+          // document.getElementById("aaa4").value = Last_N_in(ArrayReverse(record),3); //前3筆紀錄顯示
+          //alert(repin.length);
         	}else{
+//				bot.on('message', function(event) {
+					//var msg = event.message.text;
 					console.log(instr)
 					if(instr.length < 3)
 						return;
@@ -600,6 +656,7 @@ bot.on('message', function(event) {
           					break;
         				}
     				}
+					// console.log(innameL);
 					var j = 0;
 					if(c_instr.length == 3){
 						var name4 = " "+names[j][0]+" "+names[j][1]+" "+names[j][2];
@@ -608,7 +665,8 @@ bot.on('message', function(event) {
 						var name4 = " "+names[j][0]+" "+names[j][1];
 					}
 					var msg2 = toPinyin(instr);
-
+					//console.log(msg2);
+					//console.log(name4);
 					while(msg2.indexOf(name4) == -1){
 						j++;
 						if(c_instr.length == 3){
@@ -621,11 +679,25 @@ bot.on('message', function(event) {
 							break;
 						}
 					}
+    				// 
 					msg3 = toPinyin(a_instr);
 					c_instr = toPinyin(c_instr)
+					// console.log(event);
+					// console.log("------");
+					// console.log(event.message.text);
+					// console.log("--------------");
+					// console.log("msg2:"+msg2)
+					// console.log("msg3:"+msg3)
+					// console.log("name4:"+name4)
+					
     				if(msg2.indexOf(name4) != -1 && msg3 == c_instr){
+    					//console.log("測試"+names2[ans[0]+1][0]+names2[ans[0]+1][1]);
+    					// event.reply("已有輸入成績:"+names2[ans[0]+1][0]+names2[ans[0]+1][1]).then(function(data){
+	        //  			}).catch(function(error){
+	       	// 			console.log("error")
+	     			// 	});
     					var egg = '是';
-    					event.reply({
+    					event.reply([{ type: 'text', text: "已有輸入成績:"+names2[ans[0]+1][0]+names2[ans[0]+1][1]},{
     	 				   type: 'template',
     					    altText: 'this is a buttons template',
     					    template: {
@@ -643,7 +715,7 @@ bot.on('message', function(event) {
         							data: '否'
         						}]
         					}
-      					})
+      					}])
       					var temp2 = [];
       					temp2[0] = "修改";
       					temp2[1] = ans[0]+1;
@@ -652,7 +724,100 @@ bot.on('message', function(event) {
       					return temp2;
       					//console.log(temp2);
     				}
-		else if(ans.length > 1){           //名單中找到多人，回傳給使用者選擇
+    	// 			console.log(event);
+					// console.log("========");
+					// event.message.text = "666";
+					// console.log(event.message.text);
+					// console.log("=================");
+					// console.log("T上names2[ans[0]+1][1]:"+names2[ans[0]+1][1])
+					// console.log("T上fraction:"+fraction.toString())
+					// var temp = [];
+					// temp[0] = names2[ans[0]+1][1];
+					// temp[1] = fraction;
+					// console.log("T下names2[ans[0]+1][1]:"+names2[ans[0]+1][1])
+					// console.log("T下fraction:"+fraction.toString())
+					// bot.on('postback', function(event) {
+					// 	msg3 = event.postback.data;
+
+					// 	// console.log("msg2:"+msg2)
+					// 	// console.log("msg3:"+msg3)
+					// 	// console.log("name4:"+name4)
+					// 	// console.log("-=-=-=-=-=-=-")
+						
+					// 	// console.log(event.postback.data)
+					// 	if(msg3.indexOf("是") != -1){
+					// 		// document.getElementById("myTable").rows[1].cells[ans[0]+1].innerHTML = fraction;
+					// 		console.log("是改前names2[ans[0]+1][1]:"+names2[ans[0]+1][1])
+					// 		console.log("是改前fraction:"+fraction)
+				 //            names2[ans[0]+1][1] = fraction;				            
+				 //            recordStr = names2[ans[0]+1][0]+"    "+fraction;     //儲存每筆紀錄
+				 //            console.log("是改後names2[ans[0]+1][1]:"+names2[ans[0]+1][1])
+					// 		console.log("是改後fraction:"+fraction)
+				 //            record.push(recordStr);
+				 //            // document.getElementById("answer").value = record;
+				 //            ArrayReverse(record);                 //反轉紀錄
+				 //            event.reply("已覆蓋").then(function(data){
+     //      					}).catch(function(error){
+     //    					console.log("error")
+     //  						});
+				 //            // document.getElementById("aaa3").value = ArrayReverse(record); //反轉紀錄顯示
+				 //            // document.getElementById("aaa4").value = Last_N_in(ArrayReverse(record),3); //前3筆紀錄顯示  
+				 //  	// 		event.reply({
+					// 		// 	"type": "template",
+					// 		// 	"altText": "this is a confirm template",
+					// 		// 	"template": {
+				 //  	// 				"type": "confirm",
+				 //  	// 				"text": "是否覆蓋?",
+				 //  	// 				"actions": [{
+				 //   //      				"type": "postback",
+				 //   //      				"label": "是",
+				 //   //      				"data": "是"
+				 //   //  				},{
+				 //   //      				"type": "postback",
+				 //   //      				"label": "否",
+				 //   //      				"data": "否"
+				 //   //    				}]
+					// 		// 	}
+					// 		// })
+					// 	}
+					// 	if(msg3.indexOf("否") != -1){
+					// 		console.log("否改前names2[ans[0]+1][1]:"+names2[ans[0]+1][1])
+					// 		console.log("否改前temp[0]:"+temp[0])
+				 //            names2[ans[0]+1][1] = temp[0];				            
+				 //            recordStr = names2[ans[0]+1][0]+"    "+temp[0]     //儲存每筆紀錄
+				 //            record.push(recordStr);
+				 //            console.log("否改後names2[ans[0]+1][1]:"+names2[ans[0]+1][1])
+					// 		console.log("否改後temp[0]:"+temp[0])
+				 //            // document.getElementById("answer").value = record;
+				 //            ArrayReverse(record);                 //反轉紀錄
+				 //            event.reply("已取消覆蓋").then(function(data){
+     //      					}).catch(function(error){
+     //    					console.log("error")
+     //  						});
+				 //            // document.getElementById("aaa3").value = ArrayReverse(record); //反轉紀錄顯示
+				 //            // document.getElementById("aaa4").value = Last_N_in(ArrayReverse(record),3); //前3筆紀錄顯示  
+
+					// 	}
+     //    				// if(event.postback.data == "是"){    //此人成績已輸入過，檢查是否覆蓋
+			  //        //    	// document.getElementById("myTable").rows[1].cells[ans[0]+1].innerHTML = fraction;
+				 //        //     names2[ans[0]+1][1] = fraction;				            
+				 //        //     recordStr = names2[ans[0]+1][0]+"    "+fraction;     //儲存每筆紀錄
+				 //        //     record.push(recordStr);
+				 //        //     // document.getElementById("answer").value = record;
+				 //        //     ArrayReverse(record);                 //反轉紀錄
+				 //        //     // document.getElementById("aaa3").value = ArrayReverse(record); //反轉紀錄顯示
+				 //        //     // document.getElementById("aaa4").value = Last_N_in(ArrayReverse(record),3); //前3筆紀錄顯示  
+			  //        //    return "已覆蓋";   
+     //    				// }else{
+     //    				// 	return;   
+     //        //           //不覆蓋，不動作
+     //    				// }
+    	// 			});
+    			//});
+			}
+        //alert(names2[ans[0]+1][0])
+        // document.form1.selection.value = "";
+		}else if(ans.length > 1){           //名單中找到多人，回傳給使用者選擇
         	var str_select ="";
 
         	for(var i = 0; i < ans.length ; i++){
@@ -668,506 +833,593 @@ bot.on('message', function(event) {
 	       		console.log("error")
 	     		});
     	}
+    	event.reply("輸入的成績:"+names2[ans[0]+1][0]+names2[ans[0]+1][1]).then(function(data){
+	    }).catch(function(error){
+	    console.log("error")
+	    });
 	}
 
-    function names_cmp_instr(instr){          //搜尋名單
-      var ary = new Array(names.length);
-      var inname = toPinyin(instr);
-      var a_inname = toPinyin(instr.substring(0,1));
-      var b_inname = toPinyin(instr.substring(1,2));
-      var c_inname = toPinyin(instr.substring(2,3));
-      var inary = [a_inname,b_inname,c_inname];
-      var nnn=[];
-      //var d_inname = toPinyin(instr.substring(3,4));
-      
+    function names_cmp_instr(instr){					//搜尋名單
+			var ary = new Array(names.length);
+			var inname = toPinyin(instr);
+			var a_inname = toPinyin(instr.substring(0,1));
+			var b_inname = toPinyin(instr.substring(1,2));
+			var c_inname = toPinyin(instr.substring(2,3));
+			var inary = [a_inname,b_inname,c_inname];
+			var nnn=[];
+			//var d_inname = toPinyin(instr.substring(3,4));
+			
 
-      for(var row = 0 ; row < names.length ; row++){    //比分初始化
-        ary[row] = new Array(4);
-        for(var col = 0 ; col < 4 ; col++){
-          ary[row][col] = 0;
-          //document.write(ary[row][col]);
-        }
-        //document.write(" ");
-      }
+			for(var row = 0 ; row < names.length ; row++){		//比分初始化
+				ary[row] = new Array(4);
+				for(var col = 0 ; col < 4 ; col++){
+					ary[row][col] = 0;
+					//document.write(ary[row][col]);
+				}
+				//document.write(" ");
+			}
+			//var allpoint[],alp=0;
+			for(var row = 0 ; row < names.length ; row++){		//比對名字拼音
+				for(var col = 0 ; col < 3 ; col++){
+					if(names[row][col] == inary[col]){
+						ary[row][col] = ary[row][col]+1;
+						ary[row][3] = ary[row][3]+1;
+						
+					}else{
 
-      for(var row = 0 ; row < names.length ; row++){    //比對名字拼音
-        for(var col = 0 ; col < 3 ; col++){
-          if(names[row][col] == inary[col]){
-            ary[row][col] = ary[row][col]+1;
-            ary[row][3] = ary[row][3]+1;
-            
-          }
-          //document.write(names[row][col])
-          //document.write("棒")
-          //document.write(inary[col])
-        }
-        //document.write(" ");
-      }
-      //return ary;
-      var nn=[0,0,0,0];                 //
-      for(var row = 0 ; row < names.length ; row++){    //統計比分
-        if(ary[row][3] == 3){
-          nn[3]++;
-        }
-        else if(ary[row][3] == 2){
-          nn[2]++;
-        }
-        else if(ary[row][3] == 1){
-          nn[1]++;
-        }
-      }
+          			var testname,testin;
+          			for(var trow = 0 ; trow < array.length ; trow++){
+          				// if(trow==35)
+          				// 	continue;
 
-      var nn2=[],nn3=[];                      //多個比分2的位置
-      var nn2_num=0,nn3_num=0;
-      for(var row = 0 ; row < names.length ; row++){    //回傳結果
-        if(ary[row][3] == 3 && nn[3] == 1){
-          nnn[0] = row;
-          return nnn;
-        }
-        else if(ary[row][3] == 2 && nn[2] == 1 && nn[3] == 0){
-          nnn[0] = row;
-          return nnn;
-        }
-        else if(ary[row][3] == 2 && nn[2] > 1){
-          nn2[nn2_num] = row;
-          nn2_num++;
-        }//else if(ary[row][3] == 1 && nn[1] == 1){
-        //  nnn[0] = row;
-        //  return nnn;
-        // }else if(ary[row][3] == 1 && nn[1] > 1){
-        //  nn3[nn3_num] = row;
-        //  nn3_num++;
-        // }
-      }
+          				for(var tcol = 0 ; tcol < array[trow].length ; tcol++){
+          					
+          					if(array[trow][tcol] == inary[col]){
+          						testin = array[trow][0];
+          						
+          						break;
+          					}
+          				}
+          			}
 
-      if(nn2_num != 0 && nn[2] > 1){
-        //nn[2]=0;
-        nnn = nn2;
-      }
-      
-      // if(nn3_num != 0 && nn[1] > 1){
-      //  //nn[2]=0;
-      //  nnn = nn3;
-      // }
+          			for(var trow = 0 ; trow < array.length ; trow++){
+          				// if(trow==35)
+          				// 	continue;
+          				
+          				for(var tcol = 0 ; tcol < array[trow].length ; tcol++){
 
-      return nnn;
-      
-      
-    //   for(var row = 0 ; row < names.length ; row++){
-    //     //ary[row] = new Array(4);
-    //     for(var col = 0 ; col < 4 ; col++){
-    //       //ary[row][col] = 0;
-    //       document.write(ary[row][col]);
-    //     }
-    //     document.write(" ");
-    //   }
-      
-    //   //document.write(ary[0][3]);
-     }
+          					if(array[trow][tcol] == names[row][col]){
+          						testname = array[trow][0];
+          						break;
+          					}
+          				}
+          				
+          			}
+
+          			if(testname == testin){
+          				ary[row][col] = ary[row][col]+0.9;
+            			ary[row][3] = ary[row][3]+0.9;
+          			}else{
+          				var row1=0,col1=0,row2=0,col2=0;
+          				for(var trow = 0 ; trow < array2.length ; trow++){
+          					//document.getElementById("aaa87").value = trow;
+          					for(var tcol = 0 ; tcol < array2[trow].length ; tcol++){
+          						if(array2[trow][tcol] == testname){
+          							row1 = trow;
+          							col1 = tcol;
+          							break;
+          						}
+          					}
+          				}
+          				for(var trow = 0 ; trow < array2.length ; trow++){
+          					for(var tcol = 0 ; tcol < array2[trow].length ; tcol++){
+          						if(array2[trow][tcol] == testin){
+          							row2 = trow;
+          							col2 = tcol;
+          							break;
+          						}
+          					}
+          				}
+          				if(row1 == row2){
+          					ary[row][col] = ary[row][col]+(0.9-(Math.abs(col1-col2)*0.1));
+          					ary[row][3] = ary[row][3]+(0.9-(Math.abs(col1-col2)*0.1));
+          				}
+          				break;
+          			}
+          			}
+					//document.write(names[row][col])
+					//document.write("棒")
+					//document.write(inary[col])
+				}
+				//allpoint[alp] = ary[row][3];
+				//alp++;
+				//document.write(" ");
+				//document.getElementById("aaa87").value = allpoint[0];
+			}
+			//document.getElementById("aaa87").value = ary;
+			//return ary;
+			
+			var nn=[0,0,0,0];									//
+			for(var row = 0 ; row < names.length ; row++){		//統計比分
+				if(ary[row][3] == 3){
+					nn[3]++;
+				}else if(ary[row][3] >= 2){
+					nn[2]++;
+				}else if(ary[row][3] >= 1){
+					nn[1]++;
+				}else{
+					nn[0]++;
+				}
+			}
+
+			var nn2=[],nn3=[];											//多個比分2的位置
+			var nn2_num=0,nn3_num=0,nn2_temp=0;
+			for(var row = 0 ; row < names.length ; row++){		//回傳結果
+				if(ary[row][3] == 3 && nn[3] == 1){
+					nnn[0] = row;
+					return nnn;
+				// }else if(ary[row][3] >= 2){
+				// 	var tx = Math.max.apply(null, allpoint);
+				// 	for(var i = 0 ; i < allpoint.length ; i++){
+				// 		if(allpoint[i] == tx){
+				// 			nnn[0] = i;
+				// 			return nnn;
+				// 		}
+				// 	}
+				}else if(ary[row][3] >= 2 && nn[2] == 1 && nn[3] == 0){
+					nnn[0] = row;
+					return nnn;
+				}else if(ary[row][3] >= 2 && nn[2] > 1){
+					if(ary[row][3] > nn2_temp)
+						nn2_temp = ary[row][3];
+					nnn[0] = row;
+					//nn2[nn2_num] = row;
+					//nn2_num++;
+
+				}//else if(ary[row][3] == 1 && nn[1] == 1){
+				// 	nnn[0] = row;
+				// 	return nnn;
+				// }else if(ary[row][3] == 1 && nn[1] > 1){
+				// 	nn3[nn3_num] = row;
+				// 	nn3_num++;
+				// }
+			}
+
+			// if(nn2_num != 0 && nn[2] > 1){
+			// 	//nn[2]=0;
+			// 	nnn = nn2;
+			// }
+			
+			// if(nn3_num != 0 && nn[1] > 1){
+			// 	//nn[2]=0;
+			// 	nnn = nn3;
+			// }
+
+			return nnn;
+			
+			
+			// for(var row = 0 ; row < names.length ; row++){
+			// 	//ary[row] = new Array(4);
+			// 	for(var col = 0 ; col < 4 ; col++){
+			// 		//ary[row][col] = 0;
+			// 		document.write(ary[row][col]);
+			// 	}
+			// 	document.write(" ");
+			// }
+			
+			//document.write(ary[0][3]);
+		}
     //names_cmp_instr("我是誰");
 
-    var array = [
-           ["ba","bā","bá","bǎ","bà"],
-           ["bo","bō","bó","bǒ","bò"],
-           ["bai","bāi","bái","bǎi","bài"],
-           ["bei","bēi","běi","bèi"],
-           ["bao","bāo","báo","bǎo","bào"],
-           ["ban","bān","bǎn","bàn"],
-           ["ben","bēn","běn","bèn"],
-           ["bang","bāng","bǎng","bàng"],
-           ["beng","bēng","béng","běng","bèng"],
-           ["bi","bī","bí","bǐ","bì"],
-           ["bie","biē","bié","biě","biè"],
-           ["biao","biāo","biǎo","biào"],
-           ["bian","biān","biǎn","biàn"],
-           ["bin","bīn","bìn"],
-           ["bing","bīng","bǐng","bìng"],
-           ["bu","bū","bú","bǔ","bù"],
-           ["pa","pā","pá","pà"],
-           ["po","pō","pó","pǒ","pò"],
-           ["pai","pāi","pái","pěi","pài"],
-           ["pei","pēi","péi","pò","pèi"],
-           ["pao","pāo","páo","pǎo","pào"],
-           ["pou","pōu","póu","pǒu","pǒu"],
-           ["pan","pān","pán","pǎn","pàn"],
-           ["pan","pēn","pén","běn","pēn"],
-           ["pang","pāng","páng","pǎng","pàng"],
-           ["peng","pēng","péng","pěng","pèng"],
-           ["pi ","pī","pí","pǐ","pì"],
-           ["pie ","piē","piě","piè"],
-           ["piao","piāo","piáo","piǎo","piào"],
-           ["pian","piān","pián","piǎn","piàn"],
-           ["pin","pàn","pín","pǐn","pìn"],
-           ["ping","pīng","píng","pǐng","pìng"],
-           ["pu","pū","pú","pǔ","pù"],
-           ["ma","mā","má","mǎ","mà"],
-           ["mo","mō","mó","mǒ","mò"],
-           ["me","mē","mé","mě","mè"]
-           ["mai","mái","mǎi","mài"],
-           ["mei","méi","měi","mèi"],
-           ["mao","māo","máo","mǎo","mào"],
-           ["mou","móu","mǒu","mòu"],
-           ["man","mǎn","mán","mǎn","màn"],
-           ["men","mèn","mén","mèn","mèn"],
-           ["mang","máng","mǎng","màng"],
-           ["meng","mēng","méng","měng","mèng"],
-           ["mi","mī","mí","mǐ","mì"],
-           ["mie","miē","miě","miè"],
-           ["miao","miāo","miáo","miǎo","miào"],
-           ["miu","miū","miù"],
-           ["mian","mián","miǎn","miàn"],
-           ["min","mín","mǐn"],
-           ["ming","míng","mǐng","mìng"],
-           ["mu","mú","mǔ","mù"],
-           ["fa","fā","fá","fǎ","fà"],
-           ["fo","fó"],
-           ["fei","fēi","féi","fěi","fèi"],
-           ["fou","fóu","fǒu"],
-           ["fan","fān","fán","fǎn","fàn"],
-           ["fen","fēn","fén","fěn","fèn"],
-           ["fang","fāng","fáng","fǎng","fàng"],
-           ["feng","fēng","féng","fěng","fèng"],
-           ["fu","fū","fú","fǔ","fù"],
-           ["da","dā","dá","dǎ","dà"],
-           ["de","dé"],
-           ["da","dài","dài","dài"],
-           ["dei","děi"],
-           ["dao","dāo","dáo","dǎo","dào"],
-           ["dou","dōu","dǒu","dòu"],
-           ["dan","dān","dǎn","dàn"],
-           ["dang","dāng","dǎng","dàng"],
-           ["deng","dēng","děng","dèng"],
-           ["di","dī","dí","dǐ","dì"],
-           ["die","diē","dié","diè"],
-           ["diao","diāo","diǎo","diào"],
-           ["diu","diū"],
-           ["dian","diān","diǎn","diàn"],
-           ["ding","dīng","dǐng","dìng"],
-           ["du","dū","dú","dǔ","dù"],
-           ["duo","duō","duó","duǒ","duò"],
-           ["dui","duī","duì"],
-           ["duan","duān","duǎn","duàn"],
-           ["dun","dūn","dǔn","dùn"],
-           ["dong","dōng","dǒng","dòng"],
-           ["ta","tā","tǎ","tà"],
-           ["te","tè","tè"],
-           ["ta","tāi","tái","tài"],
-           ["tao","tāo","táo","tǎo","tào"],
-           ["tou","tōu","tóu","tǒu","tòu"],
-           ["tan","tān","tán","tǎn","tàn"],
-           ["tang","tāng","táng","tǎng","tàng"],
-           ["teng","tēng","téng"],
-           ["ti","tī","tí","tǐ","tì"],
-           ["tie","tiē","tiě","tiè"],
-           ["tiao","tiāo","tiáo","tiǎo","tiào"],
-           ["tian","tiān","tián","tiǎn","tiàn"],
-           ["ting","tīng","tíng","tǐng","tìng"],
-           ["tu","tū","tú","tǔ","tǔ"],
-           ["tuo","tuō","tuó","tuǒ","tuò"],
-           ["tui","tuī","tuí","tuǐ","tuì"],
-           ["tuan","tuān","tuán","tuǎn","tuàn"],
-           ["tun","tūn","tún","tǔn","tuì"],
-           ["tong","tōng","tóng","tǒng","tòng"],
-           ["na","nā","ná","nǎ","nà"],
-           ["ne","nē","nè"],
-           ["nai","nái","nǎi","nài"],
-           ["nei","něi","nèi"],
-           ["nao","nāo","náo","nǎo","nào"],
-           ["nou","nóu","nǒu","nòu"],
-           ["nan","nān","nán","nǎn","nán"],
-           ["nen","nēn","nèn"],
-           ["nang ","nāng","náng","nǎng","nàng"],
-           ["neng","néng","nèng"],
-           ["ni","ní","nǐ","nì"],
-           ["nie","niē","nié","niè"],
-           ["niao","niǎo","niào"],
-           ["niu","niū","niú","niǔ","niǜ"],
-           ["nian","niān","nián","niǎn","niàn"],
-           ["nin","nín","nǐn"],
-           ["niang","niáng","niàng"],
-           ["ning","níng","nǐng","nìng"],
-           ["nu","nú","nǔ","nù"],
-           ["nuo","nuó","nuǒ","nuò"],
-           ["nuan","nuǎn"],
-           ["nong","nóng","nǒng","nòng"],
-           ["nu","nǚ","nǜ"],
-           ["nue","nüè"],
-           ["la","lā","lá","lǎ","là"],
-           ["le","lē","lè"],
-           ["lai","lái","lài"],
-           ["lei","lēi","léi","lěi","lèi"],
-           ["lao","lāo","láo","lǎo","lào"],
-           ["lou","lōu","lóu","lǒu","lòu"],
-           ["lan","lān","lán","lǎn","làn"],
-           ["lang","lāng","láng","lǎng","làng"],
-           ["leng ","léng","lěng","lèng"],
-           ["li","li","lí","lǐ","lì"],
-           ["lia","liǎ"],["lie","liē","liě","liè"],
-           ["liao","liāo","liáo","liǎo","liào"],
-           ["liu","liū","liú","liǔ","liù"],
-           ["lian","lián","liǎn","liàn"],
-           ["lin","lín","lín","lǐn","lìn"],
-           ["liang","liáng","liǎng","liàng"],
-           ["ling","līng","líng","lǐng","lìng"],
-           ["lu","lū","lú","lǔ","lù"],
-           ["luo","luō","luó","luǒ","luò"],
-           ["luan","luán","luǎn","luàn"],
-           ["lun","lūn","lún","lǔn","lùn"],
-           ["long","lōng","lóng","lǒng","lòng"],
-           ["lu","lǘ","lǚ","lǜ"],["lue","lüè"],
-           ["luan","luán","luán"],
-           ["ga","gā","gá","gà"],
-           ["ge","gē","gé","gé","gè"],
-           ["gai","gāi","gǎi","gài"],
-           ["gei","gěi"],
-           ["gao","gāo","gǎo","gào"],
-           ["gou","gōu","gǒu","gòu"],
-           ["gan","gān","gǎn","gàn"],
-           ["gen","gēn","gén","gèn","gèn"],
-           ["gang","gāng","gǎng","gàng"],
-           ["geng","gēng","gěng","gèn"],
-           ["gu","gū","gú","gǔ","gù"],
-           ["gua","guā","guǎ","guà"],
-           ["guo","guō","guó","guǒ","guò"],
-           ["guai","guāi","guǎi","guài"],
-           ["gui","guī","guǐ","guì"],
-           ["guan","guān","guǎn","guān"],
-           ["gun","gūn","gǔn","gùn"],
-           ["guang","guāng","guǎng","guàng"],
-           ["gong","gōng","gǒng","gòng"],
-           ["ka","kā","kǎ","kà"],
-           ["ke","kē","ké","kě","kè"],
-           ["kai","kāi","kǎi","kài"],
-           ["kao","kāo","kǎo","kào"],
-           ["kou","kǒu","kòu"],
-           ["kan","kān","kǎn","kàn"],
-           ["ken","kěn","kèn"],
-           ["keng","kēng","kěng"],
-           ["ku","kū","kǔ","kù"],
-           ["kua","kuā","kuǎ","kuà"],
-           ["kuo","kuǒ","kuò"],
-           ["kuai","kuāi","kuǎi","kuài"],
-           ["kui","kuī","kuí","kuǐ","kuì"],
-           ["kuan","kuān","kuǎn"],
-           ["kun","kūn","kǔn","kùn"],
-           ["kuang","kuāng","kuáng","kuǎng","kuàng"],
-           ["kong","kōng","kǒng","kòng"],
-           ["ha","hā","há","hǎ","hà"],
-           ["he","hē","hé","hè"],
-           ["hai","hāi","hái","hǎi","hài"],
-           ["hei","hēi","hěi","hèi"],
-           ["hao","hāo","háo","hǎo","hào"],
-           ["hou","hōu","hóu","hǒu","hòu"],
-           ["han","hān","hán","hǎn","hàn"],
-           ["hen","hén","hěn","hèn"],
-           ["hang","hāng","háng","hǎng","hàng"],
-           ["heng","hēng","héng","hèng"],["hu","hū","hú","hǔ","hù"],
-           ["hua","huā","huá","huà"],
-           ["huo","huō","huó","huǒ","huò"],
-           ["huai","huái","huài"],
-           ["hui","huī","huí","huǐ","huì"],
-           ["huan","huān","huán","huǎn","huàn"],
-           ["","hūn","hún","hǔn","hùn"],
-           ["huang","huāng","huáng","huǎng","kuàng"],
-           ["hong","hōng","hóng","hōng","hòng"],
-           ["ji","jī","jí","jī","jì"],
-           ["jia","jiā","jiā","jiǎ","jià"],
-           ["jie","jiē","jié","jiě","jiè"],
-           ["jiao","jiāo","jiáo","jiǎo","jiào"],
-           ["jiu","jiū","jiǔ","jiù"],
-           ["jian","jiān","jiǎn","jiàn"],
-           ["jin","jīn","jǐn","jìn"],
-           ["jiang","jiāng","jiǎng","jiàng"],
-           ["jing","jīng","jǐng","jìng"],
-           ["ju","jū","jú","jǔ","jù"],
-           ["jue","juē","jué","juě","jué"],
-           ["juan","juān","juǎn","juàn"],
-           ["jun","jūn","jǔn","jùn"],
-           ["jiong","jiōng","jiǒng","jiòng"],
-           ["qi","qī","qí","qǐ","qì"],
-           ["qia","qiā","zhòu","qià"],
-           ["qie","qiē","qié","qiě","qiè"],
-           ["qiao","qiāo","qiáo","qiǎo","qiào"],
-           ["qiu","qiū","qiú","qiǔ"],
-           ["qian","qiān","qián","qiǎn","qiàn"],
-           ["qin","qīn","qín","qǐn","qìn"],
-           ["qiang","qiāng","qiáng","qiǎng","qiāng"],
-           ["qing","qīng","qíng","qǐng","qìng"],
-           ["qu","qū","qú","qǔ","qù"],
-           ["que","quē","qué","què"],
-           ["quan","quān","quán","quǎn","quàn"],
-           ["qun","qūn","qún"],
-           ["qiong","qiōng","qióng","qiǒng"],
-           ["xi","xī","xī","xǐ","xì"],
-           ["xia","xiā","xiá","xiǎ","xià"],
-           ["xie","xiē","xié","xiě","xiè"],
-           ["xiao","xiāo","xiáo","xiǎo","xiào"],
-           ["xiu","xiū","xiǔ","xiù"],
-           ["xian","xiān","xián","xiǎn","xiàn"],
-           ["xin","xīn","xín","xǐn","xìn"],
-           ["xiang","xiāng","xiáng","xiǎng","xiàng"],
-           ["xing","xīng","xíng","xǐng","xìng"],
-           ["xu","xū","xú","xū","xù"],
-           ["xue","xuē","xué","xuě","xué"],
-           ["xuan","xuān","xuán","xuǎn","xuàn"],
-           ["xun","xūn","xún","xùn"],
-           ["xiong","xiōng","xióng","xiòng"],
-           ["zhi","zhī","zhí","zhī","zhì"],
-           ["zha","zhā","zhá","zhǎ","zhà"],
-           ["zhe","zhē","zhé","zhě","zhè"],
-           ["zhai","zhāi","zhái","zhǎi","zhài"],
-           ["zhei"],["zhao","zhāo","zhuó","zhǎo","zhào"],
-           ["zhou","zhōu","zhóu","zhǒu","zhòu"],
-           ["zhan","zhān","zhǎn","zhàn"],
-           ["zhen","zhēn","zhěn","zhèn"],
-           ["zhang","zhāng","zhǎng","zhàng"],
-           ["zheng","zhēng","zhěng","zhèng"],
-           ["zhu","zhū","zhú","zhǔ","zhù"],
-           ["zhua","zhuā","zhuǎ"],
-           ["zhuo","zhuō","zhuó"],
-           ["zhuai","zhuāi","zhuǎi","zhuài"],
-           ["zhui","zhuī","zhuǐ","zhuì"],
-           ["zhuan","zhuān","zhuǎn","zhuàn"],
-           ["zhun","zhūn","zhǔn","zhùn"],
-           ["zhuang","zhuāng","zhuǎng","zhuàng"],
-           ["zhong","zhōng","zhǒng","zhòng"],
-           ["chi","chī","chí","chǐ","chì"],
-           ["cha","chà","chá","chǎ","chà"],
-           ["che","chē","chě","chè"],
-           ["chai","chāi","chái","chǎi","chài"],
-           ["chao","chāo","cháo","chǎo","chào"],
-           ["chou","chōu","chóu","chǒu","chòu"],
-           ["chan","chān","chán","chǎn","chàn"],
-           ["chen","chēn","chén","chěn","chèn"],
-           ["chang","cāng","cáng"],
-           ["cheng","chēng","chéng","chěng","chèng"],
-           ["chu","chū","chú","chǔ","chù"],
-           ["chuo","chuō","chuò"],
-           ["chuai","chuāi","chuái","chuǎi","chuài"],
-           ["chui","chuī","chuí","chuì"],
-           ["chuan","chuān","chuán","chuǎn","chuàn"],
-           ["chun","chūn","chún","chǔn"],
-           ["chuang","chuāng","chuáng","chuǎng","chuàng"],
-           ["chong","chōng","chóng","chǒng","chòng"],
-           ["shi","shī","shí","shǐ","shì"],
-           ["sha","shā","shá","shǎ","shā"],
-           ["she","shē","shé","shě","shè"],
-           ["shai","shāi","shǎi","shài"],
-           ["shei","shéi"],
-           ["shao","shāo","sháo","shǎo","shào"],
-           ["shou","shōu","shú","shǒu","shòu"],
-           ["shan","shān","shǎn","shàn"],
-           ["shen","shēn","shén","shěn","shèn"],
-           ["shang","shāng","shǎng","shàng"],
-           ["sheng","shēng","shéng","shěng","shèng"],
-           ["shu","shū","shū","shǔ","shù"],
-           ["shua","shuā","shuǎ","shuà"],
-           ["shuo","shuō","shuò"],
-           ["shuai","shuāi","shuǎi","shuài"],
-           ["shui","shuí","shuǐ","shuì"],
-           ["shuan","shuān","shuàn"],
-           ["shun","shǔn","shùn"],
-           ["shuang","shuāng","shuǎng","shuàng"],
-           ["ri","rì"],
-           ["re","ré","rě","rè"],
-           ["rao","ráo","rǎo","rào"],
-           ["rou","róu","rǒu","ròu"],
-           ["ran","rán","rǎn"],
-           ["ren","rén","rěn","rèn"],
-           ["rang","ráng","rǎng","ràng"],
-           ["reng","rēng","réng","rěng","rèng"],
-           ["ru","rú","rǔ","rù"],
-           ["ruo","ruó","ruò"],
-           ["rui","ruí","ruǐ","ruì"],
-           ["ruan","ruán","ruǎn"],
-           ["run","rūn","rún","rùn"],
-           ["rong","róng","rǒng"],
-           ["zi","zī","zǐ","zì"],
-           ["za","zā","zá","zǎ"],
-           ["ze","zé","zě","zè"],
-           ["zai","zāi","zǎi","zài"],
-           ["zei","zéi"],
-           ["zao","zāo","záo","zǎo","zào"],
-           ["zou","zōu","zǒu","zòu"],
-           ["zan","zān","zán","zǎn","zàn"],
-           ["zen","zān","zěn","zèn"],
-           ["zang","zāng","zǎng","zàng"],
-           ["zeng","zēng","zèng"],
-           ["zu","zū","zú","zǔ","zù"],
-           ["zuo","zuō","zuó","zuǒ","zuò"],
-           ["zui","zuī","zuǐ","zuì"],
-           ["zuan","zuān","zuǎn","zuān"],
-           ["zun","zūn","zǔn","zùn"],
-           ["zong","zōng","zǒng","zòng"],
-           ["ci","cí","cí","cǐ","cì"],
-           ["ca","cā","cǎ","zá"],
-           ["ce","cè"],
-           ["cai","cāi","cái","cǎi","cài"],
-           ["cao","cāo","cáo","cǎo","cào"],
-           ["cou","còu"],
-           ["can","cān","cán","cǎn","càn"],
-           ["cen","cēn","cén"],
-           ["cang","cāng","cáng"],
-           ["ceng","cēng","céng","cèng"],
-           ["cu","cū","cú","cù"],
-           ["cuo","cuō","cuó","cuǒ","cuò"],
-           ["cui","cuī","cuí","cuǐ","cuì"],
-           ["cuan","cuān","cuán","cuàn"],
-           ["cun","cūn","cún","cǔn","cùn"],
-           ["cong","cōng","cóng","cǒng","còng"],
-           ["si","sī","sǐ","sì"],["sa","sā","sǎ","sà"],
-           ["se","sè"],
-           ["sai","sāi","sài"],
-           ["sao","sāo","sǎo","sào"],
-           ["sou","sōu","sǒu","sòu"],
-           ["san","sān","sǎn","sàn"],
-           ["sen","sēn"],
-           ["sang","sāng","sǎng","sàng"],
-           ["seng","sēng"],
-           ["su","sū","sú","sù"],
-           ["suo","suō","suǒ","suò"],
-           ["sui","suī","suí","suǐ","suì"],
-           ["suan","suān","suǎn","suàn"],
-           ["sun","sūn","sǔn","sùn"],
-           ["song","sōng","sǒng","sòng"],
-           ["a","ā","á","à"],
-           ["e","ē","é","ě","è"],
-           ["ai","āi","ái","ǎi","ài"],
-           ["ao","āo","áo","ǎo","ào"],
-           ["ou","ōu","ǒu","ǒu"],
-           ["an","ān","án","ǎn","àn"],
-           ["en","ēn","èn"],
-           ["ang","āng","áng","ǎng","àng"],
-           ["eng","ēng"],
-           ["er","ér","ěr","èr"],
-           ["yi","yī","yí","yǐ","yì"],
-           ["ya","yā","yá","yā","yà"],
-           ["yo","yō"],
-           ["ye","yē","yé","yě","yè"],
-           ["yai","yái"],
-           ["yao","yāo","yáo","yǎo","yào"],
-           ["you","yōu","yóu","yǒu","yòu"],
-           ["yan","yān","yán","yǎn","yàn"],
-           ["yin","yīn","yín","yǐn","yìn"],
-           ["yang","yāng","yáng","yǎng","yàng"],
-           ["ying","yīng","yíng","yǐng","yìng"],
-           ["wu","wū","wú","wǔ","wù"],
-           ["wa","wā","wá","wǎ","wà"],
-           ["wo","wō","wǒ","wò"],
-           ["wai","wāi","wài"],
-           ["wei","wēi","wéi","wěi","wéi"],
-           ["wan","wān","wán","wǎn","wàn"],
-           ["wen","wēn","wén","wěn","wèn"],
-           ["wang","wāng","wáng","wǎng","wàng"],
-           ["weng","wēng","wěng","wèng"],
-           ["yu","yū","yú","yǔ","yù"],
-           ["yue","yuē","yuè"],
-           ["yuan","yuān","yuán","yuǎn","yuàn"],
-           ["yun","yùn","yún","yǔn","yùn"],
-           ["yong","yōng","yóng","yǒng","yòng"],
-           ["ei","ēi","éi","ěi","èi"],
-           ["o","ō","ó","ò"],
-           ["xi","xī","xí","xǐ","xì"]]
+  //names_cmp_instr("我是誰");
+		var array2 = [
+						["ya","ye","yan","wa","yue","yuan"],
+						["yin","ying","wen","weng","yun","yong"],
+						["wai","wei","wan"],
+						["yang","wang"],
+						["yao","you","wo"]];
+		var array = [
+					 ["ba","bā","bá","bǎ","bà"],
+					 ["bo","bō","bó","bǒ","bò"],
+					 ["bai","bāi","bái","bǎi","bài"],
+					 ["bei","bēi","běi","bèi"],
+					 ["bao","bāo","báo","bǎo","bào"],
+					 ["ban","bān","bǎn","bàn"],
+					 ["ben","bēn","běn","bèn"],
+					 ["bang","bāng","bǎng","bàng"],
+					 ["beng","bēng","béng","běng","bèng"],
+					 ["bi","bī","bí","bǐ","bì"],
+					 ["bie","biē","bié","biě","biè"],
+					 ["biao","biāo","biǎo","biào"],
+					 ["bian","biān","biǎn","biàn"],
+					 ["bin","bīn","bìn"],
+					 ["bing","bīng","bǐng","bìng"],
+					 ["bu","bū","bú","bǔ","bù"],
+					 ["pa","pā","pá","pà"],
+					 ["po","pō","pó","pǒ","pò"],
+					 ["pai","pāi","pái","pěi","pài"],
+					 ["pei","pēi","péi","pò","pèi"],
+					 ["pao","pāo","páo","pǎo","pào"],
+					 ["pou","pōu","póu","pǒu","pǒu"],
+					 ["pan","pān","pán","pǎn","pàn"],
+					 ["pan","pēn","pén","běn","pēn"],
+					 ["pang","pāng","páng","pǎng","pàng"],
+					 ["peng","pēng","péng","pěng","pèng"],
+					 ["pi ","pī","pí","pǐ","pì"],
+					 ["pie ","piē","piě","piè"],
+					 ["piao","piāo","piáo","piǎo","piào"],
+					 ["pian","piān","pián","piǎn","piàn"],
+					 ["pin","pàn","pín","pǐn","pìn"],
+					 ["ping","pīng","píng","pǐng","pìng"],
+					 ["pu","pū","pú","pǔ","pù"],
+					 ["ma","mā","má","mǎ","mà"],
+					 ["mo","mō","mó","mǒ","mò"],
+					 ["me","mē","mé","mě","mè"],
+					 ["mai","mái","mǎi","mài"],
+					 ["mei","méi","měi","mèi"],
+					 ["mao","māo","máo","mǎo","mào"],
+					 ["mou","móu","mǒu","mòu"],
+					 ["man","mǎn","mán","mǎn","màn"],
+					 ["men","mèn","mén","mèn","mèn"],
+					 ["mang","máng","mǎng","màng"],
+					 ["meng","mēng","méng","měng","mèng"],
+					 ["mi","mī","mí","mǐ","mì"],
+					 ["mie","miē","miě","miè"],
+					 ["miao","miāo","miáo","miǎo","miào"],
+					 ["miu","miū","miù"],
+					 ["mian","mián","miǎn","miàn"],
+					 ["min","mín","mǐn"],
+					 ["ming","míng","mǐng","mìng"],
+					 ["mu","mú","mǔ","mù"],
+					 ["fa","fā","fá","fǎ","fà"],
+					 ["fo","fó"],
+					 ["fei","fēi","féi","fěi","fèi"],
+					 ["fou","fóu","fǒu"],
+					 ["fan","fān","fán","fǎn","fàn"],
+					 ["fen","fēn","fén","fěn","fèn"],
+					 ["fang","fāng","fáng","fǎng","fàng"],
+					 ["feng","fēng","féng","fěng","fèng"],
+					 ["fu","fū","fú","fǔ","fù"],
+					 ["da","dā","dá","dǎ","dà"],
+					 ["de","dé"],
+					 ["da","dài","dài","dài"],
+					 ["dei","děi"],
+					 ["dao","dāo","dáo","dǎo","dào"],
+					 ["dou","dōu","dǒu","dòu"],
+					 ["dan","dān","dǎn","dàn"],
+					 ["dang","dāng","dǎng","dàng"],
+					 ["deng","dēng","děng","dèng"],
+					 ["di","dī","dí","dǐ","dì"],
+					 ["die","diē","dié","diè"],
+					 ["diao","diāo","diǎo","diào"],
+					 ["diu","diū"],
+					 ["dian","diān","diǎn","diàn"],
+					 ["ding","dīng","dǐng","dìng"],
+					 ["du","dū","dú","dǔ","dù"],
+					 ["duo","duō","duó","duǒ","duò"],
+					 ["dui","duī","duì"],
+					 ["duan","duān","duǎn","duàn"],
+					 ["dun","dūn","dǔn","dùn"],
+					 ["dong","dōng","dǒng","dòng"],
+					 ["ta","tā","tǎ","tà"],
+					 ["te","tè","tè"],
+					 ["ta","tāi","tái","tài"],
+					 ["tao","tāo","táo","tǎo","tào"],
+					 ["tou","tōu","tóu","tǒu","tòu"],
+					 ["tan","tān","tán","tǎn","tàn"],
+					 ["tang","tāng","táng","tǎng","tàng"],
+					 ["teng","tēng","téng"],
+					 ["ti","tī","tí","tǐ","tì"],
+					 ["tie","tiē","tiě","tiè"],
+					 ["tiao","tiāo","tiáo","tiǎo","tiào"],
+					 ["tian","tiān","tián","tiǎn","tiàn"],
+					 ["ting","tīng","tíng","tǐng","tìng"],
+					 ["tu","tū","tú","tǔ","tǔ"],
+					 ["tuo","tuō","tuó","tuǒ","tuò"],
+					 ["tui","tuī","tuí","tuǐ","tuì"],
+					 ["tuan","tuān","tuán","tuǎn","tuàn"],
+					 ["tun","tūn","tún","tǔn","tuì"],
+					 ["tong","tōng","tóng","tǒng","tòng"],
+					 ["na","nā","ná","nǎ","nà"],
+					 ["ne","nē","nè"],
+					 ["nai","nái","nǎi","nài"],
+					 ["nei","něi","nèi"],
+					 ["nao","nāo","náo","nǎo","nào"],
+					 ["nou","nóu","nǒu","nòu"],
+					 ["nan","nān","nán","nǎn","nán"],
+					 ["nen","nēn","nèn"],
+					 ["nang ","nāng","náng","nǎng","nàng"],
+					 ["neng","néng","nèng"],
+					 ["ni","ní","nǐ","nì"],
+					 ["nie","niē","nié","niè"],
+					 ["niao","niǎo","niào"],
+					 ["niu","niū","niú","niǔ","niǜ"],
+					 ["nian","niān","nián","niǎn","niàn"],
+					 ["nin","nín","nǐn"],
+					 ["niang","niáng","niàng"],
+					 ["ning","níng","nǐng","nìng"],
+					 ["nu","nú","nǔ","nù"],
+					 ["nuo","nuó","nuǒ","nuò"],
+					 ["nuan","nuǎn"],
+					 ["nong","nóng","nǒng","nòng"],
+					 ["nu","nǚ","nǜ"],
+					 ["nue","nüè"],
+					 ["la","lā","lá","lǎ","là"],
+					 ["le","lē","lè"],
+					 ["lai","lái","lài"],
+					 ["lei","lēi","léi","lěi","lèi"],
+					 ["lao","lāo","láo","lǎo","lào"],
+					 ["lou","lōu","lóu","lǒu","lòu"],
+					 ["lan","lān","lán","lǎn","làn"],
+					 ["lang","lāng","láng","lǎng","làng"],
+					 ["leng ","léng","lěng","lèng"],
+					 ["li","li","lí","lǐ","lì"],
+					 ["lia","liǎ"],["lie","liē","liě","liè"],
+					 ["liao","liāo","liáo","liǎo","liào"],
+					 ["liu","liū","liú","liǔ","liù"],
+					 ["lian","lián","liǎn","liàn"],
+					 ["lin","lín","lín","lǐn","lìn"],
+					 ["liang","liáng","liǎng","liàng"],
+					 ["ling","līng","líng","lǐng","lìng"],
+					 ["lu","lū","lú","lǔ","lù"],
+					 ["luo","luō","luó","luǒ","luò"],
+					 ["luan","luán","luǎn","luàn"],
+					 ["lun","lūn","lún","lǔn","lùn"],
+					 ["long","lōng","lóng","lǒng","lòng"],
+					 ["lu","lǘ","lǚ","lǜ"],["lue","lüè"],
+					 ["luan","luán","luán"],
+					 ["ga","gā","gá","gà"],
+					 ["ge","gē","gé","gé","gè"],
+					 ["gai","gāi","gǎi","gài"],
+					 ["gei","gěi"],
+					 ["gao","gāo","gǎo","gào"],
+					 ["gou","gōu","gǒu","gòu"],
+					 ["gan","gān","gǎn","gàn"],
+					 ["gen","gēn","gén","gèn","gèn"],
+					 ["gang","gāng","gǎng","gàng"],
+					 ["geng","gēng","gěng","gèn"],
+					 ["gu","gū","gú","gǔ","gù"],
+					 ["gua","guā","guǎ","guà"],
+					 ["guo","guō","guó","guǒ","guò"],
+					 ["guai","guāi","guǎi","guài"],
+					 ["gui","guī","guǐ","guì"],
+					 ["guan","guān","guǎn","guān"],
+					 ["gun","gūn","gǔn","gùn"],
+					 ["guang","guāng","guǎng","guàng"],
+					 ["gong","gōng","gǒng","gòng"],
+					 ["ka","kā","kǎ","kà"],
+					 ["ke","kē","ké","kě","kè"],
+					 ["kai","kāi","kǎi","kài"],
+					 ["kao","kāo","kǎo","kào"],
+					 ["kou","kǒu","kòu"],
+					 ["kan","kān","kǎn","kàn"],
+					 ["ken","kěn","kèn"],
+					 ["keng","kēng","kěng"],
+					 ["ku","kū","kǔ","kù"],
+					 ["kua","kuā","kuǎ","kuà"],
+					 ["kuo","kuǒ","kuò"],
+					 ["kuai","kuāi","kuǎi","kuài"],
+					 ["kui","kuī","kuí","kuǐ","kuì"],
+					 ["kuan","kuān","kuǎn"],
+					 ["kun","kūn","kǔn","kùn"],
+					 ["kuang","kuāng","kuáng","kuǎng","kuàng"],
+					 ["kong","kōng","kǒng","kòng"],
+					 ["ha","hā","há","hǎ","hà"],
+					 ["he","hē","hé","hè"],
+					 ["hai","hāi","hái","hǎi","hài"],
+					 ["hei","hēi","hěi","hèi"],
+					 ["hao","hāo","háo","hǎo","hào"],
+					 ["hou","hōu","hóu","hǒu","hòu"],
+					 ["han","hān","hán","hǎn","hàn"],
+					 ["hen","hén","hěn","hèn"],
+					 ["hang","hāng","háng","hǎng","hàng"],
+					 ["heng","hēng","héng","hèng"],["hu","hū","hú","hǔ","hù"],
+					 ["hua","huā","huá","huà"],
+					 ["huo","huō","huó","huǒ","huò"],
+					 ["huai","huái","huài"],
+					 ["hui","huī","huí","huǐ","huì"],
+					 ["huan","huān","huán","huǎn","huàn"],
+					 ["hun","hūn","hún","hǔn","hùn"],
+					 ["huang","huāng","huáng","huǎng","kuàng"],
+					 ["hong","hōng","hóng","hōng","hòng"],
+					 ["ji","jī","jí","jī","jì"],
+					 ["jia","jiā","jiā","jiǎ","jià"],
+					 ["jie","jiē","jié","jiě","jiè"],
+					 ["jiao","jiāo","jiáo","jiǎo","jiào"],
+					 ["jiu","jiū","jiǔ","jiù"],
+					 ["jian","jiān","jiǎn","jiàn"],
+					 ["jin","jīn","jǐn","jìn"],
+					 ["jiang","jiāng","jiǎng","jiàng"],
+					 ["jing","jīng","jǐng","jìng"],
+					 ["ju","jū","jú","jǔ","jù"],
+					 ["jue","juē","jué","juě","jué"],
+					 ["juan","juān","juǎn","juàn"],
+					 ["jun","jūn","jǔn","jùn"],
+					 ["jiong","jiōng","jiǒng","jiòng"],
+					 ["qi","qī","qí","qǐ","qì"],
+					 ["qia","qiā","zhòu","qià"],
+					 ["qie","qiē","qié","qiě","qiè"],
+					 ["qiao","qiāo","qiáo","qiǎo","qiào"],
+					 ["qiu","qiū","qiú","qiǔ"],
+					 ["qian","qiān","qián","qiǎn","qiàn"],
+					 ["qin","qīn","qín","qǐn","qìn"],
+					 ["qiang","qiāng","qiáng","qiǎng","qiāng"],
+					 ["qing","qīng","qíng","qǐng","qìng"],
+					 ["qu","qū","qú","qǔ","qù"],
+					 ["que","quē","qué","què"],
+					 ["quan","quān","quán","quǎn","quàn"],
+					 ["qun","qūn","qún"],
+					 ["qiong","qiōng","qióng","qiǒng"],
+					 ["xi","xī","xī","xǐ","xì"],
+					 ["xia","xiā","xiá","xiǎ","xià"],
+					 ["xie","xiē","xié","xiě","xiè"],
+					 ["xiao","xiāo","xiáo","xiǎo","xiào"],
+					 ["xiu","xiū","xiǔ","xiù"],
+					 ["xian","xiān","xián","xiǎn","xiàn"],
+					 ["xin","xīn","xín","xǐn","xìn"],
+					 ["xiang","xiāng","xiáng","xiǎng","xiàng"],
+					 ["xing","xīng","xíng","xǐng","xìng"],
+					 ["xu","xū","xú","xū","xù"],
+					 ["xue","xuē","xué","xuě","xué"],
+					 ["xuan","xuān","xuán","xuǎn","xuàn"],
+					 ["xun","xūn","xún","xùn"],
+					 ["xiong","xiōng","xióng","xiòng"],
+					 ["zhi","zhī","zhí","zhī","zhì"],
+					 ["zha","zhā","zhá","zhǎ","zhà"],
+					 ["zhe","zhē","zhé","zhě","zhè"],
+					 ["zhai","zhāi","zhái","zhǎi","zhài"],
+					 ["zhei"],["zhao","zhāo","zhuó","zhǎo","zhào"],
+					 ["zhou","zhōu","zhóu","zhǒu","zhòu"],
+					 ["zhan","zhān","zhǎn","zhàn"],
+					 ["zhen","zhēn","zhěn","zhèn"],
+					 ["zhang","zhāng","zhǎng","zhàng"],
+					 ["zheng","zhēng","zhěng","zhèng"],
+					 ["zhu","zhū","zhú","zhǔ","zhù"],
+					 ["zhua","zhuā","zhuǎ"],
+					 ["zhuo","zhuō","zhuó"],
+					 ["zhuai","zhuāi","zhuǎi","zhuài"],
+					 ["zhui","zhuī","zhuǐ","zhuì"],
+					 ["zhuan","zhuān","zhuǎn","zhuàn"],
+					 ["zhun","zhūn","zhǔn","zhùn"],
+					 ["zhuang","zhuāng","zhuǎng","zhuàng"],
+					 ["zhong","zhōng","zhǒng","zhòng"],
+					 ["chi","chī","chí","chǐ","chì"],
+					 ["cha","chà","chá","chǎ","chà"],
+					 ["che","chē","chě","chè"],
+					 ["chai","chāi","chái","chǎi","chài"],
+					 ["chao","chāo","cháo","chǎo","chào"],
+					 ["chou","chōu","chóu","chǒu","chòu"],
+					 ["chan","chān","chán","chǎn","chàn"],
+					 ["chen","chēn","chén","chěn","chèn"],
+					 ["chang","cāng","cáng"],
+					 ["cheng","chēng","chéng","chěng","chèng"],
+					 ["chu","chū","chú","chǔ","chù"],
+					 ["chuo","chuō","chuò"],
+					 ["chuai","chuāi","chuái","chuǎi","chuài"],
+					 ["chui","chuī","chuí","chuì"],
+					 ["chuan","chuān","chuán","chuǎn","chuàn"],
+					 ["chun","chūn","chún","chǔn"],
+					 ["chuang","chuāng","chuáng","chuǎng","chuàng"],
+					 ["chong","chōng","chóng","chǒng","chòng"],
+					 ["shi","shī","shí","shǐ","shì"],
+					 ["sha","shā","shá","shǎ","shā"],
+					 ["she","shē","shé","shě","shè"],
+					 ["shai","shāi","shǎi","shài"],
+					 ["shei","shéi"],
+					 ["shao","shāo","sháo","shǎo","shào"],
+					 ["shou","shōu","shú","shǒu","shòu"],
+					 ["shan","shān","shǎn","shàn"],
+					 ["shen","shēn","shén","shěn","shèn"],
+					 ["shang","shāng","shǎng","shàng"],
+					 ["sheng","shēng","shéng","shěng","shèng"],
+					 ["shu","shū","shū","shǔ","shù"],
+					 ["shua","shuā","shuǎ","shuà"],
+					 ["shuo","shuō","shuò"],
+					 ["shuai","shuāi","shuǎi","shuài"],
+					 ["shui","shuí","shuǐ","shuì"],
+					 ["shuan","shuān","shuàn"],
+					 ["shun","shǔn","shùn"],
+					 ["shuang","shuāng","shuǎng","shuàng"],
+					 ["ri","rì"],
+					 ["re","ré","rě","rè"],
+					 ["rao","ráo","rǎo","rào"],
+					 ["rou","róu","rǒu","ròu"],
+					 ["ran","rán","rǎn"],
+					 ["ren","rén","rěn","rèn"],
+					 ["rang","ráng","rǎng","ràng"],
+					 ["reng","rēng","réng","rěng","rèng"],
+					 ["ru","rú","rǔ","rù"],
+					 ["ruo","ruó","ruò"],
+					 ["rui","ruí","ruǐ","ruì"],
+					 ["ruan","ruán","ruǎn"],
+					 ["run","rūn","rún","rùn"],
+					 ["rong","róng","rǒng"],
+					 ["zi","zī","zǐ","zì"],
+					 ["za","zā","zá","zǎ"],
+					 ["ze","zé","zě","zè"],
+					 ["zai","zāi","zǎi","zài"],
+					 ["zei","zéi"],
+					 ["zao","zāo","záo","zǎo","zào"],
+					 ["zou","zōu","zǒu","zòu"],
+					 ["zan","zān","zán","zǎn","zàn"],
+					 ["zen","zān","zěn","zèn"],
+					 ["zang","zāng","zǎng","zàng"],
+					 ["zeng","zēng","zèng"],
+					 ["zu","zū","zú","zǔ","zù"],
+					 ["zuo","zuō","zuó","zuǒ","zuò"],
+					 ["zui","zuī","zuǐ","zuì"],
+					 ["zuan","zuān","zuǎn","zuān"],
+					 ["zun","zūn","zǔn","zùn"],
+					 ["zong","zōng","zǒng","zòng"],
+					 ["ci","cí","cí","cǐ","cì"],
+					 ["ca","cā","cǎ","zá"],
+					 ["ce","cè"],
+					 ["cai","cāi","cái","cǎi","cài"],
+					 ["cao","cāo","cáo","cǎo","cào"],
+					 ["cou","còu"],
+					 ["can","cān","cán","cǎn","càn"],
+					 ["cen","cēn","cén"],
+					 ["cang","cāng","cáng"],
+					 ["ceng","cēng","céng","cèng"],
+					 ["cu","cū","cú","cù"],
+					 ["cuo","cuō","cuó","cuǒ","cuò"],
+					 ["cui","cuī","cuí","cuǐ","cuì"],
+					 ["cuan","cuān","cuán","cuàn"],
+					 ["cun","cūn","cún","cǔn","cùn"],
+					 ["cong","cōng","cóng","cǒng","còng"],
+					 ["si","sī","sǐ","sì"],["sa","sā","sǎ","sà"],
+					 ["se","sè"],
+					 ["sai","sāi","sài"],
+					 ["sao","sāo","sǎo","sào"],
+					 ["sou","sōu","sǒu","sòu"],
+					 ["san","sān","sǎn","sàn"],
+					 ["sen","sēn"],
+					 ["sang","sāng","sǎng","sàng"],
+					 ["seng","sēng"],
+					 ["su","sū","sú","sù"],
+					 ["suo","suō","suǒ","suò"],
+					 ["sui","suī","suí","suǐ","suì"],
+					 ["suan","suān","suǎn","suàn"],
+					 ["sun","sūn","sǔn","sùn"],
+					 ["song","sōng","sǒng","sòng"],
+					 ["a","ā","á","à"],
+					 ["e","ē","é","ě","è"],
+					 ["ai","āi","ái","ǎi","ài"],
+					 ["ao","āo","áo","ǎo","ào"],
+					 ["ou","ōu","ǒu","ǒu"],
+					 ["an","ān","án","ǎn","àn"],
+					 ["en","ēn","èn"],
+					 ["ang","āng","áng","ǎng","àng"],
+					 ["eng","ēng"],
+					 ["er","ér","ěr","èr"],
+					 ["yi","yī","yí","yǐ","yì"],
+					 ["ya","yā","yá","yā","yà"],
+					 ["yo","yō"],
+					 ["ye","yē","yé","yě","yè"],
+					 ["yai","yái"],
+					 ["yao","yāo","yáo","yǎo","yào"],
+					 ["you","yōu","yóu","yǒu","yòu"],
+					 ["yan","yān","yán","yǎn","yàn"],
+					 ["yin","yīn","yín","yǐn","yìn"],
+					 ["yang","yāng","yáng","yǎng","yàng"],
+					 ["ying","yīng","yíng","yǐng","yìng"],
+					 ["wu","wū","wú","wǔ","wù"],
+					 ["wa","wā","wá","wǎ","wà"],
+					 ["wo","wō","wǒ","wò"],
+					 ["wai","wāi","wài"],
+					 ["wei","wēi","wéi","wěi","wéi"],
+					 ["wan","wān","wán","wǎn","wàn"],
+					 ["wen","wēn","wén","wěn","wèn"],
+					 ["wang","wāng","wáng","wǎng","wàng"],
+					 ["weng","wēng","wěng","wèng"],
+					 ["yu","yū","yú","yǔ","yù"],
+					 ["yue","yuē","yuè"],
+					 ["yuan","yuān","yuán","yuǎn","yuàn"],
+					 ["yun","yùn","yún","yǔn","yùn"],
+					 ["yong","yōng","yóng","yǒng","yòng"],
+					 ["ei","ēi","éi","ěi","èi"],
+					 ["o","ō","ó","ò"],
+					 ["xi","xī","xí","xǐ","xì"]]
 
 
 function Display_all(){
@@ -1221,21 +1473,19 @@ function Grade(instr){
 
     	return b_instr;
 }
+
 var ag = [];
 //a[0]="";
-  bot.on("message",function(event){
-msg = event.message.text;
-console.log(event)
-var replyMsg2 = "";
-var aaaa ;
-var bbbb ;
-var j = 0;
+bot.on("message",function(event){
+	msg = event.message.text;
+	console.log(event)
+	var replyMsg2 = "";
 	if(msg.length < 3 || msg == "登記完成" || msg == "學校資訊")
 		return;
-ag = compare(names,msg,event);
-console.log("a外")
-console.log(ag);
-console.log(typeof(ag))
+		ag = compare(names,msg,event);
+		console.log("a外")
+		console.log(ag);
+		console.log(typeof(ag))
 		aaaa = Sname(msg);
 		bbbb = Grade(msg);
 		var connection = mysql.createConnection({
@@ -1245,10 +1495,11 @@ console.log(typeof(ag))
   			database : 'line'
 		});
 		connection.connect();
-			connection.query('INSERT INTO test (Sname, Grade) values (aaaa, bbbb)',function(err, results) {
+			connection.query("INSERT INTO test (Sname,Grade) values (aaaa,bbbb)", function(err, results) {
   				if (err) {
     				throw err;
  				 }
+ 				 console.log("資料已修改");
 			});
 		connection.end();
 });
@@ -1287,26 +1538,23 @@ if(typeof(ag) == 'object'){
     	});
 	//}
 }
+// bot.on('message',function(event){
+// 	msg5 = event.message.text;
+// 	if(msg5.indexOf("登記完成") != -1){
+// 		var a = Display_all();
+// 		fs.writeFile(__dirname + '/content.txt', a, function(err){
+//      if (err) {
+//           console.error(err)
+//      }
+// });
+// 	}
+// }); 
 
-bot.on("postback",function(event){
+   bot.on("postback",function(event){
 var msg4 = event.postback.data;
 var replyMsg3 = "";
 if(msg4.indexOf("成績") != -1){
-	var connection = mysql.createConnection({
-  			host     : '104.199.190.196',
-  			user     : 'root',
-  			password : 'asdcpi14',
-  			database : 'line'
-		});
-		connection.connect();
-			connection.query('SELECT * FROM STUDENT', function (err, result, fields) {
-    // if any error while executing above query, throw error
-    if (err) throw err;
-    // if there is no error, you have the result
-    replyMsg3 = result;
-  });
-		connection.end();
-	//replyMsg3 = Display_all();
+	replyMsg3 = Display_all();
       event.reply(replyMsg3).then(function(data){
           }).catch(function(error){
         console.log("error")
