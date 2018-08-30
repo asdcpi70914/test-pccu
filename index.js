@@ -1488,6 +1488,7 @@ bot.on("message",function(event){
 		console.log(typeof(ag))
 		aaaa = Sname(msg);
 		bbbb = Grade(msg);
+		var data = {Sname:aaaa,Grade:bbbb}
 		var connection = mysql.createConnection({
   			host     : '104.199.190.196',
   			user     : 'root',
@@ -1495,7 +1496,7 @@ bot.on("message",function(event){
   			database : 'line'
 		});
 		connection.connect();
-			connection.query("INSERT INTO test (Sname,Grade) values (aaaa,bbbb)", function(err, results) {
+			connection.query('INSERT INTO test (Sname,Grade) VALUES ?',data, function(err, results) {
   				if (err) {
     				throw err;
  				 }
