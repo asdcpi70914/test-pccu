@@ -751,21 +751,14 @@ bot.on('message', function(event) {
       // }
 
       return nnn;
-      
-      
-    //   for(var row = 0 ; row < names.length ; row++){
-    //     //ary[row] = new Array(4);
-    //     for(var col = 0 ; col < 4 ; col++){
-    //       //ary[row][col] = 0;
-    //       document.write(ary[row][col]);
-    //     }
-    //     document.write(" ");
-    //   }
-      
-    //   //document.write(ary[0][3]);
      }
-    //names_cmp_instr("我是誰");
 
+     var array2 = [
+			["ya","ye","yan","wa","yue","yuan"],
+			["yin","ying","wen","weng","yun","yong"],
+			["wai","wei","wan"],
+			["yang","wang"],
+			["yao","you","wo"]];
     var array = [
            ["ba","bā","bá","bǎ","bà"],
            ["bo","bō","bó","bǒ","bò"],
@@ -1223,19 +1216,19 @@ function Grade(instr){
 }
 var ag = [];
 //a[0]="";
-  bot.on("message",function(event){
-msg = event.message.text;
-console.log(event)
-var replyMsg2 = "";
-var aaaa ;
-var bbbb ;
-var j = 0;
+bot.on("message",function(event){
+	msg = event.message.text;
+	console.log(event)
+	var replyMsg2 = "";
+	var aaaa ;
+	var bbbb ;
+	var j = 0;
 	if(msg.length < 3 || msg == "登記完成" || msg == "學校資訊")
 		return;
-ag = compare(names,msg,event);
-console.log("a外")
-console.log(ag);
-console.log(typeof(ag))
+		ag = compare(names,msg,event);
+		console.log("a外")
+		console.log(ag);
+		console.log(typeof(ag))
 		aaaa = Sname(msg);
 		bbbb = Grade(msg);
 		var connection = mysql.createConnection({
@@ -1256,7 +1249,6 @@ console.log(typeof(ag))
 if(typeof(ag) == 'object'){
 	var bb = ag;
 	console.log(ag[0]);
-	//if(ag[0] == '修改'){
 		bot.on('postback', function(event) {
 			msg3 = event.postback.data;
 			if(msg3.indexOf("是") != -1){
@@ -1285,27 +1277,12 @@ if(typeof(ag) == 'object'){
 	     		});
 			}
     	});
-	//}
 }
 bot.on("postback",function(event){
 var msg4 = event.postback.data;
 var replyMsg3 = "";
 if(msg4.indexOf("成績") != -1){
-	var connection = mysql.createConnection({
-  			host     : '104.199.190.196',
-  			user     : 'root',
-  			password : 'asdcpi14',
-  			database : 'line'
-		});
-		connection.connect();
-			connection.query('SELECT * FROM STUDENT', function (err, result, fields) {
-    // if any error while executing above query, throw error
-    if (err) throw err;
-    // if there is no error, you have the result
-    replyMsg3 = result;
-  });
-		connection.end();
-	//replyMsg3 = Display_all();
+	replyMsg3 = Display_all();
       event.reply(replyMsg3).then(function(data){
           }).catch(function(error){
         console.log("error")
@@ -1323,4 +1300,4 @@ if(msg6.indexOf("前5筆") != -1){
         console.log("error")
       });
     }      
- });
+});
