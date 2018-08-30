@@ -1245,12 +1245,11 @@ console.log(typeof(ag))
   			database : 'line'
 		});
 		connection.connect();
-			connection.query('UPDATE STUDENT  SET GRADE = ? WHERE Sname = ?',[bbbb,aaaa], function(err, results) {
+			connection.query('Insert into test (Sname,Grade) value (aaaa,bbbb) ', function(err, results) {
   				if (err) {
     				throw err;
  				 }
- 				 console.log("資料已修改");
-			});
+ 			});
 		connection.end();
 });
 
@@ -1266,7 +1265,8 @@ if(typeof(ag) == 'object'){
 	            recordStr = names2[ag[1]][0]+"    "+ag[3];     //儲存每筆紀錄
 	            record.push(recordStr);
 	            ArrayReverse(record);                 //反轉紀錄
-				event.reply("已覆蓋").then(function(data){
+				event.reply([{ type: 'text', text: "已修改"},
+							 { type: 'text', text: "現在成績:"+names2[ag[1]][0]+names2[ag[1]][1]}]).then(function(data){
 	         	}).catch(function(error){
 	       		console.log("error")
 	     		});   
@@ -1278,12 +1278,14 @@ if(typeof(ag) == 'object'){
 	            recordStr = names2[ag[1]][0]+"    "+ag[2]     //儲存每筆紀錄
 	            record.push(recordStr);
 	            ArrayReverse(record);                 //反轉紀錄
-				event.reply("已取消覆蓋").then(function(data){
+				event.reply([{ type: 'text', text: "已取消修改"},
+							 { type: 'text', text: "現在成績:"+names2[ag[1]][0]+names2[ag[1]][1]}]).then(function(data){
 	         	}).catch(function(error){
 	       		console.log("error")
 	     		});
 			}
     	});
+	//}
 }
 bot.on("postback",function(event){
 var msg4 = event.postback.data;
