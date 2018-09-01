@@ -6,6 +6,7 @@ var path = require('path');
 var fs= require('fs');
 var mysql = require('mysql');
 var pinyin_dict_all = require("./pinyin_dict3.js")
+var dt = new Date();
 require('events').EventEmitter.prototype._maxListeners = 100;
 var bot = linebot({
   channelId:"1564803662",
@@ -1489,8 +1490,8 @@ bot.on("message",function(event){
 		console.log(typeof(ag))
 		aaaa = Sname(msg);
 		bbbb = Grade(msg);
-		var data = {name:aaaa,Grade1:bbbb}
-		var data1 = {name:aaaa}
+		var data = {Sname:aaaa,Grade:bbbb}
+		var data1 = {Grade:bbbb}
 		var connection = mysql.createConnection({
   			host     : '104.199.190.196',
   			user     : 'root',
@@ -1498,19 +1499,30 @@ bot.on("message",function(event){
   			database : 'line'
 		});
 		connection.connect();
-			connection.query('INSERT INTO test SET ?',[data], function(err, results) {
+			date =dt.getMonth()+"/"+dt.getDay();
+		connection.query('CREATE TABLE '+date+' (Sname VARCHAR(255) NOT NULL,GRADE INT NULL,PRIMARY KEY(Sname))', function(err, results) {
+  				if (err) {
+    				throw err;
+ 				 }
+ 				 console.log("Table Created");
+			});
+		results = connection.query('SELECT GRADE FROM'+date+'WHERE Sname = ?',aaaa);
+		if(results == null){
+			connection.query('INSERT INTO'+date+'SET ?',[data], function(err, results) {
   				if (err) {
     				throw err;
  				 }
  				 console.log("資料已修改");
 			});
-		connection.query('SELECT Grade1 FROM test WHERE name = ?',[data1], function(err, results) {
+		}
+		else{
+			connection.query('UPDATE GRADE SET ? WhERE Sname = ?',[data1,aaaa], function(err, results) {
   				if (err) {
     				throw err;
  				 }
- 				 console.log(results);
+ 				 console.log("資料已修改");
 			});
-
+		}
 		connection.end();
 });
 
@@ -1551,13 +1563,12 @@ if(typeof(ag) == 'object'){
 // bot.on('message',function(event){
 // 	msg5 = event.message.text;
 // 	if(msg5.indexOf("登記完成") != -1){
-// 		var data = {name:aaaaGrade1:bbbb}
-// 		var connection = mysql.createConnection({
-//   			host     : '104.199.190.196',
-//   			user     : 'root',
-//   			password : 'asdcpi14',
-//   			database : 'line'
-// 		});
+// 		var a = Display_all();
+// 		fs.writeFile(__dirname + '/content.txt', a, function(err){
+//      if (err) {
+//           console.error(err)
+//      }
+// });
 // 	}
 // }); 
 
