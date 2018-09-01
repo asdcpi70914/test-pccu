@@ -19,6 +19,7 @@
     "jssha": "^2.3.1",
     "linebot": "^1.4.1",
     "mysql": "^2.16.0",
+    "node-datetime": "^2.1.0",
     "npm": "^6.4.1",
     "prompt-confirm": "^1.2.0",
     "request": "^2.85.0",

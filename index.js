@@ -1490,6 +1490,7 @@ bot.on("message",function(event){
 		aaaa = Sname(msg);
 		bbbb = Grade(msg);
 		var data = {name:aaaa,Grade1:bbbb}
+		var data1 = {name:aaaa}
 		var connection = mysql.createConnection({
   			host     : '104.199.190.196',
   			user     : 'root',
@@ -1497,12 +1498,19 @@ bot.on("message",function(event){
   			database : 'line'
 		});
 		connection.connect();
-			connection.query('INSERT INTO test SET name = ? SET Grade1 = ?',[aaaa,bbbb], function(err, results) {
+			connection.query('INSERT INTO test SET ?',[data], function(err, results) {
   				if (err) {
     				throw err;
  				 }
  				 console.log("資料已修改");
 			});
+		connection.query('SELECT Grade1 FROM test WHERE name = ?',[data1], function(err, results) {
+  				if (err) {
+    				throw err;
+ 				 }
+ 				 console.log(results);
+			});
+
 		connection.end();
 });
 
@@ -1543,12 +1551,13 @@ if(typeof(ag) == 'object'){
 // bot.on('message',function(event){
 // 	msg5 = event.message.text;
 // 	if(msg5.indexOf("登記完成") != -1){
-// 		var a = Display_all();
-// 		fs.writeFile(__dirname + '/content.txt', a, function(err){
-//      if (err) {
-//           console.error(err)
-//      }
-// });
+// 		var data = {name:aaaaGrade1:bbbb}
+// 		var connection = mysql.createConnection({
+//   			host     : '104.199.190.196',
+//   			user     : 'root',
+//   			password : 'asdcpi14',
+//   			database : 'line'
+// 		});
 // 	}
 // }); 
 
