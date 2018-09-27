@@ -1,12 +1,13 @@
+var gradeswitch = 0;
+var formate = "";
 var linebot = require('linebot');
 var express = require('express');
 var request = require("request");
 var getJSON = require('get-json');
 var path = require('path');
+var mysql = require('mysql')
 var fs= require('fs');
-var mysql = require('mysql');
 var pinyin_dict_all = require("./pinyin_dict3.js")
-var dt = new Date();
 require('events').EventEmitter.prototype._maxListeners = 100;
 var bot = linebot({
   channelId:"1564803662",
@@ -35,6 +36,55 @@ var server = app.listen(process.env.PORT || 8080, function() {
   var port = server.address().port;
   console.log("App now running on port", port);
 });
+
+
+
+// bot.on('message', function(event) {
+//   if(event.message.type == "text"){
+//     var msg = event.message.text;
+//     if(msg.indexOf("日期") != -1){
+//       event.reply({
+//         type: 'template',
+//         altText: 'this is a buttons template',
+//         template: {
+//         type: 'buttons',
+//         //thumbnailImageUrl: 'https://example.com/bot/images/image.jpg',
+//         title: '選日期',
+//         text: '可以在此查詢各資訊',
+//         actions: [{
+//           type: 'datetimepicker',
+//           label: '選日期',
+//           data: 'q1',
+//           mode: "date"
+//           }]
+//         }
+//       })
+//     }
+//   };
+// });
+
+// bot.on("postback",function(event){
+// var msg4 = event.postback.data;
+// var mmsg = event.postback.params;
+// console.log(mmsg);
+// //var replyMsg3 = "";
+// if(msg4.indexOf("q1") != -1){
+//   //replyMsg3 = Display_all();
+//       event.reply(mmsg.date).then(function(data){
+//           }).catch(function(error){
+//         console.log("error")
+//       });
+//     }      
+//  });
+
+// bot.on("postback",function(event){
+//   event.reply({
+//   data: "q1",
+//   params: {
+//     date:"2018-03-22"
+//   }
+//   })
+//  });
 
  bot.on('message', function(event) {
   if(event.message.type == "text"){
@@ -517,18 +567,58 @@ var names2 = [["姓名","成績"],
     //重複輸入紀錄
     var repin = [];
 
-    var number = ["100","99","98","97","96","95","94","93","92","91","90","89","88","87","86","85","84","83","82","81",
-             "80","79","78","77","76","75","74","73","72","71","70","69","68","67","66","65","64","63","62","61",
-             "60","59","58","57","56","55","54","53","52","51","50","49","48","47","46","45","44","43","42","41",
-             "40","39","38","37","36","35","34","33","32","31","30","29","28","27","26","25","24","23","22","21",
-             "20","19","18","17","16","15","14","13","12","11","10","9","8","7","6","5","4","3","2","1","0"];
+    var number = ["0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20",
+    "21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40",
+    "41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60",
+    "61","62","63","64","65","66","67","68","69","70","71","72","73","74","75","76","77","78","79","80",
+    "81","82","83","84","85","86","87","88","89","90","91","92","93","94","95","96","97","98","99","100"];
+
+    var number_ch1 = ["零","一","二","三","四","五","六","七","八","九","十","十一","十二","十三","十四","十五","十六","十七","十八","十九",
+    "二十","二十一","二十二","二十三","二十四","二十五","二十六","二十七","二十八","二十九",
+    "三十","三十一","三十二","三十三","三十四","三十五","三十六","三十七","三十八","三十九",
+    "四十","四十一","四十二","四十三","四十四","四十五","四十六","四十七","四十八","四十九",
+    "五十","五十一","五十二","五十三","五十四","五十五","五十六","五十七","五十八","五十九",
+    "六十","六十一","六十二","六十三","六十四","六十五","六十六","六十七","六十八","六十九",
+    "七十","七十一","七十二","七十三","七十四","七十五","七十六","七十七","七十八","七十九",
+    "八十","八十一","八十二","八十三","八十四","八十五","八十六","八十七","八十八","八十九",
+    "九十","九十一","九十二","九十三","九十四","九十五","九十六","九十七","九十八","九十九","一百"];
+
+    var number_ch2 = ["零","一","二","三","四","五","六","七","八","九","十","十一","十二","十三","十四","十五","十六","十七","十八","十九",
+    "二十","二一","二二","二三","二四","二五","二六","二七","二八","二九",
+    "三十","三一","三二","三三","三四","三五","三六","三七","三八","三九",
+    "四十","四一","四二","四三","四四","四五","四六","四七","四八","四九",
+    "五十","五一","五二","五三","五四","五五","五六","五七","五八","五九",
+    "六十","六一","六二","六三","六四","六五","六六","六七","六八","六九",
+    "七十","七一","七二","七三","七四","七五","七六","七七","七八","七九",
+    "八十","八一","八二","八三","八四","八五","八六","八七","八八","八九",
+    "九十","九一","九二","九三","九四","九五","九六","九七","九八","九九","一百"];
+
+    var number_Piny1 = ["líng","yī","èr","sān","sì","wǔ","liù","qī","bā","jiǔ","shí","shí yī","shí èr","shí sān","shí sì","shí wǔ","shí liù","shí qī","shí bā","shí jiǔ",
+    "èr shí","èr shí yī","èr shí èr","èr shí sān","èr shí sì","èr shí wǔ","èr shí liù","èr shí qī","èr shí bā","èr shí jiǔ",
+    "sān shí","sān shí yī","sān shí èr","sān shí sān","sān shí sì","sān shí wǔ","sān shí liù","sān shí qī","sān shí bā","sān shí jiǔ",
+    "sì shí","sì shí yī","sì shí èr","sì shí sān","sì shí sì","sì shí wǔ","sì shí liù","sì shí qī","sì shí bā","sì shí jiǔ",
+    "wǔ shí","wǔ shí yī","wǔ shí èr","wǔ shí sān","wǔ shí sì","wǔ shí wǔ","wǔ shí liù","wǔ shí qī","wǔ shí bā","wǔ shí jiǔ",
+    "liù shí","liù shí yī","liù shí èr","liù shí sān","liù shí sì","liù shí wǔ","liù shí liù","liù shí qī","liù shí bā","liù shí jiǔ",
+    "qī shí","qī shí yī","qī shí èr","qī shí sān","qī shí sì","qī shí wǔ","qī shí liù","qī shí qī","qī shí bā","qī shí jiǔ",
+    "bā shí","bā shí yī","bā shí èr","bā shí sān","bā shí sì","bā shí wǔ","bā shí liù","bā shí qī","bā shí bā","bā shí jiǔ",
+    "jiǔ shí","jiǔ shí yī","jiǔ shí èr","jiǔ shí sān","jiǔ shí sì","jiǔ shí wǔ","jiǔ shí liù","jiǔ shí qī","jiǔ shí bā","jiǔ shí jiǔ","yī bǎi"];
+
+    var number_Piny2 = ["líng","yī","èr","sān","sì","wǔ","liù","qī","bā","jiǔ","shí","shí yī","shí èr","shí sān","shí sì","shí wǔ","shí liù","shí qī","shí bā","shí jiǔ",
+    "èr shí","èr yī","èr èr","èr sān","èr sì","èr wǔ","èr liù","èr qī","èr bā","èr jiǔ",
+    "sān shí","sān yī","sān èr","sān sān","sān sì","sān wǔ","sān liù","sān qī","sān bā","sān jiǔ",
+    "sì shí","sì yī","sì èr","sì sān","sì sì","sì wǔ","sì liù","sì qī","sì bā","sì jiǔ",
+    "wǔ shí","wǔ yī","wǔ èr","wǔ sān","wǔ sì","wǔ wǔ","wǔ liù","wǔ qī","wǔ bā","wǔ jiǔ",
+    "liù shí","liù yī","liù èr","liù sān","liù sì","liù wǔ","liù liù","liù qī","liù bā","liù jiǔ",
+    "qī shí","qī yī","qī èr","qī sān","qī sì","qī wǔ","qī liù","qī qī","qī bā","qī jiǔ",
+    "bā shí","bā yī","bā èr","bā sān","bā sì","bā wǔ","bā liù","bā qī","bā bā","bā jiǔ",
+    "jiǔ shí","jiǔ yī","jiǔ èr","jiǔ sān","jiǔ sì","jiǔ wǔ","jiǔ liù","jiǔ qī","jiǔ bā","jiǔ jiǔ","yī bǎi"];
 
     var record = [];
 
 
 bot.on('message', function(event) {
 	msg = event.message.text;
-    if(msg.indexOf("成績") != -1){
+    if(msg.indexOf("成績") != -1 && msg.length == 2){
       event.reply({
         type: 'template',
         altText: 'this is a buttons template',
@@ -601,30 +691,244 @@ bot.on('message', function(event) {
       return personrecord;
     }
 
+    function setupGrades(names,instr,event){
+      var month = 1,day = 1;
+      var num_strset = instr.indexOf("建立");
+      var num_strgrade = instr.indexOf("成績");
+      var num_num = instr.indexOf("號");
+      var num_month = instr.indexOf("月");
+      var num_today1 = instr.indexOf("今天");
+      var num_today2 = instr.indexOf("今日");
+      var a_instr,b_instr;
+       
+      if(num_today1 != -1 || num_today2 != -1){
+        var tname;
+        
+        var Today = new Date();
+        month = (Today.getMonth()+1);
+        day = Today.getDate();
+
+        if(num_today1 != -1){
+          tname = instr.substring(num_today1+2,num_strgrade);
+        }else{
+          tname = instr.substring(num_today2+2,num_strgrade);
+        }
+
+        if(num_strset != -1 && num_strgrade != -1){
+          names2[0][1] = month.toString()+"/"+day.toString()+tname+"成績";
+          event.reply("建立成功").then(function(data){
+            }).catch(function(error){
+              console.log("error")
+            });
+          return;
+        }
+        
+      }
+      if(num_strset != -1 && num_strgrade != -1){
+        
+        a_instr = instr.substring(0,num_month);
+        b_instr = instr.substring(num_month,instr.length);
+        
+        for(var i = number.length-1 ; i >= 0 ; i--){
+          if(a_instr.indexOf(number[i]) != -1){
+            month = number[i];
+            break;
+          }
+          if(a_instr.indexOf(number_ch1[i]) != -1){
+            month = number[i];
+            break;
+          }
+          if(a_instr.indexOf(number_ch2[i]) != -1){
+            month = number[i];
+            break;
+          }
+        }
+        for(var i = number.length-1 ; i >= 0 ; i--){
+          if(b_instr.indexOf(number[i]) != -1){
+            day = number[i];
+            break;
+          }
+          if(b_instr.indexOf(number_ch1[i]) != -1){
+            day = number[i];
+            break;
+          }
+          if(b_instr.indexOf(number_ch2[i]) != -1){
+            day = number[i];
+            break;
+          }
+        }
+
+        
+
+        if(num_num != -1){
+          var tname = instr.substring(num_num+1,num_strgrade);
+          names2[0][1] = month.toString()+"/"+day.toString()+tname+"成績";
+          event.reply("建立成功").then(function(data){
+            }).catch(function(error){
+              console.log("error")
+            });
+        }else{
+          var tname = instr.substring(num_strgrade-2,num_strgrade);
+          names2[0][1] = month.toString()+"/"+day.toString()+tname+"成績";
+          event.reply("建立成功").then(function(data){
+            }).catch(function(error){
+              console.log("error")
+            });
+        }        
+      }
+
+        
+    }
 
 
+function Update (name,grade){
+  var connection = mysql.createConnection({
+            host     : '35.229.249.240',
+            user     : 'root',
+            password : 'asdcpi14',
+            database : 'line'
+        });
+        var aaaa = name;
+        var bbbb = grade;
+        connection.connect();
+          connection.query('UPDATE '+formate+' SET Grade = ? WHERE Sname = ?',[bbbb,aaaa], function(err, results) {
+            if (err) {
+              throw err;
+          }
+         console.log("資料已修改");
+        });
+        connection.end();
+}
 
-    function compare(names,instr,event){              //成績
+
+function Insert (name,grade){
+  var aaaa = name;
+  var bbbb = grade;
+  var connection = mysql.createConnection({
+        host     : '35.229.249.240',
+        user     : 'root',
+        password : 'asdcpi14',
+        database : 'line'
+    });
+    connection.connect();
+    connection.query('INSERT INTO '+formate+'(Sname,Grade) VALUES (?,?)',[aaaa,bbbb], function(err, results) {
+          if (err) {
+            throw err;
+         }
+         console.log("資料已輸入");
+      });
+    connection.end();
+
+}
+
+function table (){
+  var connection = mysql.createConnection({
+        host     : '35.229.249.240',
+        user     : 'root',
+        password : 'asdcpi14',
+        database : 'line'
+    });
+    connection.connect();
+    connection.query("show tables", function(err, results) {
+          if (err) {
+            throw err;
+         }
+         console.log(results)
+      });
+    connection.end();
+
+}
+
+function compare(names,instr,event){              //成績
+      if(instr.length > 8)
+        return;
 		var a_instr,b_instr;                //輸入分割成名字和分數2部分
 		var fraction;                   //分數
+    var pinyinstr = toPinyin(instr);
 		if(instr.length < 3)
 			return;
-    	for(var i = 0 ; i < number.length ; i++){
+    	for(var i = number.length-1 ; i >= 0 ; i--){
         	var num = instr.indexOf(number[i]);
-        	if(num != -1){
+          var num2 = instr.indexOf(number_ch1[i]);
+          var num3 = instr.indexOf(number_ch2[i]);
+          var num4 = pinyinstr.indexOf(number_Piny1[i]);
+          var num5 = pinyinstr.indexOf(number_Piny2[i]);
+        	if(num != -1){                               //全數字
           		a_instr = instr.substring(0,num);
           		b_instr = instr.substring(num,instr.length);
           		fraction = number[i];
           	break;
         	}
+          if(num2 != -1){                             //全中文有十
+              a_instr = instr.substring(0,num2);
+              b_instr = instr.substring(num2,instr.length);
+              fraction = number[i];
+            break;
+          }
+          if(num3 != -1){                             //全中文無十
+              a_instr = instr.substring(0,num3);
+              b_instr = instr.substring(num3,instr.length);
+              fraction = number[i];
+            break;
+          }
+          if(num4 != -1){                             //拼音有十
+            var front_instr = pinyinstr.substring(1,num4);
+            var count = 0;
+            while(front_instr.indexOf(" ") != -1){
+              count++;
+              front_instr = front_instr.substring(front_instr.indexOf(" ")+1,front_instr.length);
+            }
+            // var j;
+            // for( j = 0; front_instr.indexOf(" ") != -1 ; j++){
+            //   front_instr = front_instr.substring(front_instr.indexOf(" ")+1,front_instr.length)
+            // }
+            a_instr = instr.substring(0,count);
+            //b_instr = instr.substring(count,instr.length);
+            fraction = number[i];
+            break;
+          }
+          if(num5 != -1){                             //拼音無十
+            var front_instr = pinyinstr.substring(1,num5);
+            var count = 0;
+            // var j;
+            // for( j = 0; front_instr.indexOf(" ") != -1 ; j++){
+            //   front_instr = front_instr.substring(front_instr.indexOf(" ")+1,front_instr.length)
+            // }
+            while(front_instr.indexOf(" ") != -1){
+              count++;
+              front_instr = front_instr.substring(front_instr.indexOf(" ")+1,front_instr.length);
+            }
+            a_instr = instr.substring(0,count);
+            //b_instr = instr.substring(count,instr.length);
+            fraction = number[i];
+            break;
+          }
     	}
+      //console.log("a_instr:"+a_instr);
+      //console.log("b_instr:"+b_instr);
+      //console.log("fraction:"+fraction);
+      //console.log("typeof(a_instr)"+typeof(a_instr));
+      if(typeof(a_instr) == "undefined" && typeof(b_instr) == "undefined"){
+        console.log("undefined OK");
+        return;
+      }
+      //console.log("undefined error");
       //var inname = toPinyin(a_instr);
       //var a_inname,b_inname,c_inname,d_inname;
       //document.form1.answer.value = inname;
       //document.form1.a1.value = fraction;
+
    		var ans = names_cmp_instr(a_instr)
+      console.log("ans1:"+ans);
+      if(ans.length !=0 && gradeswitch ==0){
+        event.reply("登記成績功能未開啟，請輸入'登記成績'開啟功能").then(function(data){
+          }).catch(function(error){
+        console.log("error")
+      });
+          return;
+      }
       	var innameL = a_instr.length;
-      	console.log(ans);
+      	console.log("ans2:"+ans);
       // if(typeof(ans) == 'number'){
       //  document.getElementById("myTable").rows[1].cells[ans+1]. innerHTML = fraction;
       // }
@@ -639,6 +943,8 @@ bot.on('message', function(event) {
         	 	record.push(recordStr);
           // document.getElementById("answer").value = record;
         	 	ArrayReverse(record);
+        	 	Insert(a_instr,b_instr);
+        	 	table();
         	 	                 //反轉紀錄
           // document.getElementById("aaa3").value = ArrayReverse(record); //反轉紀錄顯示
           // document.getElementById("aaa4").value = Last_N_in(ArrayReverse(record),3); //前3筆紀錄顯示
@@ -646,44 +952,44 @@ bot.on('message', function(event) {
         	}else{
 //				bot.on('message', function(event) {
 					//var msg = event.message.text;
-					console.log(instr)
-					if(instr.length < 3)
-						return;
-			  		for(var i = 0 ; i < number.length ; i++){
-        				var num = instr.indexOf(number[i]);
-    	    			if(num != -1){
-    		    			var c_instr = instr.substring(0,num);
-    		    			var d_instr = instr.substring(num,instr.length);
-    	    				fraction = number[i];
-          					break;
-        				}
-    				}
-					// console.log(innameL);
-					var j = 0;
-					if(c_instr.length == 3){
-						var name4 = " "+names[j][0]+" "+names[j][1]+" "+names[j][2];
-					}
-					else if(c_instr.length == 2){
-						var name4 = " "+names[j][0]+" "+names[j][1];
-					}
-					var msg2 = toPinyin(instr);
-					//console.log(msg2);
-					//console.log(name4);
-					while(msg2.indexOf(name4) == -1){
-						j++;
-						if(c_instr.length == 3){
-							var name4 = " "+names[j][0]+" "+names[j][1]+" "+names[j][2];
-						}
-						else if(c_instr.length == 2){
-							var name4 = " "+names[j][0]+" "+names[j][1];
-						}
-						if(msg2.indexOf(name4) != -1){
-							break;
-						}
-					}
-    				// 
-					msg3 = toPinyin(a_instr);
-					c_instr = toPinyin(c_instr)
+					// console.log(instr)
+					// if(instr.length < 3)
+					// 	return;
+			  // 		for(var i = 0 ; i < number.length ; i++){
+     //    				var num = instr.indexOf(number[i]);
+    	//     			if(num != -1){
+    	// 	    			var c_instr = instr.substring(0,num);
+    	// 	    			var d_instr = instr.substring(num,instr.length);
+    	//     				fraction = number[i];
+     //      					break;
+     //    				}
+    	// 			}
+					// // console.log(innameL);
+					// var j = 0;
+					// if(c_instr.length == 3){
+					// 	var name4 = " "+names[j][0]+" "+names[j][1]+" "+names[j][2];
+					// }
+					// else if(c_instr.length == 2){
+					// 	var name4 = " "+names[j][0]+" "+names[j][1];
+					// }
+					// var msg2 = toPinyin(instr);
+					// //console.log(msg2);
+					// //console.log(name4);
+					// while(msg2.indexOf(name4) == -1){
+					// 	j++;
+					// 	if(c_instr.length == 3){
+					// 		var name4 = " "+names[j][0]+" "+names[j][1]+" "+names[j][2];
+					// 	}
+					// 	else if(c_instr.length == 2){
+					// 		var name4 = " "+names[j][0]+" "+names[j][1];
+					// 	}
+					// 	if(msg2.indexOf(name4) != -1){
+					// 		break;
+					// 	}
+					// }
+    	// 			// 
+					// msg3 = toPinyin(a_instr);
+					// c_instr = toPinyin(c_instr)
 					// console.log(event);
 					// console.log("------");
 					// console.log(event.message.text);
@@ -692,7 +998,7 @@ bot.on('message', function(event) {
 					// console.log("msg3:"+msg3)
 					// console.log("name4:"+name4)
 					
-    				if(msg2.indexOf(name4) != -1 && msg3 == c_instr){
+    				//if(msg2.indexOf(name4) != -1 && msg3 == c_instr){
     					//console.log("測試"+names2[ans[0]+1][0]+names2[ans[0]+1][1]);
     					// event.reply("已有輸入成績:"+names2[ans[0]+1][0]+names2[ans[0]+1][1]).then(function(data){
 	        //  			}).catch(function(error){
@@ -725,7 +1031,7 @@ bot.on('message', function(event) {
 						temp2[3] = fraction;
       					return temp2;
       					//console.log(temp2);
-    				}
+    				//}
     	// 			console.log(event);
 					// console.log("========");
 					// event.message.text = "666";
@@ -1425,105 +1731,117 @@ bot.on('message', function(event) {
 
 
 function Display_all(){
-   var display_str = names2[0][0] + "      " + names2[0][1] + "\n";
+   var display_str = names2[0][0] + "        " + names2[0][1] + "\n";
+   var num_space = names2[0][1].length;
+   var space = "";
+   for(var j = 0 ; j < num_space ; j++){
+      space = space+" ";
+   }
    for (var i = 1; i < names2.length; i++) {
-   		if(i==names2.length-1)
-   			display_str = display_str + names2[i][0] + "    " + names2[i][1];
-   		else
-    		display_str = display_str + names2[i][0] + "    " + names2[i][1] + "\n";
+   		if(i==names2.length-1){
+        if(names2[i][0].length == 2)
+   			  display_str = display_str + names2[i][0] + "        " + space + names2[i][1];
+        else
+          display_str = display_str + names2[i][0] + "    " + space + names2[i][1];
+      }else{
+        if(names2[i][0].length == 2)
+    		  display_str = display_str + names2[i][0] + "        " + space + names2[i][1] + "\n";
+        else
+          display_str = display_str + names2[i][0] + "    " + space + names2[i][1] + "\n";
+      }
    }
    return display_str;
   }
 
 function Display(inarray){
-	var display_str = names2[0][0] + "      " + names2[0][1] + "\n";
+	var display_str = names2[0][0] + "        " + names2[0][1] + "\n";
+  var num_space = names2[0][1].length;
+   var space = "";
+   for(var j = 0 ; j < num_space+1 ; j++){
+      space = space+" ";
+   }
 	for (var i = 0; i < inarray.length; i++) {
-		if(i==inarray.length-1)
-			display_str = display_str + inarray[i];
-		else
-     		display_str = display_str + inarray[i] + "\n";
+		if(i==inarray.length-1){
+			var inner_temp = inarray[i];
+      inner_temp = inner_temp.replace(" ",space);
+      if(inner_temp.indexOf(" ") == 2){
+        inner_temp = inner_temp.replace(" ","     ");
+      }
+      display_str = display_str + inner_temp;
+    }else{
+      var inner_temp = inarray[i];
+      inner_temp = inner_temp.replace(" ",space);
+      if(inner_temp.indexOf(" ") == 2){
+        inner_temp = inner_temp.replace(" ","     ");
+      }
+     	display_str = display_str + inner_temp + "\n";
+    }
    }
    return display_str;
 }
-function Sname(instr){
-		var a_instr
-		if(instr.length < 3)
-			return;
-    	for(var i = 0 ; i < number.length ; i++){
-        	var num = instr.indexOf(number[i]);
-        	if(num != -1){
-          		a_instr = instr.substring(0,num);
-          		
-          	break;
-        	}
-    	}
-    	return a_instr;
-}
-
-function Grade(instr){
-		var b_instr;                //輸入分割成名字和分數2部分                  //分數
-		if(instr.length < 3)
-			return;
-    	for(var i = 0 ; i < number.length ; i++){
-        	var num = instr.indexOf(number[i]);
-        	if(num != -1){
-          		b_instr = instr.substring(num,instr.length);
-          		
-          	break;
-        	}
-    	}
-
-    	return b_instr;
-}
-
 var ag = [];
+var testname = "";
 //a[0]="";
-bot.on("message",function(event){
-	msg = event.message.text;
-	console.log(event)
-	var replyMsg2 = "";
+  bot.on("message",function(event){
+msg = event.message.text;
+console.log(event)
+
+var replyMsg2 = "";
 	if(msg.length < 3 || msg == "登記完成" || msg == "學校資訊")
 		return;
-		ag = compare(names,msg,event);
-		console.log("a外")
-		console.log(ag);
-		console.log(typeof(ag))
-		aaaa = Sname(msg);
-		bbbb = Grade(msg);
-		var data = {Sname:aaaa,Grade:bbbb}
-		var data1 = {Grade:bbbb}
-		var connection = mysql.createConnection({
-  			host     : '104.199.190.196',
-  			user     : 'root',
-  			password : 'asdcpi14',
-  			database : 'line'
-		});
-		connection.connect();
-			date =dt.getMonth()+"/"+dt.getDay();
-		connection.query('CREATE TABLE '+date+' (Sname VARCHAR(255) NOT NULL,GRADE INT NULL,PRIMARY KEY(Sname))', function(err, results) {
-  				if (err) {
-    				throw err;
- 				 }
- 				 console.log("Table Created");
-			});
-		results = connection.query('SELECT GRADE FROM'+date+'WHERE Sname = ?',aaaa);
-		if(results == null){
-			connection.query('INSERT INTO'+date+'SET ?',[data], function(err, results) {
-  				if (err) {
-    				throw err;
- 				 }
- 				 console.log("資料已修改");
-			});
-		}
-		else{
-			connection.query('UPDATE GRADE SET ? WhERE Sname = ?',[data1,aaaa], function(err, results) {
-  				if (err) {
-    				throw err;
- 				 }
- 				 console.log("資料已修改");
-			});
-		}
-		connection.end();
+if(msg.indexOf("建立") != -1 && msg.indexOf("成績") != -1){
+
+  var num_strset = msg.indexOf("建立");
+  var num_strgrade = msg.indexOf("成績");
+  //testname = msg.substring(num_strset+2,num_strgrade);
+
+    //var msg6 = event.message.text;   
+      event.reply({
+        type: 'template',
+        altText: 'this is a buttons template',
+        template: {
+        type: 'buttons',
+        //thumbnailImageUrl: 'https://example.com/bot/images/image.jpg',
+        title: '考試日期',
+        text: '請選擇考試日期',
+        actions: [{
+          type: 'datetimepicker',
+          label: '選擇小考日期',
+          data: '小考',
+          mode: "date"
+          },{
+          type: 'datetimepicker',
+          label: '選擇大考日期',
+          data: '大考',
+          mode: "date"
+          }]
+        }
+      })
+  //setupGrades(names,msg,event);
+}else{
+  //if(gradeswitch == 1){
+ag = compare(names,msg,event);
+console.log("a外")
+console.log(ag);
+console.log(typeof(ag))
+//}
+//console.log(a);
+ // if(a == "已覆蓋"){
+ 
+ //  	replyMsg2 = "已覆蓋";
+	//   event.reply(replyMsg2).then(function(data){
+ //          }).catch(function(error){
+ //        console.log("error")
+ //      });
+ //    }
+ //    else if(a == "音差太多,查無此人"){
+ //    	replyMsg2 = "音差太多,查無此人";
+	// 	event.reply(replyMsg2).then(function(data){
+ //          }).catch(function(error){
+ //        console.log("error")
+ //      });
+ //    }
+}
 });
 
 if(typeof(ag) == 'object'){
@@ -1538,6 +1856,7 @@ if(typeof(ag) == 'object'){
 	            recordStr = names2[ag[1]][0]+"    "+ag[3];     //儲存每筆紀錄
 	            record.push(recordStr);
 	            ArrayReverse(record);                 //反轉紀錄
+	            Update(names2[ag[1]][0],names2[ag[1]][1]);
 				event.reply([{ type: 'text', text: "已修改"},
 							 { type: 'text', text: "現在成績:"+names2[ag[1]][0]+names2[ag[1]][1]}]).then(function(data){
 	         	}).catch(function(error){
@@ -1551,6 +1870,7 @@ if(typeof(ag) == 'object'){
 	            recordStr = names2[ag[1]][0]+"    "+ag[2]     //儲存每筆紀錄
 	            record.push(recordStr);
 	            ArrayReverse(record);                 //反轉紀錄
+	            Update(names2[ag[1]][0],names2[ag[1]][1]);
 				event.reply([{ type: 'text', text: "已取消修改"},
 							 { type: 'text', text: "現在成績:"+names2[ag[1]][0]+names2[ag[1]][1]}]).then(function(data){
 	         	}).catch(function(error){
@@ -1560,6 +1880,55 @@ if(typeof(ag) == 'object'){
     	});
 	//}
 }
+
+bot.on("message",function(event){
+  var msg = event.message.text;
+  console.log("msg:"+msg)
+  if( msg == "登記成績" ){
+    gradeswitch = 1;
+    event.reply("開始登記成績").then(function(data){
+          }).catch(function(error){
+        console.log("error")
+      });
+  }
+});
+
+bot.on("message",function(event){
+  var msg = event.message.text;
+  console.log("msg:"+msg)
+  if( msg == "成績登記" ){
+    gradeswitch = 1;
+    event.reply("開始登記成績").then(function(data){
+          }).catch(function(error){
+        console.log("error")
+      });
+  }
+
+});
+bot.on("message",function(event){
+  var msg = event.message.text;
+  console.log("msg:"+msg)
+  if( msg == "登記完成" ){
+    gradeswitch = 0;
+    event.reply("關閉登記功能").then(function(data){
+          }).catch(function(error){
+        console.log("error")
+      });
+  }
+});
+
+bot.on("message",function(event){
+  var msg = event.message.text;
+  console.log("msg:"+msg)
+  if( msg == "完成登記" ){
+    gradeswitch = 0;
+    event.reply("關閉登記功能").then(function(data){
+          }).catch(function(error){
+        console.log("error")
+      });
+  }
+
+});
 // bot.on('message',function(event){
 // 	msg5 = event.message.text;
 // 	if(msg5.indexOf("登記完成") != -1){
@@ -1571,6 +1940,69 @@ if(typeof(ag) == 'object'){
 // });
 // 	}
 // }); 
+
+bot.on("postback",function(event){
+var msg4 = event.postback.data;
+var mmsg = event.postback.params;
+console.log(mmsg);
+//var replyMsg3 = "";
+if(msg4.indexOf("小考") != -1){
+  //replyMsg3 = Display_all();
+  var strdate = mmsg.date.substring((mmsg.date.indexOf("-"))+1,mmsg.date.length);
+  strdate = strdate.replace("-","");
+  formate = strdate + "小考成績";
+  //formate = names2[0][1];
+  console.log(formate);
+      var connection = mysql.createConnection({
+        host     : '35.229.249.240',
+        user     : 'root',
+        password : 'asdcpi14',
+        database : 'line'
+    });
+    connection.connect();
+    connection.query('CREATE TABLE '+formate +' (Sname VARCHAR(255) NOT NULL, Grade INT NULL,PRIMARY KEY(Sname))', function(err, results) {
+          if (err) {
+            throw err;
+         }
+         console.log("Table Created");
+      });
+      
+    connection.end();
+    
+     event.reply("建立完成").then(function(data){
+          }).catch(function(error){
+        console.log("error")
+      });
+  return;
+  }
+  else if(msg4.indexOf("大考") != -1){
+  	   strdate = mmsg.date.substring((mmsg.date.indexOf("-"))+1,mmsg.date.length);
+  strdate = strdate.replace("-","");
+  formate = strdate + "大考成績";
+  //formate = names2[0][1];
+  console.log(formate);
+     var connection = mysql.createConnection({
+        host     : '35.229.249.240',
+        user     : 'root',
+        password : 'asdcpi14',
+        database : 'line'
+    });
+    connection.connect();
+    connection.query('CREATE TABLE '+formate +' (Sname VARCHAR(255) NOT NULL, Grade INT NULL,PRIMARY KEY(Sname))', function(err, results) {
+          if (err) {
+            throw err;
+         }
+         console.log("Table Created");
+      });
+      
+    connection.end();
+      event.reply("建立完成").then(function(data){
+          }).catch(function(error){
+        console.log("error")
+      });
+  return;
+  }      
+ });
 
    bot.on("postback",function(event){
 var msg4 = event.postback.data;
