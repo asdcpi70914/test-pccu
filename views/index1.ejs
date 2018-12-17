@@ -1,0 +1,62 @@
+<% include header %>
+  <nav class="navbar navbar-inverse  ">
+  <ul class="nav navbar-nav">
+    <li><a href="/">主頁</a></li>
+    <li><a href="/">上傳</a></li>
+    <li class="active"><a href="/insert">成績管理</a></li>
+ 
+  </ul>  
+  </nav>
+<h2>建立成績單</h2>
+<script>
+    function getValue() {
+        $.ajax({
+            url: '/index1',
+            dataType: 'json',
+            type: 'get',
+            data: {
+                date: $('.time').val()
+                test: $('.test').val()
+                classname:$('.classname').val()
+            },
+            success: function (data) {
+                console.log(data);
+                console.log(test);
+                console.log(classname);
+            }
+        })
+    }
+    // function getValue(){
+    //   var value = document.getElementById("select_COURSE").value;
+    //   alert(value);
+    // }
+</script>
+<article class="col-lg-offset-1 col-sm-offset-1 col-lg-8 col-sm-8 col-lg-push-2 col-sm-push-2">
+<form action = "/index3" method="post">
+  <label>選擇時間</label>
+  <input type="date" name="time"><BR><BR>
+  <label>選擇考試類型</label>
+  <select name = "test">
+    <option value="" Selected >請選擇</option>
+    <option value="大考">大考</option>
+    <option value="小考" >小考</option>
+    <option value="期中考" >期中考</option>
+    <option value="期末考">期末考</option>
+  </select><BR><BR>
+  <label>輸入課堂名稱</label>
+  <input type="text" name="classname"><BR><BR>
+  <input type="submit" name="submit" onclick="getValue()">
+</form>
+</article>
+<aside class="col-lg-2 col-sm-2 col-lg-pull-9 col-sm-pull-9">
+       
+           <ul class="nav nav-pills nav-stacked">
+              <li><a href="/">上傳學生資料</a></li>
+              <li><a href="/insert">新增學生成績</a></li>
+              <li><a href="/index">修改學生成績</a></li>
+              <li><a href="/index4">刪除學生成績</a></li>
+              <li><a href="/select">查看學生成績</a></li>
+              <li class="active"><a href="/index1">建立成績單</a></li>
+            </ul>  
+         </aside>
+<% include footer %>

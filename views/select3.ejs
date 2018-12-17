@@ -1,0 +1,77 @@
+<% include header %>
+  <nav class="navbar navbar-inverse  ">
+  <ul class="nav navbar-nav">
+    <li><a href="/">主頁</a></li>
+    <li><a href="/">上傳</a></li>
+    <li class="active"><a href="/insert" >成績管理</a></li>
+  </ul>  
+  </nav>
+<h2>Line Bot成績管理</h2>
+<script>
+   $('submit').click(function(){
+     //var tableId = document.getElementById("score"); 
+      var tr = $(this).closest('tr');
+    // var str = "";
+    var id = tr.find('td').eq(0).text();
+    var grade = tr.find('td').eq(1).text();
+       $.ajax({
+            url: '/update2',
+            dataType: 'json',
+            type: 'post',
+            data: {
+                id :id,
+                grade :grade  
+            },
+            success: function (data) {
+                
+            }
+        })
+       alert(id)
+    });
+   //  function getTdValue()
+   // {
+   //  var tableId = document.getElementById("score"); 
+   //  var str = "";
+
+   //    alert(tableId.rows[0].cells[0].innerHTML);
+    
+   // }
+  // $(".submit").click(function(){
+  //   var dir=$(this).parents("tr").find("input").val();
+  //   alert(dir);     
+  //   });
+//  { 
+//       var grade=$(elem).parent().siblings().html(); 
+//       console.log(grade); 
+//   } 
+</script>
+<article class="col-lg-offset-1 col-sm-offset-1 col-lg-8 col-sm-8 col-lg-push-2 col-sm-push-2"> 
+  <form action="/update2" method="post">
+    <table class="table table-bordered table-striped" border="2" id = "score">
+      <tr>
+        <td  align='center' valign="middle"><font size="5" face="標楷體"><strong>學號</strong></font></th>
+        <td  align='center' valign="middle"><font size="5" face="標楷體"><strong>成績</strong></font></th>
+        <td  align='center' valign="middle"><font size="5" face="標楷體"><strong>修改成績</strong></font></th>
+      </tr>
+      <% for ( var j = 0 ; j < data.length ; j++){ %>
+      <tr>
+        <td width="100" align="center"><font size="5" face="標楷體"><strong><%-data[j].Student_ID%></strong></font></td>
+        <td width="100" align="center"><font size="5" face="標楷體"><strong><%-data[j].Grade%>分</strong></font></td>
+        <td width="100" align="center"><font size="3" face="標楷體"><strong><input type="submit" value="修改成績"></strong></font></td>
+      </tr>
+            <% } %>
+    </table>
+    </form>
+</article>
+<aside class="col-lg-2 col-sm-2 col-lg-pull-9 col-sm-pull-9">
+       
+           	<ul class="nav nav-pills nav-stacked">
+              <li><a href="/">上傳學生資料</a></li>
+              <li><a href="/insert">新增學生成績</a></li> 
+              <li><a href="/index">修改學生成績</a></li>
+              <li><a href="/index4">刪除學生成績</a></li>
+              <li class="active"><a href="/select">查看學生成績</a></li>
+              <li><a href="/index1">建立成績單</a></li>
+            </ul>  
+         </aside>
+<% include footer %>

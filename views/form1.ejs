@@ -1,0 +1,47 @@
+<% include header %>
+<nav class="navbar navbar-inverse  ">
+  <ul class="nav navbar-nav">
+    <li><a href="/">主頁</a></li>
+    <li class="active"><a href="/">上傳</a></li>
+    <li><a href="/insert">成績管理</a></li>
+ 
+  </ul>  
+  </nav>
+    <script type="text/javascript">
+function check(aa){
+  if(aa == 1){
+    alert("已上傳");
+  }
+}
+function getvalue(aa){
+  data = {name : aa}
+  $.ajax({
+    url: '/form1',
+    dataType: 'json',
+    type: 'post',
+    data: data,
+            success: function (data) {
+                console.log(name);
+            }
+        })
+  alert(aa)
+}
+</script>
+<h2>上傳學生資料</h2>
+<article class="col-lg-offset-1 col-sm-offset-1 col-lg-8 col-sm-8 col-lg-push-2 col-sm-push-2">
+
+<form action="/" enctype="multipart/form-data"  method="post">
+    <input type="file" name="upload" id="upload" multiple onchange="getvalue(this.value.substr(this.value.lastIndexOf('\\')+1))">
+    <BR>
+    <input type="submit" value="上傳" onclick = "check(1)">
+</form>
+
+</article>
+<aside class="col-lg-2 col-sm-2 col-lg-pull-9 col-sm-pull-9">
+       
+            <ul class="nav nav-pills nav-stacked">
+              <li class="active"><a href="/">上傳學生資料</a></li>
+              <li><a href="/index">成績管理</a></li>
+            </ul>  
+         </aside>
+<% include footer %>

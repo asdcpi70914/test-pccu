@@ -1,0 +1,26 @@
+<% include header %>
+  <nav class="navbar navbar-inverse ">
+  <ul class="nav navbar-nav">
+    <li><a href="/">主頁</a></li>
+    <li><a href="/new-entry">留言</a></li>
+    <li class="active"><a href="/talk" >留言板</a></li>
+  </ul>  
+  </nav>
+<% if (entries.length) { %>
+  <% entries.forEach(function(entry) { %>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <div class="text-muted pull-right">
+          <%= entry.published %>
+        </div>
+        <%= entry.title %>
+      </div>
+      <div class="panel-body">
+        <%= entry.content %>
+      </div>
+    </div>
+  <% }) %>
+<% } else { %>
+  No entries! <a href="/new-entry">Add one!</a>
+<% } %>
+<% include footer %>

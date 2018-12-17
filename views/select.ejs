@@ -1,0 +1,54 @@
+<% include header %>
+  <nav class="navbar navbar-inverse  ">
+  <ul class="nav navbar-nav">
+    <li><a href="/">主頁</a></li>
+    <li><a href="/">上傳</a></li>
+    <li class="active"><a href="/insert" >成績管理</a></li>
+  </ul>  
+  </nav>
+<h2>Line Bot成績管理</h2>
+<script>
+    function getValue() {
+        $.ajax({
+            url: '/select',
+            dataType: 'json',
+            type: 'get',
+            data: {
+                course: $('.text').val(),  
+            },
+            success: function (data) {
+                console.log(data);
+            }
+        })
+    }
+    // function getValue(){
+    //   var value = document.getElementById("select_COURSE").value;
+    //   alert(value);
+    // }
+</script>
+<article class="col-lg-offset-1 col-sm-offset-1 col-lg-8 col-sm-8 col-lg-push-2 col-sm-push-2">
+    <form action="/select2" method="post">
+    <label>輸入班級:</label>
+    <input type="text" id = "text" name="text">
+        <input type="submit" name="submit" value = "確定"onclick ="getValue()">
+    <BR><BR>
+    <label>選擇成績單:</label>
+    <select  size=1 id = "select_Transcript">
+      <option value="" Selected >請選擇</option>
+    </select>  
+        <BR><BR>
+    <input type="submit" name="submit" value = "查詢">        
+  </form>
+</article>
+<aside class="col-lg-2 col-sm-2 col-lg-pull-9 col-sm-pull-9">
+       
+           	<ul class="nav nav-pills nav-stacked">
+              <li><a href="/">上傳學生資料</a></li>
+              <li><a href="/insert">新增學生成績</a></li> 
+              <li><a href="/index">修改學生成績</a></li>
+              <li><a href="/index4">刪除學生成績</a></li>
+              <li class="active"><a href="/select">查看學生成績</a></li>
+              <li><a href="/index1">建立成績單</a></li>
+            </ul>  
+         </aside>
+<% include footer %>
