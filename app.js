@@ -459,6 +459,6 @@ app.use(function(request, response) {
 // http.createServer(app).listen(3000, function() {
 //   console.log("Guestbook app started on port 3000.");
 // });
-app.listen(process.env.PORT || 5000, () => {
-    console.log(`server is listening to ${process.env.PORT || 5000}...`);
+app.listen(process.env.PORT || 3000, () => {
+    console.log(`server is listening to ${process.env.PORT || 3000}...`);
 });
