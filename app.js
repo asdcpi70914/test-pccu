@@ -9,9 +9,66 @@ var fs = require('fs');
 var mysql = require('mysql')
 var CsvReadableStream = require('csv-reader');
 var AutoDetectDecoderStream = require('autodetect-decoder-stream');
+var data = {}
+var data1 = {}
+var data2 = {}
+var data3 = {}
+var id = ""
 app.set("views", path.resolve(__dirname, "views"));
 app.set("view engine", "ejs");
+"use strict";
 
+require("dotenv").config();
+
+const line_login = require("line-login");
+const session = require("express-session");
+const session_options = {
+    secret: process.env.LINE_LOGIN_CHANNEL_SECRET,
+    resave: false,
+    saveUninitialized: false
+}
+app.use(session(session_options));
+
+app.get("/",function(request, response) {
+    response.render("login");
+})
+
+const login = new line_login({
+    channel_id: process.env.LINE_LOGIN_CHANNEL_ID,
+    channel_secret: process.env.LINE_LOGIN_CHANNEL_SECRET,
+    callback_url: process.env.LINE_LOGIN_CALLBACK_URL
+});
+
+
+app.get("/auth", login.auth());
+
+
+app.get("/callback", login.callback(
+    (req, res, next, token_response,url) => {
+    var connection = mysql.createConnection({
+      host     : '35.185.170.234',
+      user     : 'root',
+      password : 'asdcpi14',
+      database : 'line'
+  });
+   connection.connect();
+   console.log("connect");  
+   id = token_response.id_token.sub
+  connection.query('Insert Into LoginHTML(Lname,User_ID,LoginStatus) VALUES (?,?,?)',[token_response.id_token.name,token_response.id_token.sub,1], function(err, results) {
+         if (err) {
+           return;
+        }
+          console.log("資料已修改");
+        });
+  connection.end();
+        res.render("form1");
+         console.log(token_response)
+        console.log(token_response.id_token.sub)
+    },(req, res, next, error) => {
+
+        res.status(400).json(error);
+    }
+));
 var entries = [];
 app.locals.entries = entries;
 
@@ -94,8 +151,23 @@ inputStream
                   res.render(__dirname + '/views/form1.ejs');
 })
 
-app.get("/", function(request, response) {
-  response.render("form1");
+app.get("/form1", function(request, response) {
+   var connection = mysql.createConnection({
+      host     : '35.185.170.234',
+      user     : 'root',
+      password : 'asdcpi14',
+      database : 'line'
+  });
+   connection.connect();
+   console.log("connect");  
+    connection.query('SELECT LoginStatus FROM LoginHTML WHERE User_ID = ?',[id], function(err, results) {
+         if (err) {
+           throw err;
+        }
+        data3.user = results
+          response.render("form1",{data3:data3.user});
+        });
+  connection.end();  
 }); 
 app.get("/index", function(request, response,next) {
   response.render("index")
@@ -103,9 +175,6 @@ app.get("/index", function(request, response,next) {
 app.get("/index1", function(request, response) {
   response.render("index1");
 });
-var data = {}
-var data1 = {}
-var data2 = {}
 app.post("/index2", function(request, response,next) {
   console.log(request.body.text)
   var course = request.body.text
@@ -387,7 +456,9 @@ app.use(function(request, response) {
   response.status(404).render("404");
 });
 
-http.createServer(app).listen(3000, function() {
-  console.log("Guestbook app started on port 3000.");
+// http.createServer(app).listen(3000, function() {
+//   console.log("Guestbook app started on port 3000.");
+// });
+app.listen(process.env.PORT || 5000, () => {
+    console.log(`server is listening to ${process.env.PORT || 5000}...`);
 });
-
