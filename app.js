@@ -9,17 +9,14 @@ var fs = require('fs');
 var mysql = require('mysql')
 var CsvReadableStream = require('csv-reader');
 var AutoDetectDecoderStream = require('autodetect-decoder-stream');
-var data = {}
-var data1 = {}
-var data2 = {}
-var data3 = {}
-var id = ""
 app.set("views", path.resolve(__dirname, "views"));
 app.set("view engine", "ejs");
+var id = "";
+var entries = [];
+app.locals.entries = entries;
 "use strict";
 
 require("dotenv").config();
-
 const line_login = require("line-login");
 const session = require("express-session");
 const session_options = {
@@ -28,50 +25,31 @@ const session_options = {
     saveUninitialized: false
 }
 app.use(session(session_options));
-
-app.get("/",function(request, response) {
-    response.render("login");
+app.use(express.static(__dirname + "/views"));
+app.set("view engine", "ejs");
+app.get("/login", (req, res) => {
+    res.render("login");
 })
-
 const login = new line_login({
     channel_id: process.env.LINE_LOGIN_CHANNEL_ID,
     channel_secret: process.env.LINE_LOGIN_CHANNEL_SECRET,
     callback_url: process.env.LINE_LOGIN_CALLBACK_URL
 });
-
-
 app.get("/auth", login.auth());
 
 
-app.get("/callback", login.callback(
-    (req, res, next, token_response,url) => {
-    var connection = mysql.createConnection({
-      host     : '35.185.170.234',
-      user     : 'root',
-      password : 'asdcpi14',
-      database : 'line'
-  });
-   connection.connect();
-   console.log("connect");  
-   id = token_response.id_token.sub
-  connection.query('Insert Into LoginHTML(Lname,User_ID,LoginStatus) VALUES (?,?,?)',[token_response.id_token.name,token_response.id_token.sub,1], function(err, results) {
-         if (err) {
-           return;
-        }
-          console.log("資料已修改");
-        });
-  connection.end();
-        res.render("form1");
-         console.log(token_response)
+app.get("/callback",login.callback(
+    (req, res, next, token_response) => {
+
+        console.log(token_response)
         console.log(token_response.id_token.sub)
+        id = token_response.id_token.sub
+        res.render("form1")
     },(req, res, next, error) => {
 
         res.status(400).json(error);
     }
 ));
-var entries = [];
-app.locals.entries = entries;
-
 app.use(logger("dev"));
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -97,19 +75,36 @@ app.post('/', upload.single('upload'), (req, res, next) => {
   console.log(path);
   var str = req.file.originalname
   var text = str.split(" ")
-  var length = text[4].indexOf("_")
-  var text1 = text[4].substring(0,length)
-  console.log(text[3]);
+    var i = 3
+    var j = 0;
+    if(text[i]==""){
+      i++
+      j = i;
+    }
+    else{
+      j = i;
+    }
+    var length = text[j].indexOf("_")
+  var text1 = text[j+1].substring(0,length)+text[j-1]
+  console.log(text[j]);
   console.log(text1);
 var inputStream = fs.createReadStream(path,'utf8');
     var connection = mysql.createConnection({
-      host     : '35.221.225.212',
+      host     : '35.185.170.234',
       user     : 'root',
       password : 'asdcpi14',
       database : 'line'
   });
    connection.connect();
    console.log("connect");
+   connection.query('Insert Into COURSE(TeacherName,CourseName,Course_ID,User_ID) VALUES ((SELECT Tname FROM TEACHER WHERE User_ID = ?),?,?,?)',[id,text1,text[j],id], function(err, results) {
+         if (err) {
+           throw err;
+        }
+          console.log("資料已修改");
+        });
+    setTimeout(function(){
+    },1100)
 inputStream
     .pipe(CsvReadableStream({ parseNumbers: true, parseBooleans: true, trim: true }))
     .on('data', function (row) {
@@ -129,12 +124,6 @@ inputStream
   // var text1 = text[4].substring(0,length)
   // console.log(text[2]);
   // console.log(text);
-  var i = 3
-  while(text[i] == ""){
-    // console.log("------------")
-    i++;
-    var j = i
-  }
   console.log(text[j]);
    connection.query('Insert Into SCOURSE(Student_ID,COURSE_ID) VALUES (?,?)',[row[2],text[j]], function(err, results) {
          if (err) {
@@ -151,37 +140,40 @@ inputStream
                   res.render(__dirname + '/views/form1.ejs');
 })
 
-app.get("/form1", function(request, response) {
-   var connection = mysql.createConnection({
-      host     : '35.185.170.234',
-      user     : 'root',
-      password : 'asdcpi14',
-      database : 'line'
-  });
-   connection.connect();
-   console.log("connect");  
-    connection.query('SELECT LoginStatus FROM LoginHTML WHERE User_ID = ?',[id], function(err, results) {
-         if (err) {
-           throw err;
-        }
-        data3.user = results
-          response.render("form1",{data3:data3.user});
-        });
-  connection.end();  
+app.get("/", function(request, response) {
+  response.render("form1");
 }); 
 app.get("/index", function(request, response,next) {
   response.render("index")
 }); 
 app.get("/index1", function(request, response) {
-  response.render("index1");
+    var connection = mysql.createConnection({
+      host     : '35.185.170.234',
+      user     : 'root',
+      password : 'asdcpi14',
+      database : 'line'
+  });
+  connection.connect();
+  connection.query('SELECT CourseName FROM COURSE Where User_ID = ?',[id],function(err, results) {
+         if (err) {
+         }
+          console.log("--------------------")
+          console.log(results);
+          data.user = results
+          response.render("index1",{data:data.user})
+        });
+  connection.end();
 });
+var data = {}
+var data1 = {}
+var data2 = {}
 app.post("/index2", function(request, response,next) {
   console.log(request.body.text)
   var course = request.body.text
   console.log("course:"+course)
   data1.user = course
    var connection = mysql.createConnection({
-      host     : '35.221.225.212',
+      host     : '35.185.170.234',
       user     : 'root',
       password : 'asdcpi14',
       database : 'line'
@@ -204,7 +196,7 @@ app.post("/update", function(request, response,next) {
   data1.user = request.body.text3;
   data2.user = request.body.text2;
   var connection = mysql.createConnection({
-      host     : '35.221.225.212',
+      host     : '35.185.170.234',
       user     : 'root',
       password : 'asdcpi14',
       database : 'line'
@@ -233,7 +225,7 @@ app.post("/update", function(request, response,next) {
 app.post("/index3", function(request, response) {
   test = request.body.test
   time = request.body.time
-  classname = request.body.classname
+  classname = request.body.CourseName
   console.log(typeof(test))
   console.log(typeof(time))
   year = time.substring(0,time.search("-"))
@@ -244,7 +236,7 @@ app.post("/index3", function(request, response) {
   console.log(classname)
   time1 = time1+test+"成績";
     var connection = mysql.createConnection({
-      host     : '35.221.225.212',
+      host     : '35.185.170.234',
       user     : 'root',
       password : 'asdcpi14',
       database : 'line'
@@ -271,7 +263,7 @@ app.get("/index4", function(request, response,next) {
 app.post("/delete", function(request, response,next) {
   data1.user = request.body.text;
   var connection = mysql.createConnection({
-      host     : '35.221.225.212',
+      host     : '35.185.170.234',
       user     : 'root',
       password : 'asdcpi14',
       database : 'line'
@@ -296,7 +288,7 @@ app.post("/delete", function(request, response,next) {
     console.log(request.body.transcript)
     console.log(request.body.text1)   
     var connection = mysql.createConnection({
-      host     : '35.221.225.212',
+      host     : '35.185.170.234',
       user     : 'root',
       password : 'asdcpi14',
       database : 'line'
@@ -321,7 +313,7 @@ app.get("/insert", function(request, response,next) {
 app.post("/insert1", function(request, response,next) {
       data1.user = request.body.text
   var connection = mysql.createConnection({
-      host     : '35.221.225.212',
+      host     : '35.185.170.234',
       user     : 'root',
       password : 'asdcpi14',
       database : 'line'
@@ -357,7 +349,7 @@ app.post("/insert1", function(request, response,next) {
     console.log(grade)
 
     var connection = mysql.createConnection({
-      host     : '35.221.225.212',
+      host     : '35.185.170.234',
       user     : 'root',
       password : 'asdcpi14',
       database : 'line'
@@ -389,7 +381,7 @@ app.get("/select", function(request, response,next) {
 app.post("/select2", function(request, response,next) {
   data1.user = request.body.text;
   var connection = mysql.createConnection({
-      host     : '35.221.225.212',
+      host     : '35.185.170.234',
       user     : 'root',
       password : 'asdcpi14',
       database : 'line'
@@ -411,7 +403,7 @@ app.post("/select2", function(request, response,next) {
 
 app.post("/select3", function(request, response,next) {
   var connection = mysql.createConnection({
-      host     : '35.221.225.212',
+      host     : '35.185.170.234',
       user     : 'root',
       password : 'asdcpi14',
       database : 'line'
@@ -436,7 +428,7 @@ app.post("/select3", function(request, response,next) {
     console.log(request)
 
     var connection = mysql.createConnection({
-      host     : '35.221.225.212',
+      host     : '35.185.170.234',
       user     : 'root',
       password : 'asdcpi14',
       database : 'line'
@@ -456,9 +448,7 @@ app.use(function(request, response) {
   response.status(404).render("404");
 });
 
-// http.createServer(app).listen(3000, function() {
-//   console.log("Guestbook app started on port 3000.");
-// });
-app.listen(process.env.PORT || 3000, () => {
-    console.log(`server is listening to ${process.env.PORT || 3000}...`);
+http.createServer(app).listen(5000, function() {
+  console.log("Guestbook app started on port 5000.");
 });
+
