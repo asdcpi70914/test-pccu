@@ -78,16 +78,24 @@ app.post('/', upload.single('upload'), (req, res, next) => {
     var i = 3
     var j = 0;
     if(text[i]==""){
-      i++
+      ++i;
       j = i;
     }
     else{
-      j = i;
+      j = 3;
     }
-    var length = text[j].indexOf("_")
-  var text1 = text[j+1].substring(0,length)+text[j-1]
+    var length = text[j+1].indexOf("_")
+   var text1 = text[j+1].substring(0,length)
+  if(text[j-1] == ""){
+   var text2 = text1+text[j-2];
+  }
+  else{
+   var text2 = text1+text[j-1]; 
+  }
+
+  console.log(text2)
   console.log(text[j]);
-  console.log(text1);
+  console.log(text);
 var inputStream = fs.createReadStream(path,'utf8');
     var connection = mysql.createConnection({
       host     : '35.185.170.234',
@@ -97,7 +105,7 @@ var inputStream = fs.createReadStream(path,'utf8');
   });
    connection.connect();
    console.log("connect");
-   connection.query('Insert Into COURSE(TeacherName,CourseName,Course_ID,User_ID) VALUES ((SELECT Tname FROM TEACHER WHERE User_ID = ?),?,?,?)',[id,text1,text[j],id], function(err, results) {
+   connection.query('Insert Into COURSE(TeacherName,CourseName,Course_ID,User_ID) VALUES ((SELECT Tname FROM TEACHER WHERE User_ID = ?),?,?,?)',[id,text2,text[j],id], function(err, results) {
          if (err) {
            throw err;
         }
