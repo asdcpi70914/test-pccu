@@ -12,6 +12,9 @@ var AutoDetectDecoderStream = require('autodetect-decoder-stream');
 app.set("views", path.resolve(__dirname, "views"));
 app.set("view engine", "ejs");
 var id = "";
+var data = {}
+var data1 = {}
+var data2 = {}
 var entries = [];
 app.locals.entries = entries;
 "use strict";
@@ -28,6 +31,7 @@ app.use(session(session_options));
 app.use(express.static(__dirname + "/views"));
 app.set("view engine", "ejs");
 app.get("/login", (req, res) => {
+  console.log(req)
     res.render("login");
 })
 const login = new line_login({
@@ -38,18 +42,18 @@ const login = new line_login({
 app.get("/auth", login.auth());
 
 
-app.get("/callback",login.callback(
-    (req, res, next, token_response) => {
+// app.get("/callback",login.callback(
+//     (req, res, next, token_response) => {
 
-        console.log(token_response)
-        console.log(token_response.id_token.sub)
-        id = token_response.id_token.sub
-        res.render("form1")
-    },(req, res, next, error) => {
+//         console.log(token_response)
+//         console.log(token_response.id_token.sub)
+//         id = token_response.id_token.sub
+//         res.render("form1")
+//     },(req, res, next, error) => {
 
-        res.status(400).json(error);
-    }
-));
+//         res.status(400).json(error);
+//     }
+// ));
 app.use(logger("dev"));
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -148,9 +152,18 @@ inputStream
                   res.render(__dirname + '/views/form1.ejs');
 })
 
-app.get("/", function(request, response) {
-  response.render("form1");
-}); 
+app.get("/form1",login.callback(
+    (req, res, next, token_response) => {
+
+        console.log(token_response)
+        console.log(token_response.id_token.sub)
+        id = token_response.id_token.sub
+        res.render("form1")
+    },(req, res, next, error) => {
+
+        res.status(400).json(error);
+    }
+));
 app.get("/index", function(request, response,next) {
   response.render("index")
 }); 
@@ -172,9 +185,6 @@ app.get("/index1", function(request, response) {
         });
   connection.end();
 });
-var data = {}
-var data1 = {}
-var data2 = {}
 app.post("/index2", function(request, response,next) {
   console.log(request.body.text)
   var course = request.body.text
@@ -233,7 +243,8 @@ app.post("/update", function(request, response,next) {
 app.post("/index3", function(request, response) {
   test = request.body.test
   time = request.body.time
-  classname = request.body.CourseName
+  classname = request.body.Coursename
+  console.log(request.body)
   console.log(typeof(test))
   console.log(typeof(time))
   year = time.substring(0,time.search("-"))
@@ -251,7 +262,14 @@ app.post("/index3", function(request, response) {
   });
    connection.connect();
    console.log("connect");
- connection.query('INSERT INTO Transcript (TranscriptTpye,TranscriptName,Course_ID) VALUES (?,?,(select Course_ID FROM COURSE Where CourseName = ?))',[test,time1,classname], function(err, results) {
+    connection.query('CREATE TABLE '+time1 +' (Sname VARCHAR(255) NOT NULL, Grade INT NULL,PRIMARY KEY(Sname))', function(err, results) {
+          if (err) {
+            throw err;
+         }
+         console.log("Table Created");
+      });
+
+ connection.query('INSERT INTO Transcript (TranscriptType,TranscriptName,Course_ID) VALUES (?,?,(select Course_ID FROM COURSE Where CourseName = ?))',[test,time1,classname], function(err, results) {
           if (err) {
             throw err;
          }
@@ -383,11 +401,6 @@ app.post("/insert1", function(request, response,next) {
 });
 
 app.get("/select", function(request, response,next) {
-
-     response.render("select")
-}); 
-app.post("/select2", function(request, response,next) {
-  data1.user = request.body.text;
   var connection = mysql.createConnection({
       host     : '35.185.170.234',
       user     : 'root',
@@ -395,7 +408,26 @@ app.post("/select2", function(request, response,next) {
       database : 'line'
   });
   connection.connect();
-  connection.query('SELECT TranscriptName FROM Transcript Where Course_ID = (SELECT Course_ID FROM COURSE Where CourseName = ?)',[request.body.text],function(err, results) {
+  connection.query('SELECT CourseName FROM COURSE Where User_ID = ?',[id],function(err, results) {
+         if (err) {
+         }
+          console.log("--------------------")
+          console.log(results);
+          data.user = results
+           response.render("select",{data:data.user})
+        });
+  connection.end();
+}); 
+app.post("/select2", function(request, response,next) {
+  data1.user = request.body.Coursename;
+  var connection = mysql.createConnection({
+      host     : '35.185.170.234',
+      user     : 'root',
+      password : 'asdcpi14',
+      database : 'line'
+  });
+  connection.connect();
+  connection.query('SELECT TranscriptName FROM Transcript Where Course_ID = (SELECT Course_ID FROM COURSE Where CourseName = ?)',[request.body.Coursename],function(err, results) {
          if (err) {
          }
           console.log("--------------------")
@@ -432,31 +464,36 @@ app.post("/select3", function(request, response,next) {
 }); 
 
  app.post("/update2", function(request, response,next) {
-    console.log("update2")
-    console.log(request)
 
-    var connection = mysql.createConnection({
+            response.render("update2")
+
+});
+
+ app.post("/update3", function(request, response,next) {
+  console.log(request.body.text[0])
+  var connection = mysql.createConnection({
       host     : '35.185.170.234',
       user     : 'root',
       password : 'asdcpi14',
       database : 'line'
   });
   connection.connect();
-  connection.query('Select Sname From STUDENT WHERE Student_ID = ?',[request.body.id0],function(err, results) {
+  connection.query('SELECT TranscriptName FROM Transcript Where Course_ID = (SELECT Course_ID FROM COURSE Where CourseName = ?) ',[request.body.text[0]],function(err, results) {
          if (err) {
          }
           console.log("--------------------")
           console.log(results);
           data.user = results
-            response.render("update2",{data:data.user,data1:request.body.grade})
+            response.render("update3",{data:data.user,data1:request.body.text[0]})
         });
-});
+  connection.end();
+}); 
 
 app.use(function(request, response) {
   response.status(404).render("404");
 });
 
 http.createServer(app).listen(5000, function() {
-  console.log("Guestbook app started on port 5000.");
+  console.log("linebot app started on port 5000.");
 });
 

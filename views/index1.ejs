@@ -4,7 +4,7 @@
     <li><a href="/">主頁</a></li>
     <li><a href="/">上傳</a></li>
     <li class="active"><a href="/insert">成績管理</a></li>
-     <li><a href="/">登入</a></li>
+     <li><a href="/login">登入</a></li>
   </ul>  
   </nav>
 <h2>建立成績單</h2>
@@ -13,11 +13,11 @@
         $.ajax({
             url: '/index1',
             dataType: 'json',
-            type: 'get',
+            type: 'post',
             data: {
                 date: $('.time').val()
                 test: $('.test').val()
-                classname:$('.CourseName').val()
+                classname:$('.Coursename').val()
             },
             success: function (data) {
                 console.log(data);
@@ -43,8 +43,14 @@
     <option value="期中考" >期中考</option>
     <option value="期末考">期末考</option>
   </select><BR><BR>
-  <label>輸入課堂名稱</label>
-  <input type="text" name="CourseName" value=""><BR><BR>
+  <label>選擇課堂名稱</label>
+    <select  size=1 name = "Coursename" >
+      <option value="" Selected >請選擇</option>
+      <% for ( var j = 0 ; j < data.length ; j++){ %>
+        <option name = "Coursename" value= <%-data[j].CourseName%>><%-data[j].CourseName%></option>
+      <% } %>
+    </select>
+    <BR><BR>
   <input type="submit" name="submit"  value = "建立" onclick="getValue()">
 </form>
 </article>

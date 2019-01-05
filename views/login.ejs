@@ -1,5 +1,19 @@
 <html>
 <body>
+<script>
+function check1(aa){
+  data = {login : aa}
+  $.ajax({
+    url: '/login',
+    dataType: 'json',
+    type: 'post',
+    data: data,
+            success: function (data) {
+                console.log(login);
+            }
+        })
+}	
+</script>
 <center>
     <a href="/auth"><img src="https://camo.qiitausercontent.com/156b8aa7e98995b28ab9ec349395cf2b942fbff7/68747470733a2f2f71696974612d696d6167652d73746f72652e73332e616d617a6f6e6177732e636f6d2f302f32363037392f64393231663936622d616464312d653737662d356336662d6636323437643261363564302e706e67"></img></a>
     </center>

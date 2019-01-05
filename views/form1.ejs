@@ -4,7 +4,9 @@
     <li><a href="/">主頁</a></li>
     <li class="active"><a href="/">上傳</a></li>
     <li><a href="/insert">成績管理</a></li>
-          <li><a href="/login">登入</a></li>
+          <li><a href="/login" onclick="check1(1)">登入</a></li>
+   
+
   </ul>  
   </nav>
     <script type="text/javascript">
@@ -13,6 +15,8 @@ function check(aa){
     alert("已上傳");
   }
 }
+
+
 function getvalue(aa){
   data = {name : aa}
   $.ajax({
@@ -24,7 +28,6 @@ function getvalue(aa){
                 console.log(name);
             }
         })
-  alert(aa)
 }
 </script>
 <h2>上傳學生資料</h2>

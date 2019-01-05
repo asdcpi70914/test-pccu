@@ -15,7 +15,7 @@
             dataType: 'json',
             type: 'get',
             data: {
-                course: $('.text').val(),  
+                course: $('.Coursename').val(),  
             },
             success: function (data) {
                 console.log(data);
@@ -30,7 +30,12 @@
 <article class="col-lg-offset-1 col-sm-offset-1 col-lg-8 col-sm-8 col-lg-push-2 col-sm-push-2">
     <form action="/select2" method="post">
     <label>輸入班級:</label>
-    <input type="text" id = "text" name="text">
+    <select  size=1 name = "Coursename" >
+      <option value="" Selected >請選擇</option>
+      <% for ( var j = 0 ; j < data.length ; j++){ %>
+        <option name = "Coursename" value= <%-data[j].CourseName%>><%-data[j].CourseName%></option>
+      <% } %>
+    </select>
         <input type="submit" name="submit" value = "確定"onclick ="getValue()">
     <BR><BR>
     <label>選擇成績單:</label>
