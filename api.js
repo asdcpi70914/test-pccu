@@ -2542,7 +2542,6 @@ app.get('/grade/:grade', function(req, res) {
 
 
 
-var server = app.listen(process.env.PORT || 3000, function() {
-  var port = server.address().port;
-  console.log("App now running on port", port);
+http.createServer(app).listen(3000, function() {
+  console.log("app started on port 3000.");
 });
