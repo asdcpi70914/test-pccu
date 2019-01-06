@@ -31,7 +31,6 @@ app.use(session(session_options));
 app.use(express.static(__dirname + "/views"));
 app.set("view engine", "ejs");
 app.get("/login", (req, res) => {
-  console.log(req)
     res.render("login");
 })
 const login = new line_login({
