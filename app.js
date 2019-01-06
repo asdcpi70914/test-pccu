@@ -129,6 +129,15 @@ inputStream
   // var text1 = text[4].substring(0,length)
   // console.log(text[2]);
   // console.log(text);
+     connection.query('Insert Into STUDENT(Sname,Student_ID) VALUES (?,?)',[row[3],row[2]], function(err, results) {
+         if (err) {
+           throw err;
+        }
+
+          console.log("資料已修改");
+        }); 
+
+
   console.log(text[j]);
    connection.query('Insert Into SCOURSE(Student_ID,COURSE_ID) VALUES (?,?)',[row[2],text[j]], function(err, results) {
          if (err) {
@@ -143,6 +152,7 @@ inputStream
         console.log('No more rows!');
     });   
                   res.render(__dirname + '/views/form1.ejs');
+                  console("OK!")
 })
 
 app.get("/form1", function(request, response,next) {
