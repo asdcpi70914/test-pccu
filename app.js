@@ -71,7 +71,6 @@ app.get('/',function(req,res){
   console.log(req.body.name);
   res.render(__dirname + '/views/form1.ejs');
 })
-
 app.post('/', upload.single('upload'), (req, res, next) => {
   console.log(req.file.originalname);
   var path = __dirname +req.file.originalname;
