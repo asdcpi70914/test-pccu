@@ -69,5 +69,5 @@ app.get('/PinyinAry/:id', function(req, res){
 //      tostrary2 = toPinyin_ary(req.params.ie)
 //     res.send(tostrary+tostrary2);
 // });
-http.createServer(app).listen(3000);
+http.createServer(app).listen(2000);
 console.log('start express server\n');
