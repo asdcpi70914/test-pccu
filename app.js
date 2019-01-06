@@ -41,18 +41,18 @@ const login = new line_login({
 app.get("/auth", login.auth());
 
 
-// app.get("/callback",login.callback(
-//     (req, res, next, token_response) => {
+app.get("/callback",login.callback(
+    (req, res, next, token_response) => {
 
-//         console.log(token_response)
-//         console.log(token_response.id_token.sub)
-//         id = token_response.id_token.sub
-//         res.render("form1")
-//     },(req, res, next, error) => {
+        console.log(token_response)
+        console.log(token_response.id_token.sub)
+        id = token_response.id_token.sub
+        res.render("form1")
+    },(req, res, next, error) => {
 
-//         res.status(400).json(error);
-//     }
-// ));
+        res.status(400).json(error);
+    }
+));
 app.use(logger("dev"));
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -145,18 +145,9 @@ inputStream
                   res.render(__dirname + '/views/form1.ejs');
 })
 
-app.get("/form1",login.callback(
-    (req, res, next, token_response) => {
-
-        console.log(token_response)
-        console.log(token_response.id_token.sub)
-        id = token_response.id_token.sub
-        res.render("form1")
-    },(req, res, next, error) => {
-
-        res.status(400).json(error);
-    }
-));
+app.get("/form1", function(request, response,next) {
+  response.render("form1")
+}); 
 app.get("/index", function(request, response,next) {
   response.render("index")
 }); 
