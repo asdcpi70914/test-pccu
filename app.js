@@ -123,12 +123,6 @@ inputStream
         // console.log('A row arrived: ', row);
         // console.log(row[3])
         // console.log(row[2])
-   connection.query('Insert Into STUDENT(Sname,Student_ID) VALUES (?,?)',[row[3],row[2]], function(err, results) {
-         if (err) {
-           throw err;
-        }
-          console.log("資料已修改");
-        });
        // setTimeout(function(){
   var str = req.file.originalname
   var text = str.split(" ")
