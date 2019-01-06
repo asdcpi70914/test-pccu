@@ -73,7 +73,7 @@ app.get('/',function(req,res){
 })
 app.post('/', upload.single('upload'), (req, res, next) => {
   console.log(req.file.originalname);
-  var path = '/uploads'+req.file.originalname;
+  var path = 'uploads/'+req.file.originalname;
   console.log(path);
   var str = req.file.originalname
   var text = str.split(" ")
