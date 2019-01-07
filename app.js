@@ -246,7 +246,7 @@ app.post("/index3", function(request, response) {
   console.log(test)
   console.log(time1)
   console.log(classname)
-  time1 = time1+test+"成績";
+  time1 = classname+time1+test+"成績";
     var connection = mysql.createConnection({
       host     : '35.185.170.234',
       user     : 'root',
