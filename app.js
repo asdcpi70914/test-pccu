@@ -486,7 +486,7 @@ app.use(function(request, response) {
   response.status(404).render("404");
 });
 
-http.createServer(app).listen(5000, function() {
-  console.log("linebot app started on port 5000.");
+http.createServer(app).listen(3000, function() {
+  console.log("linebot app started on port 3000.");
 });
 
