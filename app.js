@@ -158,7 +158,7 @@ app.get("/form1", function(request, response,next) {
   response.render("form1")
 }); 
 app.get("/index", function(request, response,next) {
-  console.log(request.headers.cookie)
+  console.log(request)
   response.render("index")
 }); 
 app.get("/index1", function(request, response) {
