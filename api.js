@@ -2568,6 +2568,12 @@ app.get('/Teachername/:Teachername', function(req, res) {
       coursename = results[0].CourseName+"\n"+results[1].CourseName+"\n"+results[2].CourseName+"\n"+results[3].CourseName+"\n"+results[1].CourseName
     }else if(results.length == 6){
       coursename = results[0].CourseName+"\n"+results[1].CourseName+"\n"+results[2].CourseName+"\n"+results[3].CourseName+"\n"+results[4].CourseName+"\n"+results[5].CourseName
+    }else if(results.length == 7){
+      coursename = results[0].CourseName+"\n"+results[1].CourseName+"\n"+results[2].CourseName+"\n"+results[3].CourseName+"\n"+results[4].CourseName+"\n"+results[5].CourseName+"\n"+results[6].CourseName
+    }else if(results.length == 8){
+      coursename = results[0].CourseName+"\n"+results[1].CourseName+"\n"+results[2].CourseName+"\n"+results[3].CourseName+"\n"+results[4].CourseName+"\n"+results[5].CourseName+"\n"+results[6].CourseName+"\n"+results[7].CourseName
+    }else if(results.length == 9){
+      coursename = results[0].CourseName+"\n"+results[1].CourseName+"\n"+results[2].CourseName+"\n"+results[3].CourseName+"\n"+results[4].CourseName+"\n"+results[5].CourseName+"\n"+results[6].CourseName+"\n"+results[7].CourseName+"\n"+results[8].CourseName
     }
       console.log(coursename)
       res.json({ message:"請選擇課程:"+coursename })
@@ -2652,45 +2658,6 @@ app.get('/updategrade/:updategrade', function(req, res) {
     res.json({ message: replyMsg1 })
       console.log(replyMsg1)
 });
-// if(typeof(ag) == 'object'){
-//   var bb = ag;
-//   console.log(ag[0]);
-//   //if(ag[0] == '修改'){
-//     bot.on('postback', function(event) {
-//       msg3 = event.postback.data;
-//       if(msg3.indexOf("是") != -1){
-//         console.log("是")
-//               names2[ag[1]][1] = ag[3];                   
-//               recordStr = names2[ag[1]][0]+"    "+ag[3];     //儲存每筆紀錄
-//               record.push(recordStr);
-//               ArrayReverse(record);                 //反轉紀錄
-//               Update(names2[ag[1]][0],names2[ag[1]][1],formate);
-//         event.reply([{ type: 'text', text: "已修改"},
-//                { type: 'text', text: "現在成績:"+names2[ag[1]][0]+names2[ag[1]][1]}]).then(function(data){
-//             }).catch(function(error){
-//             console.log("error")
-//           });   
-//       }
-//       if(msg3.indexOf("否") != -1){
-//         console.log("否")  
-
-//               names2[ag[1]][1] = ag[2];                   
-//               recordStr = names2[ag[1]][0]+"    "+ag[2]     //儲存每筆紀錄
-//               record.push(recordStr);
-//               ArrayReverse(record);                 //反轉紀錄
-//               Update(names2[ag[1]][0],names2[ag[1]][1],formate);
-//         event.reply([{ type: 'text', text: "已取消修改"},
-//                { type: 'text', text: "現在成績:"+names2[ag[1]][0]+names2[ag[1]][1]}]).then(function(data){
-//             }).catch(function(error){
-//             console.log("error")
-//           });
-//       }
-//       });
-
-    
-//   //}
-// }
-
 var server = app.listen(process.env.PORT || 4000, function() {
   var port = server.address().port;
   console.log("App now running on port", port);
