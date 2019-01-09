@@ -276,7 +276,7 @@ var data = {};
 var status = ""
 
 app.get("/index4", function(request, response,next) {
-  console.log(request. _startAt)
+  console.log(request.headers.cookie)
   response.render("index4")
 });
 
