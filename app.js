@@ -154,11 +154,11 @@ inputStream
                   console("OK!")
 })
 
-app.get("/form1", function(request, response,next) {
+app.get("/form1", function(request, response) {
   response.render("form1")
 }); 
-app.get("/index", function(request, response,next) {
-  console.log(session(session_options))
+app.get("/index", function(request, response) {
+  console.log(response)
   response.render("index")
 }); 
 app.get("/index1", function(request, response) {
