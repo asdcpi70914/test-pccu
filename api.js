@@ -3,7 +3,47 @@ var app = express();
 var pinyin_dict_all = require("./pinyin_dict3.js")
 const axios = require('axios');
 const jsSHA = require('jssha');
+var gradeswitch = 0;
+var registering = 0;
+var uploadEmailing = 0;
+var verificationing = 0;
+var emailtrue = 0;
+var emailcount = 0;
+var formate = "";
+var ag = [];
+var transcript = [] ;
+var LoginStatus = 0;
+var coursename = "";
+var coursename1 = "";
+var updategrade = "";
+var TranscriptName = "";
+var min = 100000000;
+var max = 999999999;
+var datetime = require('node-datetime');
+var PW = Math.floor(Math.random()*(max-min+1))+min;
+var PWcount = 0;
+var linebot = require('linebot');
+var express = require('express');
+var request = require("request");
+var getJSON = require('get-json');
+var path = require('path');
+var mysql = require('mysql'); 
+var fs= require('fs');
+var pinyin_dict_all = require("./pinyin_dict3.js")
+require('events').EventEmitter.prototype._maxListeners = 100;
+var bot = linebot({
+  channelId:"1564803662",
+  channelSecret:"3f13593deab6b469ca88c258be7562e8",
+  channelAccessToken:"gDw6ceHuZKIxwvFg720tlcB5A6Pm0AA/Qn7IA1M5pD68w1Lw1JKeIDDc7Kul3M+uu45zG3AJp1jX9WM5iiilJG0Aw7lW+Z7D4IJf9nstcNTAmdRcwDjLMkFSZFtaEeTYgk3kySvleqoL7J1Q6pjOMQdB04t89/1O/w1cDnyilFU="
+});
 
+/**
+ * 拼音库，来源于[在线汉语字典](http://zi.artx.cn/zi/)
+ * 在 pinyin_dict_all_old.js 基础上增加了酿、铽等21个汉字，add by @liuxianan
+ */
+var util = require('util');
+var log_file = fs.createWriteStream(__dirname + '/debug.log', {flags : 'w'});
+var log_stdout = process.stdout;
 const getAuthorizationHeader = function() {
   var AppID = '63de21f4eef246b68964d718ef54284d';
   var AppKey = 'VTmUKW57n1H57UuCykCItwPlasA';
@@ -222,42 +262,6 @@ app.get('/bus1/:bus', function(req, res) {
   });
   }
 });
-var gradeswitch = 0;
-var registering = 0;
-var uploadEmailing = 0;
-var verificationing = 0;
-var emailtrue = 0;
-var emailcount = 0;
-var formate = "";
-var transcript = [] ;
-var LoginStatus = 0;
-var min = 100000000;
-var max = 999999999;
-var PW = Math.floor(Math.random()*(max-min+1))+min;
-var PWcount = 0;
-var linebot = require('linebot');
-var express = require('express');
-var request = require("request");
-var getJSON = require('get-json');
-var path = require('path');
-
-var fs= require('fs');
-var pinyin_dict_all = require("./pinyin_dict3.js")
-require('events').EventEmitter.prototype._maxListeners = 100;
-var bot = linebot({
-  channelId:"1564803662",
-  channelSecret:"3f13593deab6b469ca88c258be7562e8",
-  channelAccessToken:"gDw6ceHuZKIxwvFg720tlcB5A6Pm0AA/Qn7IA1M5pD68w1Lw1JKeIDDc7Kul3M+uu45zG3AJp1jX9WM5iiilJG0Aw7lW+Z7D4IJf9nstcNTAmdRcwDjLMkFSZFtaEeTYgk3kySvleqoL7J1Q6pjOMQdB04t89/1O/w1cDnyilFU="
-});
-
-/**
- * 拼音库，来源于[在线汉语字典](http://zi.artx.cn/zi/)
- * 在 pinyin_dict_all_old.js 基础上增加了酿、铽等21个汉字，add by @liuxianan
- */
-var util = require('util');
-var log_file = fs.createWriteStream(__dirname + '/debug.log', {flags : 'w'});
-var log_stdout = process.stdout;
-
 console.log = function(d) { //
   log_file.write(util.format(d) + '\n');
   log_stdout.write(util.format(d) + '\n');
@@ -753,6 +757,12 @@ function Update (name,grade,TranscriptName){
           }
          console.log("資料已修改");
         });
+        connection.query('UPDATE '+formate+' SET Grade = ? WHERE Sname = ?' ,[bbbb,aaaa], function(err, results) {
+            if (err) {
+              throw err;
+          }
+         console.log("資料已修改");
+        });  
         connection.end();
 }
 
@@ -798,7 +808,7 @@ function SELECTSID (Sname){
 
 
 }
-function Insert (name,grade,formate,SID){
+function Insert (name,grade,formate){
   var dt = datetime.create();
   var Sname = name;
   var Grade = Number(grade);
@@ -811,7 +821,7 @@ function Insert (name,grade,formate,SID){
         database : 'line'
     });
     connection.connect();
-    connection.query('INSERT INTO Grade (Transcript_ID,Student_ID,Grade,Course_ID,GDATE) VALUES ((SELECT Transcript_ID FROM Transcript WHERE TranscriptName = ?),(SELECT Student_ID FROM STUDENT WHERE Sname = ?),?,?,?)',[TranscriptName,Sname,Grade,'CB4312',date], function(err, results) {
+    connection.query('INSERT INTO Grade (Transcript_ID,Student_ID,Grade,Course_ID,GDATE) VALUES ((SELECT Transcript_ID FROM Transcript WHERE TranscriptName = ?),(SELECT Student_ID FROM STUDENT WHERE Sname = ?),?,(Select Course_ID FROM COURSE WHERE CourseName = ?),?)',[TranscriptName,Sname,Grade,coursename1,date], function(err, results) {
           if (err) {
             throw err;
          }
@@ -988,18 +998,20 @@ function compare(names,instr){              //成績
             recordStr = names2[ans[0]+1][0]+"    "+fraction;     //儲存每筆紀錄
             record.push(recordStr);
             ArrayReverse(record);
+            Insert(names2[ans[0]+1][0],fraction,formate);
           }else{
                 var temp2 = [];
                 temp2[0] = "修改";
+                updategrade = temp2[0];
                 temp2[1] = ans[0]+1;
                 temp2[2] = names2[ans[0]+1][1];
-            temp2[3] = fraction;
-                console.log("asas"+temp2[3])
-			  names2[temp2[1]][1] = temp2[3];                   
+                temp2[3] = fraction;
+                console.log("asas"+temp2)
+			         names2[temp2[1]][1] = temp2[3];                   
               recordStr = names2[temp2[1]][0]+"    "+temp2[3];     //儲存每筆紀錄
               record.push(recordStr);
               ArrayReverse(record);                 //反轉紀錄
-     			return ("成績已修改,現在成績:"+names2[temp2[1]][0]+names2[temp2[1]][1])
+     			return temp2
       }
     }else if(ans.length > 1){           //名單中找到多人，回傳給使用者選擇
           var str_select ="";
@@ -1769,7 +1781,6 @@ function Display_attend(inarray){
    }
    return display_str;
 }
-var ag = [];
 var testname = "";
 //a[0]="";
 
@@ -2465,7 +2476,6 @@ bot.on('postback', function(event) {
         console.log("replyMsg3+results[x].Tables_in_line")
         formate = transcript[0];
         names2[0][1] = formate;
-        getGradeByDB();
         event.reply([{ type: 'text', text: "選擇完成"},
                { type: 'text', text: "現在成績單:"+transcript[0]}]).then(function(data){
             }).catch(function(error){
@@ -2531,16 +2541,155 @@ if(msg6.indexOf("前5筆") != -1 && msg6.length == 3){
     }      
  });
 
-app.get('/grade/:grade', function(req, res) {
-    var msg = req.params.grade;
-    var replyMsg1 = "";
+app.get('/Teachername/:Teachername', function(req, res) {
+    var msg = req.params.Teachername;
     console.log(msg)
-    replyMsg1 = compare(names,msg)
-    res.json({ message: replyMsg1 })
-			console.log(replyMsg1)
+    var connection = mysql.createConnection({
+       host     : '35.185.170.234',
+       user     : 'root',
+       password : 'asdcpi14',
+       database : 'line'
+    });
+    connection.connect();
+    console.log("connect");
+    connection.query('Select CourseName FROM COURSE WHERE User_ID = (Select User_ID FROM TEACHER WHERE Tname = ?)',[msg], function(err, results) {
+         if (err) {
+           throw err;
+        }
+    if(results.length == 1){
+      coursename = results[0].CourseName;
+    }else if(results.length == 2){
+      coursename = results[0].CourseName+"\n"+results[1].CourseName
+    }else if(results.length == 3){
+      coursename = results[0].CourseName+"\n"+results[1].CourseName+"\n"+results[2].CourseName
+    }else if(results.length == 4){
+      coursename = results[0].CourseName+"\n"+results[1].CourseName+"\n"+results[2].CourseName+"\n"+results[3].CourseName
+    }else if(results.length == 5){
+      coursename = results[0].CourseName+"\n"+results[1].CourseName+"\n"+results[2].CourseName+"\n"+results[3].CourseName+"\n"+results[1].CourseName
+    }else if(results.length == 6){
+      coursename = results[0].CourseName+"\n"+results[1].CourseName+"\n"+results[2].CourseName+"\n"+results[3].CourseName+"\n"+results[4].CourseName+"\n"+results[5].CourseName
+    }
+      console.log(coursename)
+      res.json({ message:"請選擇課程:"+coursename })
+    });
+    connection.end();
+});
+
+app.get('/Coursename/:Coursename', function(req, res) {
+  var msg = req.params.Coursename
+  coursename1 = msg;
+  console.log(coursename1)
+  res.json({ message:"目前選擇的課程:"+coursename1 })
 });
 
 
+app.get('/Transcript', function(req, res) {
+  var connection = mysql.createConnection({
+       host     : '35.185.170.234',
+       user     : 'root',
+       password : 'asdcpi14',
+       database : 'line'
+    });
+    connection.connect();
+    console.log("connect");
+    connection.query('Select TranscriptName FROM Transcript WHERE Course_ID = (Select Course_ID FROM COURSE WHERE Coursename = ?) ',[coursename], function(err, results) {
+         if (err) {
+           throw err;
+        }
+    if(results.length == 1){
+      TranscriptName = results[0].TranscriptName;
+    }else if(results.length == 2){
+      TranscriptName = results[0].TranscriptName+"\n"+results[1].TranscriptName
+    }else if(results.length == 3){
+      TranscriptName = results[0].TranscriptName+"\n"+results[1].TranscriptName+"\n"+results[2].TranscriptName
+    }else if(results.length == 4){
+      TranscriptName = results[0].TranscriptName+"\n"+results[1].TranscriptName+"\n"+results[2].TranscriptName+"\n"+results[3].TranscriptName
+    }else if(results.length == 5){
+      TranscriptName = results[0].TranscriptName+"\n"+results[1].TranscriptName+"\n"+results[2].TranscriptName+"\n"+results[3].TranscriptName+"\n"+results[1].TranscriptName
+    }else if(results.length == 6){
+      TranscriptName = results[0].TranscriptName+"\n"+results[1].TranscriptName+"\n"+results[2].TranscriptName+"\n"+results[3].TranscriptName+"\n"+results[4].TranscriptName+"\n"+results[5].TranscriptName
+    }
+      console.log(coursename)
+      res.json({ message: TranscriptName })
+    });
+    connection.end();
+});
+
+app.get('/Transcript/:Transcript', function(req, res) {
+  var msg = req.params.Transcript
+  formate = msg;
+  console.log(msg)
+  getGradeByDB()
+  res.json({ message:"目前選擇的成績單:"+msg })
+});
+
+app.get('/grade/:grade', function(req, res) {
+    var msg = req.params.grade;
+    var replyMsg1 = "";
+    console.log(coursename)
+    console.log(msg)
+    ag = compare(names,msg)
+    if(ag[0] == "修改"){
+      replyMsg1 = "已有成績:"+ag[2]+",是否修改?"
+    }else{
+      replyMsg1 = compare(names,msg)
+    }
+    res.json({ message: replyMsg1 })
+			console.log(replyMsg1)
+});
+app.get('/updategrade/:updategrade', function(req, res) {
+    var msg = req.params.updategrade;
+    var replyMsg1 = "";
+    if(msg == "是"){
+      names2[ag[1]][1] = ag[3];
+      Update(names2[ag[1]][0],names2[ag[1]][1],formate); 
+      replyMsg1 ="已修改成績,現在成績:"+names2[ag[1]][0]+names2[ag[1]][1]+"分"
+    }else if(msg == "否"){
+      names2[ag[1]][1] = ag[2];
+      Update(names2[ag[1]][0],names2[ag[1]][1],formate);  
+      replyMsg1 = "未修改成績,現在成績:"+names2[ag[1]][0]+names2[ag[1]][1]+"分"
+    }
+    res.json({ message: replyMsg1 })
+      console.log(replyMsg1)
+});
+// if(typeof(ag) == 'object'){
+//   var bb = ag;
+//   console.log(ag[0]);
+//   //if(ag[0] == '修改'){
+//     bot.on('postback', function(event) {
+//       msg3 = event.postback.data;
+//       if(msg3.indexOf("是") != -1){
+//         console.log("是")
+//               names2[ag[1]][1] = ag[3];                   
+//               recordStr = names2[ag[1]][0]+"    "+ag[3];     //儲存每筆紀錄
+//               record.push(recordStr);
+//               ArrayReverse(record);                 //反轉紀錄
+//               Update(names2[ag[1]][0],names2[ag[1]][1],formate);
+//         event.reply([{ type: 'text', text: "已修改"},
+//                { type: 'text', text: "現在成績:"+names2[ag[1]][0]+names2[ag[1]][1]}]).then(function(data){
+//             }).catch(function(error){
+//             console.log("error")
+//           });   
+//       }
+//       if(msg3.indexOf("否") != -1){
+//         console.log("否")  
+
+//               names2[ag[1]][1] = ag[2];                   
+//               recordStr = names2[ag[1]][0]+"    "+ag[2]     //儲存每筆紀錄
+//               record.push(recordStr);
+//               ArrayReverse(record);                 //反轉紀錄
+//               Update(names2[ag[1]][0],names2[ag[1]][1],formate);
+//         event.reply([{ type: 'text', text: "已取消修改"},
+//                { type: 'text', text: "現在成績:"+names2[ag[1]][0]+names2[ag[1]][1]}]).then(function(data){
+//             }).catch(function(error){
+//             console.log("error")
+//           });
+//       }
+//       });
+
+    
+//   //}
+// }
 
 var server = app.listen(process.env.PORT || 3000, function() {
   var port = server.address().port;
