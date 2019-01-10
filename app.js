@@ -58,14 +58,13 @@ app.get("/callback",login.callback(
       connection.connect();
       console.log("connect");
       connection.query('select HTMLcookie FROM HTMLLogin Where User_ID = ?',[id], function(err, results) {
-          // if(err){
-          //   selectcookie == ""
-          //   console.log(selectcookie)
-          // }else{
-          //  selectcookie == results[0].HTMLcookie 
-          // console.log(selectcookie)
-          // }
-          console.log(results)
+          if(results.length == 0){
+            selectcookie == ""
+            console.log("selectcookie1:"+selectcookie)
+          }else{
+           selectcookie == results[0].HTMLcookie 
+          console.log("selectcookie2:"+selectcookie)
+          }
         });
       // if(selectcookie == ""){
       //   connection.query('Insert Into HTMLLogin(User_ID,cookie) VALUES (?,?)',[id,linecookie], function(err, results) {
