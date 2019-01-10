@@ -58,6 +58,7 @@ app.get("/callback",login.callback(
       connection.connect();
       console.log("connect");
       connection.query('select HTMLcookie FROM HTMLLogin Where User_ID = ?',[id], function(err, results) {
+        console.log(results)
           if(results.length == 0){
             selectcookie == ""
             console.log("selectcookie1:"+selectcookie)
@@ -66,6 +67,7 @@ app.get("/callback",login.callback(
           console.log("selectcookie2:"+selectcookie)
           }
         });
+      connection.end(); 
       // if(selectcookie == ""){
       //   connection.query('Insert Into HTMLLogin(User_ID,HTMLcookie) VALUES (?,?)',[id,linecookie], function(err, results) {
       //    if (err) {
