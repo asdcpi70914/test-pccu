@@ -67,14 +67,14 @@ app.get("/callback",login.callback(
           }
         });
       if(selectcookie == ""){
-        connection.query('Insert Into HTMLLogin(User_ID,cookie) VALUES (?,?)',[id,linecookie], function(err, results) {
+        connection.query('Insert Into HTMLLogin(User_ID,HTMLcookie) VALUES (?,?)',[id,linecookie], function(err, results) {
          if (err) {
            throw err;
           }
         });
           connection.end(); 
       }else{
-        connection.query('Update HTMLLogin set ? where User_ID = ?',[linecookie,id], function(err, results) {
+        connection.query('Update HTMLcookie FROM HTMLLogin set ? where User_ID = ?',[linecookie,id], function(err, results) {
          if (err) {
            throw err;
           }
