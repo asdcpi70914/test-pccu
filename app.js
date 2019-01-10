@@ -58,11 +58,12 @@ app.get("/callback",login.callback(
       connection.connect();
       console.log("connect");
       connection.query('select cookie FROM HTMLLogin Where User_ID = ?',[id], function(err, results) {
-        if (err) {
-           selectcookie = ""
+        if(cookie == "undefined"){
+        selectcookie == ""
         }else{
-        selectcookie = results[0].cookie
-      }
+         selectcookie == results[0].cookie 
+        }
+
         });
       if(selectcookie == ""){
       connection.query('Insert Into HTMLLogin(User_ID,cookie) VALUES (?,?)',[id,linecookie], function(err, results) {
