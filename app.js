@@ -58,7 +58,7 @@ app.get("/callback",login.callback(
       connection.connect();
       console.log("connect");
       connection.query('select cookie FROM HTMLLogin Where User_ID = ?',[id], function(err, results) {
-        if(cookie == "undefined"){
+        if(results[0].cookie == "undefined"){
         selectcookie == ""
         }else{
          selectcookie == results[0].cookie 
