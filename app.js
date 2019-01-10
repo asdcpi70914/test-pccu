@@ -67,6 +67,7 @@ app.get("/callback",login.callback(
            selectcookie == results[0].HTMLcookie 
           console.log("selectcookie2:"+selectcookie)
           }
+                res.render("form1")  
         });
       connection.end(); 
       // if(selectcookie == ""){
@@ -84,7 +85,6 @@ app.get("/callback",login.callback(
       //   });
       //   connection.end(); 
       // }
-        res.render("form1")
     },(req, res, next, error) => {
 
         res.status(400).json(error);
