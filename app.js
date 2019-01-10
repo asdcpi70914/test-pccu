@@ -66,21 +66,21 @@ app.get("/callback",login.callback(
           console.log("selectcookie2:"+selectcookie)
           }
         });
-      // if(selectcookie == ""){
-      //   connection.query('Insert Into HTMLLogin(User_ID,cookie) VALUES (?,?)',[id,linecookie], function(err, results) {
-      //    if (err) {
-      //      throw err;
-      //     }
-      //   });
-      //     connection.end(); 
-      // }else{
-      //   connection.query('Update HTMLLogin set ? where User_ID = ?',[linecookie,id], function(err, results) {
-      //    if (err) {
-      //      throw err;
-      //     }
-      //   });
-      //   connection.end(); 
-      //}
+      if(selectcookie == ""){
+        connection.query('Insert Into HTMLLogin(User_ID,cookie) VALUES (?,?)',[id,linecookie], function(err, results) {
+         if (err) {
+           throw err;
+          }
+        });
+          connection.end(); 
+      }else{
+        connection.query('Update HTMLLogin set ? where User_ID = ?',[linecookie,id], function(err, results) {
+         if (err) {
+           throw err;
+          }
+        });
+        connection.end(); 
+      }
         res.render("form1")
     },(req, res, next, error) => {
 
