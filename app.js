@@ -59,9 +59,10 @@ app.get("/callback",login.callback(
       console.log("connect");
       connection.query('select cookie FROM HTMLLogin Where User_ID = ?',[id], function(err, results) {
         if (err) {
-           throw err;
-        }
+           selectcookie = ""
+        }else{
         selectcookie = results[0].cookie
+      }
         });
       if(selectcookie == ""){
       connection.query('Insert Into HTMLLogin(User_ID,cookie) VALUES (?,?)',[id,linecookie], function(err, results) {
@@ -76,6 +77,7 @@ app.get("/callback",login.callback(
         }
       });
     connection.end(); 
+    
     }
         res.render("form1")
     },(req, res, next, error) => {
