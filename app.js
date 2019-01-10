@@ -12,10 +12,11 @@ var AutoDetectDecoderStream = require('autodetect-decoder-stream');
 app.set("views", path.resolve(__dirname, "views"));
 app.set("view engine", "ejs");
 var id = "";
-var linecookie = "";
+var linecookie = ""
+var selectcookie = ""
 var data = {}
 var data1 = {}
-var data2 = {}
+var data2 = {};
 var entries = [];
 app.locals.entries = entries;
 "use strict";
@@ -44,8 +45,38 @@ app.get("/auth", login.auth());
 
 app.get("/callback",login.callback(
     (req, res, next, token_response) => {
-        console.log(req.headers.cookie);
-        id = token_response.id_token.sub
+      console.log(req.headers.cookie);
+      linecookie = req.headers.cookie;
+      id = token_response.id_token.sub;
+      var inputStream = fs.createReadStream(path,'utf8');
+      var connection = mysql.createConnection({
+        host     : '35.185.170.234',
+        user     : 'root',
+        password : 'asdcpi14',
+        database : 'line'
+      });
+      connection.connect();
+      console.log("connect");
+      connection.query('select cookie FROM HTMLLogin Where User_ID = ?',[id], function(err, results) {
+        if (err) {
+           throw err;
+        }
+        selectcookie = results[0].cookie
+        });
+      if(selectcookie == ""){
+      connection.query('Insert Into HTMLLogin(User_ID,cookie) VALUES (?,?)',[id,linecookie], function(err, results) {
+         if (err) {
+           throw err;
+        }
+        });
+    }else{
+      connection.query('Update HTMLLogin set ? where User_ID = ?',[linecookie,id], function(err, results) {
+         if (err) {
+           throw err;
+        }
+      });
+    connection.end(); 
+    }
         res.render("form1")
     },(req, res, next, error) => {
 
