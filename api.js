@@ -827,6 +827,12 @@ function Insert (name,grade,formate){
          }
          console.log("資料已輸入");
       });
+    connection.query('INSERT INTO '+formate+'(Sname,Grade) VALUES (?,?)',[Sname,Grade], function(err, results) {
+          if (err) {
+            throw err;
+         }
+         console.log("資料已輸入");
+      });
     connection.end();
 }
 

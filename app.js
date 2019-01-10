@@ -12,7 +12,7 @@ var AutoDetectDecoderStream = require('autodetect-decoder-stream');
 app.set("views", path.resolve(__dirname, "views"));
 app.set("view engine", "ejs");
 var id = "";
-var selectcookie = "";
+var linecookie = ""
 var lineselect = "";
 var data = {}
 var data1 = {}
@@ -45,8 +45,7 @@ app.get("/auth", login.auth());
 
 app.get("/callback",login.callback(
     (req, res, next, token_response) => {
-        console.log(token_response)
-        console.log(token_response.id_token.sub)
+      var selectcookie = 0;
         id = token_response.id_token.sub
         linecookie = req.headers.cookie;
       var connection = mysql.createConnection({
@@ -57,34 +56,29 @@ app.get("/callback",login.callback(
       });
       connection.connect();
       console.log("connect");
-      connection.query('select HTMLcookie FROM HTMLLogin Where User_ID = ?',[id], function(err, results) {
-        console.log("results:"+results)
-        console.log("results.length"+results.length)
-          if(results.length == 0){
-            selectcookie == ""
-            console.log("selectcookie1:"+selectcookie)
-          }else if(results.length == 1){
-           selectcookie == results[0].HTMLcookie 
-          console.log("selectcookie2:"+selectcookie)
+      connection.query('select HTMLcookie FROM HTMLLogin WHERE User_ID = ?',[id], function(err, results) {
+         console.log(results.length)
+      if(results.length == 0){
+        console.log("insert"+selectcookie)
+        connection.query('Insert Into HTMLLogin(User_ID,HTMLcookie) VALUES (?,?)',[id,linecookie], function(err, results) {
+         if (err) {
+           throw err;
           }
-                res.render("form1")  
+                  console.log("Insert")
         });
-      connection.end(); 
-      // if(selectcookie == ""){
-      //   connection.query('Insert Into HTMLLogin(User_ID,HTMLcookie) VALUES (?,?)',[id,linecookie], function(err, results) {
-      //    if (err) {
-      //      throw err;
-      //     }
-      //   });
-      //     connection.end(); 
-      // }else{
-      //   connection.query('Update HTMLcookie FROM HTMLLogin set ? where User_ID = ?',[linecookie,id], function(err, results) {
-      //    if (err) {
-      //      throw err;
-      //     }
-      //   });
-      //   connection.end(); 
-      // }
+      connection.end();
+      res.render("form1") 
+      }else if(results.length == 1){
+        connection.query('Update HTMLLogin set HTMLcookie = ? where User_ID = ?',[linecookie,id], function(err, results) {
+         if (err) {
+           throw err;
+          }
+                  console.log("Update")
+        });
+              connection.end();
+      res.render("form1")  
+      }
+    });
     },(req, res, next, error) => {
 
         res.status(400).json(error);
@@ -144,7 +138,7 @@ var inputStream = fs.createReadStream(path,'utf8');
   });
    connection.connect();
    console.log("connect");
-   connection.query('Insert Into COURSE(TeacherName,CourseName,Course_ID,User_ID) VALUES ((SELECT Tname FROM TEACHER WHERE User_ID = ?),?,?,?)',[id,text2,text[j],id], function(err, results) {
+   connection.query('Insert Into COURSE(TeacherName,CourseName,Course_ID,User_ID) VALUES ((SELECT Tname FROM TEACHER WHERE User_ID = ?),?,?,(SELECT User_ID FROM HTMLLogin WHERE HTMLcookie = ?))',[id,text2,text[j],req.headers.cookie], function(err, results) {
          if (err) {
            throw err;
         }
@@ -206,7 +200,7 @@ app.get("/index1", function(request, response) {
       database : 'line'
   });
   connection.connect();
-  connection.query('SELECT CourseName FROM COURSE Where User_ID = ?',[id],function(err, results) {
+  connection.query('SELECT CourseName FROM COURSE Where User_ID = (SELECT User_ID FROM HTMLLogin WHERE HTMLcookie = ?)',[request.headers.cookie],function(err, results) {
          if (err) {
          }
           console.log("--------------------")
@@ -439,7 +433,7 @@ app.get("/select", function(request, response,next) {
       database : 'line'
   });
   connection.connect();
-  connection.query('SELECT CourseName FROM COURSE Where User_ID = ?',[id],function(err, results) {
+  connection.query('SELECT CourseName FROM COURSE Where User_ID = (SELECT User_ID FROM HTMLLogin WHERE HTMLcookie = ?)',[request.headers.cookie],function(err, results) {
          if (err) {
          }
           console.log("--------------------")
