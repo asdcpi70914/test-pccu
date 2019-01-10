@@ -12,11 +12,11 @@ var AutoDetectDecoderStream = require('autodetect-decoder-stream');
 app.set("views", path.resolve(__dirname, "views"));
 app.set("view engine", "ejs");
 var id = "";
-var linecookie = ""
-var selectcookie = ""
+var selectcookie = "";
+var lineselect = "";
 var data = {}
 var data1 = {}
-var data2 = {};
+var data2 = {}
 var entries = [];
 app.locals.entries = entries;
 "use strict";
@@ -45,10 +45,10 @@ app.get("/auth", login.auth());
 
 app.get("/callback",login.callback(
     (req, res, next, token_response) => {
-      console.log(req.headers.cookie);
-      linecookie = req.headers.cookie;
-      id = token_response.id_token.sub;
-      var inputStream = fs.createReadStream(path,'utf8');
+        console.log(token_response)
+        console.log(token_response.id_token.sub)
+        id = token_response.id_token.sub
+        linecookie = req.headers.cookie;
       var connection = mysql.createConnection({
         host     : '35.185.170.234',
         user     : 'root',
@@ -80,6 +80,12 @@ app.get("/callback",login.callback(
     connection.end(); 
 
     }
+
+
+
+
+
+
         res.render("form1")
     },(req, res, next, error) => {
 
