@@ -57,30 +57,30 @@ app.get("/callback",login.callback(
       });
       connection.connect();
       console.log("connect");
-      connection.query('select cookie FROM HTMLLogin Where User_ID = ?',[id], function(err, results) {
-        if(err){
-          selectcookie == ""
-          console.log(selectcookie)
-        }else{
-         selectcookie == results[0].cookie 
-        console.log(selectcookie)
-        }
-
+      connection.query('select HTMLcookie FROM HTMLLogin Where User_ID = ?',[id], function(err, results) {
+          // if(err){
+          //   selectcookie == ""
+          //   console.log(selectcookie)
+          // }else{
+          //  selectcookie == results[0].HTMLcookie 
+          // console.log(selectcookie)
+          // }
+          console.log(results)
         });
-      if(selectcookie == ""){
-        connection.query('Insert Into HTMLLogin(User_ID,cookie) VALUES (?,?)',[id,linecookie], function(err, results) {
-         if (err) {
-           throw err;
-          }
-        });
-          connection.end(); 
-      }else{
-        connection.query('Update HTMLLogin set ? where User_ID = ?',[linecookie,id], function(err, results) {
-         if (err) {
-           throw err;
-          }
-        });
-        connection.end(); 
+      // if(selectcookie == ""){
+      //   connection.query('Insert Into HTMLLogin(User_ID,cookie) VALUES (?,?)',[id,linecookie], function(err, results) {
+      //    if (err) {
+      //      throw err;
+      //     }
+      //   });
+      //     connection.end(); 
+      // }else{
+      //   connection.query('Update HTMLLogin set ? where User_ID = ?',[linecookie,id], function(err, results) {
+      //    if (err) {
+      //      throw err;
+      //     }
+      //   });
+      //   connection.end(); 
       }
         res.render("form1")
     },(req, res, next, error) => {
