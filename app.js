@@ -70,6 +70,7 @@ app.get("/callback",login.callback(
            throw err;
         }
         });
+          connection.end(); 
     }else{
       connection.query('Update HTMLLogin set ? where User_ID = ?',[linecookie,id], function(err, results) {
          if (err) {
@@ -77,7 +78,7 @@ app.get("/callback",login.callback(
         }
       });
     connection.end(); 
-    
+
     }
         res.render("form1")
     },(req, res, next, error) => {
