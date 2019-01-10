@@ -59,11 +59,11 @@ app.get("/callback",login.callback(
       console.log("connect");
       connection.query('select cookie FROM HTMLLogin Where User_ID = ?',[id], function(err, results) {
         if(typeof(cookie) == "undefined"){
-          console.log("undefined")
-        selectcookie == ""
+          selectcookie == ""
+          console.log(selectcookie)
         }else{
-          console.log("selectcookie")
          selectcookie == results[0].cookie 
+        console.log(selectcookie)
         }
 
         });
