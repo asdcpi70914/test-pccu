@@ -12,6 +12,7 @@ var AutoDetectDecoderStream = require('autodetect-decoder-stream');
 app.set("views", path.resolve(__dirname, "views"));
 app.set("view engine", "ejs");
 var id = "";
+var linecookie = "";
 var data = {}
 var data1 = {}
 var data2 = {}
@@ -43,9 +44,7 @@ app.get("/auth", login.auth());
 
 app.get("/callback",login.callback(
     (req, res, next, token_response) => {
-
-        console.log(token_response)
-        console.log(token_response.id_token.sub)
+        console.log(req.headers.cookie);
         id = token_response.id_token.sub
         res.render("form1")
     },(req, res, next, error) => {
