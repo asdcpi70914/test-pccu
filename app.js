@@ -314,8 +314,6 @@ app.post("/index3", function(request, response) {
     setTimeout(function(){ 
       console.log("studentname.length:"+studentname.length);
       console.log("studentname:"+studentname[0]);
-        var dt = datetime.create();
-        var date = dt.format('y-m-d H:M:S');
       for(var i = 0 ; i < studentname.length ; i++){
         connection.query('INSERT INTO Grade (Transcript_ID,Student_ID,Grade,Course_ID,GDATE) VALUES ((SELECT Transcript_ID FROM Transcript WHERE TranscriptName = ?),?,?,(Select Course_ID FROM COURSE WHERE CourseName = ?),?)',[time1,studentname[i],"",classname,today], function(err, results) {
           if (err) {
