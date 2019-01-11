@@ -19,6 +19,7 @@ var data1 = {}
 var data2 = {}
 var entries = [];
 var studentname = [];
+var day = new Date()
 app.locals.entries = entries;
 "use strict";
 
@@ -418,7 +419,6 @@ app.post("/insert1", function(request, response,next) {
    
 
   app.post("/insert2", function(request, response,next) {
-    var day = new Date()
     today = day.getFullYear()+"-"+(day.getMonth()+1)+"-"+day.getDate()+" "+day.getHours()+":"+day.getMinutes()+":"+day.getSeconds()
     console.log("--------------------")
     console.log(today)
