@@ -48,7 +48,6 @@ app.get("/auth", login.auth());
 app.get("/callback",login.callback(
     (req, res, next, token_response) => {
       var selectcookie = 0;
-      console.log(req)
         id = token_response.id_token.sub
         linecookie = req.headers.cookie;
       var connection = mysql.createConnection({
