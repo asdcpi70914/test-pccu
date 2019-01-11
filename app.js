@@ -18,6 +18,7 @@ var data = {}
 var data1 = {}
 var data2 = {}
 var entries = [];
+var studentname = [];
 app.locals.entries = entries;
 "use strict";
 
@@ -46,6 +47,7 @@ app.get("/auth", login.auth());
 app.get("/callback",login.callback(
     (req, res, next, token_response) => {
       var selectcookie = 0;
+      console.log(req)
         id = token_response.id_token.sub
         linecookie = req.headers.cookie;
       var connection = mysql.createConnection({
@@ -272,6 +274,7 @@ app.post("/index3", function(request, response) {
   console.log(request.body)
   console.log(typeof(test))
   console.log(typeof(time))
+  today = day.getFullYear()+"-"+(day.getMonth()+1)+"-"+day.getDate()+" "+day.getHours()+":"+day.getMinutes()+":"+day.getSeconds()
   year = time.substring(0,time.search("-"))
   time = time.replace(year+"-","")
   time1 = time.replace("-","")
@@ -287,21 +290,50 @@ app.post("/index3", function(request, response) {
   });
    connection.connect();
    console.log("connect");
-    connection.query('CREATE TABLE '+time1 +' (Sname VARCHAR(255) NOT NULL, Grade INT NULL,PRIMARY KEY(Sname))', function(err, results) {
-          if (err) {
-            throw err;
-         }
-         console.log("Table Created");
-      });
-
  connection.query('INSERT INTO Transcript (TranscriptType,TranscriptName,Course_ID) VALUES (?,?,(select Course_ID FROM COURSE Where CourseName = ?))',[test,time1,classname], function(err, results) {
           if (err) {
             throw err;
          }
          console.log("INSERT Table");
       });  
+    connection.query('SELECT Sname,STUDENT.Student_ID FROM STUDENT,SCOURSE WHERE Course_ID = (SELECT Course_ID FROM COURSE WHERE CourseName = ?) AND STUDENT.Student_ID = SCOURSE.Student_ID' ,[classname], function(err, results) {
+          if (err) {
+            throw err;
+         }
+         console.log("select Sname and Student_ID");
+         var countname = 0;
+         for(var x in results){
+ 
+           studentname.push(results[x].Student_ID);
+           console.log("sn:"+studentname[countname]);
+           countname = countname+1;
+         }
+
+      });
+
+    setTimeout(function(){ 
+      console.log("studentname.length:"+studentname.length);
+      console.log("studentname:"+studentname[0]);
+        var dt = datetime.create();
+        var date = dt.format('y-m-d H:M:S');
+      for(var i = 0 ; i < studentname.length ; i++){
+        connection.query('INSERT INTO Grade (Transcript_ID,Student_ID,Grade,Course_ID,GDATE) VALUES ((SELECT Transcript_ID FROM Transcript WHERE TranscriptName = ?),?,?,(Select Course_ID FROM COURSE WHERE CourseName = ?),?)',[time1,studentname[i],"",classname,today], function(err, results) {
+          if (err) {
+            throw err;
+          }
+          console.log("資料已輸入");
+        });
+      }
     connection.end();
   response.render("index3");
+     }, 4000);
+    
+
+
+
+
+
+
 });
 var data = {};
 var status = ""
@@ -408,7 +440,7 @@ app.post("/insert1", function(request, response,next) {
    connection.connect();
    console.log("connect");
    //SELECT TranscriptName FROM Transcript Where Course_ID = (SELECT Course_ID FROM COURSE Where CourseName = ?,data1:data1.user}
-   connection.query('INSERT INTO Grade (Transcript_ID, Student_ID,Grade, Course_ID,GDATE) VALUES ((select Transcript_ID from Transcript where TranscriptName = ?),(select Student_ID from STUDENT where Sname = ?),?,(select Course_ID from COURSE where CourseName = ?),?);',[transcript,name,grade,course,today],function(err, results) {
+   connection.query('UPDATE Grade SET Grade = ? , GDATE = ? where Student_ID = (select Student_ID from STUDENT where Sname = ?) AND Transcript_ID = (SELECT Transcript_ID FROM Transcript WHERE TranscriptName = ?)',[grade,today,name,transcript],function(err, results) {
          if (err) {
           data.user = false
          }
