@@ -302,20 +302,9 @@ app.post("/index3", function(request, response) {
          }
          console.log("select Sname and Student_ID");
          var countname = 0;
-         for(var x in results){
- 
-           studentname.push(results[x].Student_ID);
-           console.log("sn:"+studentname[countname]);
-           countname = countname+1;
-         }
-
-      });
-
     setTimeout(function(){ 
-      console.log("studentname.length:"+studentname.length);
-      console.log("studentname:"+studentname[0]);
-      for(var i = 0 ; i < studentname.length ; i++){
-        connection.query('INSERT INTO Grade (Transcript_ID,Student_ID,Grade,Course_ID,GDATE) VALUES ((SELECT Transcript_ID FROM Transcript WHERE TranscriptName = ?),?,?,(Select Course_ID FROM COURSE WHERE CourseName = ?),?)',[time1,studentname[i],"",classname,today], function(err, results) {
+      for(var i = 0 ; i < results.length ; i++){
+        connection.query('INSERT INTO Grade (Transcript_ID,Student_ID,Grade,Course_ID,GDATE) VALUES ((SELECT Transcript_ID FROM Transcript WHERE TranscriptName = ?),?,?,(Select Course_ID FROM COURSE WHERE CourseName = ?),?)',[time1,results[i].Student_ID,"",classname,today], function(err, results) {
           if (err) {
             throw err;
           }
@@ -323,8 +312,9 @@ app.post("/index3", function(request, response) {
         });
       }
      }, 4000);
-        connection.end();
-  response.render("index3");
+    response.render("index3");
+  });
+          connection.end();  
 });
 var data = {};
 var status = ""
