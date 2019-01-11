@@ -322,16 +322,9 @@ app.post("/index3", function(request, response) {
           console.log("資料已輸入");
         });
       }
-    connection.end();
-  response.render("index3");
      }, 4000);
-    
-
-
-
-
-
-
+        connection.end();
+  response.render("index3");
 });
 var data = {};
 var status = ""
