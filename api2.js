@@ -2320,28 +2320,28 @@ app.get('/Teachername/:Teachername', function(req, res) {
          if (err) {
            throw err;
         }
-                for(var i = 1 ; i <= results.length;i++){
-          classname[i] = results[i-1].CourseName;
-        }
+        //         for(var i = 1 ; i <= results.length;i++){
+        //   classname[i] = results[i-1].CourseName;
+        // }
         console.log(classname[0])
     if(results.length == 1){
-      coursename = "1."+results[0].CourseName;
+      coursename = results[0].CourseName;
     }else if(results.length == 2){
-      coursename = "1."+results[0].CourseName+"2."+results[1].CourseName
+      coursename = results[0].CourseName+"\n"+results[1].CourseName
     }else if(results.length == 3){
-      coursename = "1."+results[0].CourseName+"2."+results[1].CourseName+"3."+results[2].CourseName
+      coursename = results[0].CourseName+"\n"+results[1].CourseName+"\n"+results[2].CourseName
     }else if(results.length == 4){
-      coursename = "1."+results[0].CourseName+"2."+results[1].CourseName+"3."+results[2].CourseName+"4."+results[3].CourseName
+      coursename = results[0].CourseName+"\n"+results[1].CourseName+"\n"+results[2].CourseName+"\n"+results[3].CourseName
     }else if(results.length == 5){
-      coursename = "1."+results[0].CourseName+"2."+results[1].CourseName+"3."+results[2].CourseName+"4."+results[3].CourseName+"5."+results[1].CourseName
+      coursename = results[0].CourseName+"\n"+results[1].CourseName+"\n"+results[2].CourseName+"\n"+results[3].CourseName+"\n"+results[1].CourseName
     }else if(results.length == 6){
-      coursename = "1."+results[0].CourseName+"2."+results[1].CourseName+"3."+results[2].CourseName+"4."+results[3].CourseName+"5."+results[4].CourseName+"6."+results[5].CourseName
+      coursename = results[0].CourseName+"\n"+results[1].CourseName+"\n"+results[2].CourseName+"\n"+results[3].CourseName+"\n"+results[4].CourseName+"\n"+results[5].CourseName
     }else if(results.length == 7){
-      coursename = "1."+results[0].CourseName+"2."+results[1].CourseName+"3."+results[2].CourseName+"4."+results[3].CourseName+"5."+results[4].CourseName+"6."+results[5].CourseName+"7."+results[6].CourseName
+      coursename = results[0].CourseName+"\n"+results[1].CourseName+"\n"+results[2].CourseName+"\n"+results[3].CourseName+"\n"+results[4].CourseName+"\n"+results[5].CourseName+"\n"+results[6].CourseName
     }else if(results.length == 8){
-      coursename = "1."+results[0].CourseName+"2."+results[1].CourseName+"3."+results[2].CourseName+"4."+results[3].CourseName+"5."+results[4].CourseName+"6."+results[5].CourseName+"7."+results[6].CourseName+"8."+results[7].CourseName
+      coursename = results[0].CourseName+"\n"+results[1].CourseName+"\n"+results[2].CourseName+"\n"+results[3].CourseName+"\n"+results[4].CourseName+"\n"+results[5].CourseName+"\n"+results[6].CourseName+"\n"+results[7].CourseName
     }else if(results.length == 9){
-      coursename = "1."+results[0].CourseName+"2."+results[1].CourseName+"3."+results[2].CourseName+"4."+results[3].CourseName+"5."+results[4].CourseName+"6."+results[5].CourseName+"7."+results[6].CourseName+"8."+results[7].CourseName+"9."+results[8].CourseName
+      coursename = results[0].CourseName+"\n"+results[1].CourseName+"\n"+results[2].CourseName+"\n"+results[3].CourseName+"\n"+results[4].CourseName+"\n"+results[5].CourseName+"\n"+results[6].CourseName+"\n"+results[7].CourseName+"\n"+results[8].CourseName
     }
       console.log(coursename)
       res.json({ message:msg+"教授 您好!請選擇課程:"+coursename })
@@ -2352,9 +2352,9 @@ app.get('/Teachername/:Teachername', function(req, res) {
 app.get('/Coursename/:Coursename', function(req, res) {
   var msg = req.params.Coursename
     console.log(msg)
-  coursename1 = classname[req.params.Coursename];
-  console.log(coursename1)
-  res.json({ message:"目前選擇的課程:"+coursename1 })
+   coursename1 = msg;
+  // console.log(coursename1)
+  res.json({ message:"目前選擇的課程:"+msg })
 });
 
 
@@ -2371,21 +2371,21 @@ app.get('/Transcript', function(req, res) {
          if (err) {
            throw err;
         }
-        for(var i = 1 ; i <= results.length;i++){
-          transcriptName1[i] = results[i-1].TranscriptName;
-        }
+        // for(var i = 1 ; i <= results.length;i++){
+        //   transcriptName1[i] = results[i-1].TranscriptName;
+        // }
     if(results.length == 1){
-      TranscriptName = "1."+results[0].TranscriptName;
+      TranscriptName = results[0].TranscriptName;
     }else if(results.length == 2){
-      TranscriptName = "1."+results[0].TranscriptName+"2."+results[1].TranscriptName
+      TranscriptName = results[0].TranscriptName+"\n"+results[1].TranscriptName
     }else if(results.length == 3){
-      TranscriptName = "1."+results[0].TranscriptName+"2."+results[1].TranscriptName+"3."+results[2].TranscriptName
+      TranscriptName = results[0].TranscriptName+"\n"+results[1].TranscriptName+"\n"+results[2].TranscriptName
     }else if(results.length == 4){
-      TranscriptName = "1."+results[0].TranscriptName+"2."+results[1].TranscriptName+"3."+results[2].TranscriptName+"4."+results[3].TranscriptName
+      TranscriptName = results[0].TranscriptName+"\n"+results[1].TranscriptName+"\n"+results[2].TranscriptName+"\n"+results[3].TranscriptName
     }else if(results.length == 5){
-      TranscriptName = "1."+results[0].TranscriptName+"2."+results[1].TranscriptName+"3."+results[2].TranscriptName+"4."+results[3].TranscriptName+"5."+results[1].TranscriptName
+      TranscriptName = results[0].TranscriptName+"\n"+results[1].TranscriptName+"\n"+results[2].TranscriptName+"\n"+results[3].TranscriptName+"\n"+results[1].TranscriptName
     }else if(results.length == 6){
-      TranscriptName = "1."+results[0].TranscriptName+"2."+results[1].TranscriptName+"3."+results[2].TranscriptName+"4."+results[3].TranscriptName+"5."+results[4].TranscriptName+"6."+results[5].TranscriptName
+      TranscriptName = results[0].TranscriptName+"\n"+results[1].TranscriptName+"\n"+results[2].TranscriptName+"\n"+results[3].TranscriptName+"\n"+results[4].TranscriptName+"\n"+results[5].TranscriptName
     }
       console.log(coursename)
       res.json({ message: TranscriptName })
@@ -2395,10 +2395,10 @@ app.get('/Transcript', function(req, res) {
 
 app.get('/Transcript/:Transcript', function(req, res) {
   var msg = req.params.Transcript
-  formate = transcriptName1[req.params.Transcript];
-  console.log(msg)
-  getGradeByDB(formate)
-  res.json({ message:"目前選擇的成績單:"+formate })
+  // formate = transcriptName1[req.params.Transcript];
+  // console.log(msg)
+  getGradeByDB(msg)
+  res.json({ message:"目前選擇的成績單:"+msg })
 });
 
 app.get('/grade/:grade', function(req, res) {
