@@ -4,9 +4,11 @@
     <li><a href="/">主頁</a></li>
     <li class="active"><a href="/">上傳</a></li>
     <li><a href="/insert">成績管理</a></li>
-          <li><a href="/login" onclick="check1(1)">登入</a></li>
-   
-
+    <%if(data == 1){%>
+    <li id = "logout" onclick="getvalue1()"><a href="/" onclick="getvalue1()">登出</a></li>
+    <%}else{%>
+    <li id = "login" onclick="getvalue1()"><a href="/login" onclick="getvalue1()">登入</a></li>
+    <%}%>
   </ul>  
   </nav>
     <script type="text/javascript">
@@ -16,6 +18,18 @@ function check(aa){
   }
 }
 
+function getvalue1(){
+  $.ajax({
+    url: '/form1',
+    dataType: 'json',
+    type: 'get',
+    data: $('#login').text(),
+    data1: $('#logout').text(),
+            success: function (data) {
+                console.log(name);
+            }
+        })
+}
 
 function getvalue(aa){
   data = {name : aa}

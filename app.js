@@ -19,9 +19,9 @@ var data1 = {}
 var data2 = {}
 var entries = [];
 var studentname = [];
+var Identity = 0;
 var day = new Date()
 app.locals.entries = entries;
-"use strict";
 
 require("dotenv").config();
 const line_login = require("line-login");
@@ -43,8 +43,6 @@ const login = new line_login({
     callback_url: process.env.LINE_LOGIN_CALLBACK_URL
 });
 app.get("/auth", login.auth());
-
-
 app.get("/callback",login.callback(
     (req, res, next, token_response) => {
       var selectcookie = 0;
@@ -58,11 +56,22 @@ app.get("/callback",login.callback(
       });
       connection.connect();
       console.log("connect");
+       connection.query('select Identity FROM HTMLLogin WHERE User_ID = ?',[id], function(err, results) {
+      if(results.length == 0){
+        Identity = 0;
+      }else if(results[0].Identity == 0){
+        Identity = 0;
+      }
+      else if(results[0].Identity == 1){
+        Identity = 1;
+        console.log("Identity:"+Identity)
+      }
+      });
       connection.query('select HTMLcookie FROM HTMLLogin WHERE User_ID = ?',[id], function(err, results) {
          console.log(results.length)
       if(results.length == 0){
         console.log("insert"+selectcookie)
-        connection.query('Insert Into HTMLLogin(User_ID,HTMLcookie) VALUES (?,?)',[id,linecookie], function(err, results) {
+        connection.query('Insert Into HTMLLogin(User_ID,HTMLcookie,Identity) VALUES (?,?,?)',[id,linecookie,"1"], function(err, results) {
          if (err) {
            throw err;
           }
@@ -78,7 +87,7 @@ app.get("/callback",login.callback(
                   console.log("Update")
         });
               connection.end();
-      res.render("form1")  
+      res.render("form1",{data:Identity})  
       }
     });
     },(req, res, next, error) => {
@@ -101,8 +110,28 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage })
 
 app.get('/',function(req,res){
-  console.log(req.body.name);
-  res.render(__dirname + '/views/form1.ejs');
+  console.log(req);
+        var connection = mysql.createConnection({
+        host     : '35.185.170.234',
+        user     : 'root',
+        password : 'asdcpi14',
+        database : 'line'
+      });
+      connection.connect();
+      console.log("connect");
+       connection.query('select Identity FROM HTMLLogin WHERE User_ID = ?',[id], function(err, results) {
+      if(results.length == 0){
+        Identity = 0;
+      }else if(results[0].Identity == 0){
+        Identity = 0;
+      }
+      else if(results[0].Identity == 1){
+        Identity = 1;
+        console.log("Identity:"+Identity)
+      }
+      });
+        connection.end();
+  res.render(__dirname + '/views/form1.ejs',{data:Identity});
 })
 app.post('/', upload.single('upload'), (req, res, next) => {
   console.log(req.file.originalname);
@@ -110,85 +139,85 @@ app.post('/', upload.single('upload'), (req, res, next) => {
   console.log(path);
   var str = req.file.originalname
   var text = str.split(" ")
-    var i = 3
-    var j = 0;
-    if(text[i]==""){
-      ++i;
-      j = i;
-    }
-    else{
-      j = 3;
-    }
-    var length = text[j+1].indexOf("_")
-   var text1 = text[j+1].substring(0,length)
-  if(text[j-1] == ""){
-   var text2 = text1+text[j-2];
+  var i = 3;
+  //   if(text[i]==""){
+  //     ++i;
+  //     j = i;
+  //   }
+  //   else{
+  //     j = 3;
+  //   }
+  //   var length = text[j+1].indexOf("_")
+  //  var text1 = text[j+1].substring(0,length)
+  // if(text[j-1] == ""){
+  //  var text2 = text1+text[j-2];
+  // }
+  // else{
+  //  var text2 = text1+text[j-1]; 
+  // }
+  while(text[i] == ""){
+    i++;
   }
-  else{
-   var text2 = text1+text[j-1]; 
-  }
+      console.log(i)
+      console.log(text[i])
+// var inputStream = fs.createReadStream(path,'utf8');
+//     var connection = mysql.createConnection({
+//       host     : '35.185.170.234',
+//       user     : 'root',
+//       password : 'asdcpi14',
+//       database : 'line'
+//   });
+//    connection.connect();
+//    console.log("connect");
+//    connection.query('Insert Into COURSE(TeacherName,CourseName,Course_ID,User_ID) VALUES ((SELECT Tname FROM TEACHER WHERE User_ID = ?),?,?,(SELECT User_ID FROM HTMLLogin WHERE HTMLcookie = ?))',[id,text2,text[j],req.headers.cookie], function(err, results) {
+//          if (err) {
+//            throw err;
+//         }
+//           console.log("資料已修改");
+//         });
+//     setTimeout(function(){
+//     },1100)
+// inputStream
+//     .pipe(CsvReadableStream({ parseNumbers: true, parseBooleans: true, trim: true }))
+//     .on('data', function (row) {
+//         // console.log('A row arrived: ', row);
+//         // console.log(row[3])
+//         // console.log(row[2])
+//        // setTimeout(function(){
+//   var str = req.file.originalname
+//   var text = str.split(" ")
+//   // var length = text[4].indexOf("_")
+//   // var text1 = text[4].substring(0,length)
+//   // console.log(text[2]);
+//   // console.log(text);
+//      connection.query('Insert Into STUDENT(Sname,Student_ID) VALUES (?,?)',[row[3],row[2]], function(err, results) {
+//          if (err) {
+//            throw err;
+//         }
 
-  console.log(text2)
-  console.log(text[j]);
-  console.log(text);
-var inputStream = fs.createReadStream(path,'utf8');
-    var connection = mysql.createConnection({
-      host     : '35.185.170.234',
-      user     : 'root',
-      password : 'asdcpi14',
-      database : 'line'
-  });
-   connection.connect();
-   console.log("connect");
-   connection.query('Insert Into COURSE(TeacherName,CourseName,Course_ID,User_ID) VALUES ((SELECT Tname FROM TEACHER WHERE User_ID = ?),?,?,(SELECT User_ID FROM HTMLLogin WHERE HTMLcookie = ?))',[id,text2,text[j],req.headers.cookie], function(err, results) {
-         if (err) {
-           throw err;
-        }
-          console.log("資料已修改");
-        });
-    setTimeout(function(){
-    },1100)
-inputStream
-    .pipe(CsvReadableStream({ parseNumbers: true, parseBooleans: true, trim: true }))
-    .on('data', function (row) {
-        // console.log('A row arrived: ', row);
-        // console.log(row[3])
-        // console.log(row[2])
-       // setTimeout(function(){
-  var str = req.file.originalname
-  var text = str.split(" ")
-  // var length = text[4].indexOf("_")
-  // var text1 = text[4].substring(0,length)
-  // console.log(text[2]);
-  // console.log(text);
-     connection.query('Insert Into STUDENT(Sname,Student_ID) VALUES (?,?)',[row[3],row[2]], function(err, results) {
-         if (err) {
-           throw err;
-        }
-
-          console.log("資料已修改");
-        }); 
+//           console.log("資料已修改");
+//         }); 
 
 
-  console.log(text[j]);
-   connection.query('Insert Into SCOURSE(Student_ID,COURSE_ID) VALUES (?,?)',[row[2],text[j]], function(err, results) {
-         if (err) {
-           throw err;
-        }
+//   console.log(text[j]);
+//    connection.query('Insert Into SCOURSE(Student_ID,COURSE_ID) VALUES (?,?)',[row[2],text[j]], function(err, results) {
+//          if (err) {
+//            throw err;
+//         }
 
-          console.log("資料已修改");
-        });  
-       //  },3500) 
-     })    
-    .on('end', function (data) {
-        console.log('No more rows!');
-    });   
-                  res.render(__dirname + '/views/form1.ejs');
-                  console("OK!")
+//           console.log("資料已修改");
+//         });  
+//        //  },3500) 
+//      })    
+//     .on('end', function (data) {
+//         console.log('No more rows!');
+//     });   
+                  res.render('form1.ejs',{data:Identity});
+                  console.log("OK!")
 })
 
 app.get("/form1", function(request, response,next) {
-  response.render("form1")
+  response.render("form1",{data:Identity})
 }); 
 app.get("/index", function(request, response,next) {
   console.log(request.headers.cookie)
