@@ -89,9 +89,9 @@ bot.on('message', function(event) { //學生課程
   var msg = event.message.text;
   if(msg =="學生課程"){
           var connection = mysql.createConnection({
-            host     : '35.185.170.234',
+            host     : '',
             user     : 'root',
-            password : 'asdcpi14',
+            password : '',
             database : 'line'
           });
           connection.connect();
@@ -315,9 +315,9 @@ bot.on('message', function(event) { //教師課程
     return;
   var msg = event.message.text;
   var connection = mysql.createConnection({
-      host : '35.185.170.234',
+      host : '',
       user : 'root',
-      password : 'asdcpi14',
+      password : '',
       database : 'line'
   });
   connection.connect();
@@ -1481,7 +1481,7 @@ var transporter = nodemailer.createTransport({
 
 function Update (name,grade,TranscriptName){
   var connection = mysql.createConnection({
-            host     : '35.185.170.234',
+            host     : '',
             user     : 'root',
             password : 'asdcpi14',
             database : 'line'
@@ -1507,9 +1507,9 @@ function Insert (name,grade,formate){
   var dt = datetime.create();
   var date = dt.format('y-m-d H:M:S');
   var connection = mysql.createConnection({
-        host     : '35.185.170.234',
+        host     : '',
         user     : 'root',
-        password : 'asdcpi14',
+        password : '',
         database : 'line'
     });
     connection.connect();
@@ -1589,9 +1589,9 @@ function Attend(names,instr,event){
   var targetPerson = Attend_names_cmp_instr(a_instr)
   console.log(targetPerson)
   var connection = mysql.createConnection({
-        host     : '35.185.170.234',
+        host     : '',
         user     : 'root',
-        password : 'asdcpi14',
+        password : '',
         database : 'line'
       });
       connection.connect();
@@ -2189,9 +2189,9 @@ function compare(names,instr,event){              //成績
       //document.form1.answer.value = inname;
       //document.form1.a1.value = fraction;
       var connection = mysql.createConnection({
-       host     : '35.185.170.234',
+       host     : '',
        user     : 'root',
-       password : 'asdcpi14',
+       password : '',
        database : 'line'
       });
       connection.connect();
@@ -2422,9 +2422,9 @@ function compare(names,instr,event){              //成績
       return;
   }else if(ans.length !=0 && formate == ""&&coursename!=""){
         var connection = mysql.createConnection({
-       host     : '35.185.170.234',
+       host     : '',
        user     : 'root',
-       password : 'asdcpi14',
+       password : '',
        database : 'line'
    });
    connection.connect();
@@ -3472,9 +3472,9 @@ function names_cmp_instr(instr){          //搜尋名單
            ["xi","xī","xí","xǐ","xì"]]
            // function getGradeByDB(){
 //   var connection = mysql.createConnection({
-//         host     : '35.185.170.234',
+//         host     : '',
 //         user     : 'root',
-//         password : 'asdcpi14',
+//         password : '',
 //         database : 'line'
 //     });
 //     connection.connect();
@@ -3503,9 +3503,9 @@ function names_cmp_instr(instr){          //搜尋名單
 
 function getGradeByDB(transcriptName){
   var connection = mysql.createConnection({
-        host     : '35.185.170.234',
+        host     : '',
         user     : 'root',
-        password : 'asdcpi14',
+        password : '',
         database : 'line'
     });
     connection.connect();
@@ -3684,9 +3684,9 @@ bot.on("message",function(event){ //註冊及成績輸入
   if( event.message.type == 'sticker' || event.message.type == 'image' ||msg.length <= 3 ||msg.indexOf("A")!= -1 || msg == "成績" || msg == "功能" || msg == "個人成績" || msg == "使用方法" || msg == "教師課程" || msg == "學生課程" || msg == "公車資訊"  || msg == "天氣資訊"  || msg == "登記完成" || msg == "學校公告" || msg == "登入狀態" || msg.indexOf("@") != -1 || msg == "修改信箱" || msg == PW || registering == 1 || uploadEmailing == 1 || msg == "圖片" || msg == "表情" || msg == "出缺席")
     return;
    var connection = mysql.createConnection({
-       host     : '35.185.170.234',
+       host     : '',
        user     : 'root',
-       password : 'asdcpi14',
+       password : '',
        database : 'line'
    });
    connection.connect();
@@ -4016,9 +4016,9 @@ bot.on("message",function(event){ //開啟成績登記功能
   if( msg == "登記成績" && formate == ""){
     gradeswitch = 1;    
   var connection = mysql.createConnection({
-       host     : '35.185.170.234',
+       host     : '',
        user     : 'root',
-       password : 'asdcpi14',
+       password : '',
        database : 'line'
    });
    connection.connect();
@@ -4075,9 +4075,9 @@ bot.on("message",function(event){ //開啟成績登記功能
     gradeswitch = 1;
     
   var connection = mysql.createConnection({
-       host     : '35.185.170.234',
+       host     : '',
        user     : 'root',
-       password : 'asdcpi14',
+       password : '',
        database : 'line'
    });
    connection.connect();
@@ -4138,9 +4138,9 @@ bot.on("message",function(event){ //開啟成績登記功能
       });
     if(formate == ""){
   var connection = mysql.createConnection({
-       host     : '35.185.170.234',
+       host     : '',
        user     : 'root',
-       password : 'asdcpi14',
+       password : '',
        database : 'line'
    });
    connection.connect();
@@ -4201,9 +4201,9 @@ bot.on("message",function(event){ //開啟成績登記功能
       });
     if(formate == ""){
   var connection = mysql.createConnection({
-       host     : '35.185.170.234',
+       host     : '',
        user     : 'root',
-       password : 'asdcpi14',
+       password : '',
        database : 'line'
    });
    connection.connect();
@@ -4477,9 +4477,9 @@ bot.on("postback",function(event){ //建立小考或大考成績單
     console.log(formate);
     console.log("coursename"+coursename);
       var connection = mysql.createConnection({
-        host     : '35.185.170.234',
+        host     : '',
         user     : 'root',
-        password : 'asdcpi14',
+        password : '',
         database : 'line'
     });
     connection.connect();
@@ -4557,9 +4557,9 @@ bot.on("postback",function(event){ //建立小考或大考成績單
   console.log(formate);
   console.log("coursename"+coursename);
      var connection = mysql.createConnection({
-        host     : '35.185.170.234',
+        host     : '',
         user     : 'root',
-        password : 'asdcpi14',
+        password : '',
         database : 'line'
     });
     connection.connect();
@@ -4623,9 +4623,9 @@ bot.on("message",function(event){ // 顯示目前課程
   var replyMsg3;
   if(msg4.indexOf("顯示課程") != -1){
   var connection = mysql.createConnection({
-       host     : '35.185.170.234',
+       host     : '',
        user     : 'root',
-       password : 'asdcpi14',
+       password : '',
        database : 'line'
    });
    connection.connect();
@@ -4665,9 +4665,9 @@ bot.on("message",function(event){ // 顯示資料表
   var replyMsg3 = "";
   if(msg4.indexOf("顯示資料表") != -1){
   var connection = mysql.createConnection({
-       host     : '35.185.170.234',
+       host     : '',
        user     : 'root',
-       password : 'asdcpi14',
+       password : '',
        database : 'line'
    });
    connection.connect();
@@ -4726,9 +4726,9 @@ bot.on("postback",function(event){
   if( msg == "選擇成績單" ){
     gradeswitch = 1;
   var connection = mysql.createConnection({
-       host     : '35.185.170.234',
+       host     : '',
        user     : 'root',
-       password : 'asdcpi14',
+       password : '',
        database : 'line'
    });
    connection.connect();
@@ -5238,9 +5238,9 @@ bot.on("postback",function(event){
 //             return;
 //           }
 //     var connection = mysql.createConnection({
-//        host     : '35.185.170.234',
+//        host     : '',
 //        user     : 'root',
-//        password : 'asdcpi14',
+//        password : '',
 //        database : 'line'
 //     });
 //     connection.connect();
@@ -5264,9 +5264,9 @@ bot.on("postback",function(event){
 //             return;
 //           }
 //     var connection = mysql.createConnection({
-//        host     : '35.185.170.234',
+//        host     : '',
 //        user     : 'root',
-//        password : 'asdcpi14',
+//        password : '',
 //        database : 'line'
 //     });
 //     connection.connect();
@@ -5284,9 +5284,9 @@ bot.on('message', function(event) {
   var logout = event.message.text;
   if(logout.indexOf("登入狀態") != -1){
     var connection = mysql.createConnection({
-       host     : '35.185.170.234',
+       host     : '',
        user     : 'root',
-       password : 'asdcpi14',
+       password : '',
        database : 'line'
     });
     connection.connect();
@@ -5335,9 +5335,9 @@ bot.on('message', function(event) {
   var logout = event.message.text;
   if(logout.indexOf("登入") != -1 && logout.length == 2){
     var connection = mysql.createConnection({
-       host     : '35.185.170.234',
+       host     : '',
        user     : 'root',
-       password : 'asdcpi14',
+       password : '',
        database : 'line'
     });
     connection.connect();
@@ -5378,9 +5378,9 @@ bot.on('message', function(event) {
   var logout = event.message.text;
   if(logout.indexOf("登出") != -1 && logout.length == 2){
     var connection = mysql.createConnection({
-       host     : '35.185.170.234',
+       host     : '',
        user     : 'root',
-       password : 'asdcpi14',
+       password : '',
        database : 'line'
     });
     connection.connect();
@@ -5416,9 +5416,9 @@ bot.on('message', function(event) {
   else if(registering == 1 && login.length <= 4){
               Loginname = login;
                var connection = mysql.createConnection({
-       host     : '35.185.170.234',
+       host     : '\,
        user     : 'root',
-       password : 'asdcpi14',
+       password : '',
        database : 'line'
     });
     connection.connect();
@@ -5450,9 +5450,9 @@ bot.on('message', function(event) {
   var login2 = event.message.text;
 
   var connection = mysql.createConnection({
-       host     : '35.185.170.234',
+       host     : '',
        user     : 'root',
-       password : 'asdcpi14',
+       password : '',
        database : 'line'
   });
   connection.connect();
@@ -5566,9 +5566,9 @@ bot.on('message', function(event) {
 
   if(emailcount == 3){
   var connection = mysql.createConnection({
-      host     : '35.185.170.234',
+      host     : '',
       user     : 'root',
-      password : 'asdcpi14',
+      password : '',
       database : 'line'
   });
    connection.connect();
@@ -5598,9 +5598,9 @@ bot.on('message', function(event) {
 
   if(pp.indexOf("重發驗證碼") != -1 && registering == 1 && pp.length == 5 && emailtrue == 1){
     var connection = mysql.createConnection({
-      host     : '35.185.170.234',
+      host     : '',
       user     : 'root',
-      password : 'asdcpi14',
+      password : '',
       database : 'line'
     });
     connection.connect();
@@ -5618,7 +5618,7 @@ bot.on('message', function(event) {
           throw err;
         }else{
           var mailOptions = {
-            from: 'asdcpi70914@gmail.com',
+            from: '',
             to: mail,
             subject: 'line bot 驗證碼',
             text: '驗證碼為:'+ PW,
@@ -5642,9 +5642,9 @@ bot.on('message', function(event) {
       });
   }else if(pp.indexOf(PW) != -1 && registering == 1 && pp.length == 9 && emailtrue == 1){
     var connection = mysql.createConnection({
-      host     : '35.185.170.234',
+      host     : '',
       user     : 'root',
-      password : 'asdcpi14',
+      password : '',
       database : 'line'
   });
    connection.connect();
@@ -5674,9 +5674,9 @@ bot.on('message', function(event) {
   }
   if(PWcount == 3){
   var connection = mysql.createConnection({
-      host     : '35.185.170.234',
+      host     : '',
       user     : 'root',
-      password : 'asdcpi14',
+      password : '',
       database : 'line'
   });
    connection.connect();
@@ -5705,9 +5705,9 @@ bot.on('message', function(event) {
   var uploadEmail = event.message.text;
   
   var connection = mysql.createConnection({
-      host     : '35.185.170.234',
+      host     : '',
       user     : 'root',
-      password : 'asdcpi14',
+      password : '',
       database : 'line'
   });
    connection.connect();
@@ -5728,9 +5728,9 @@ bot.on('message', function(event) {
 
    if(uploadEmail.indexOf("重發驗證碼") != -1 && uploadEmailing == 1 && uploadEmail.length == 5 && verificationing == 1){
     // var connection = mysql.createConnection({
-    //   host     : '35.185.170.234',
+    //   host     : '',
     //   user     : 'root',
-    //   password : 'asdcpi14',
+    //   password : '',
     //   database : 'line'
     // });
     // connection.connect();
@@ -5740,7 +5740,7 @@ bot.on('message', function(event) {
       }else{
         PW = Math.floor(Math.random()*(max-min+1))+min;
         var mailOptions = {
-            from: 'asdcpi70914@gmail.com',
+            from: '',
             to: tempEmail,
             subject: 'line bot 驗證碼',
             text: '驗證碼為:'+ PW,
@@ -5813,7 +5813,7 @@ bot.on('message', function(event) {
       console.log("uploadEmail2000:"+uploadEmail2)
       console.log("tempEmail000:"+tempEmail)
       var mailOptions = {
-        from: 'asdcpi70914@gmail.com',
+        from: '',
         to: uploadEmail2,
         subject: 'line bot 驗證碼',
         text: '驗證碼為:'+ PW,
@@ -5841,14 +5841,14 @@ bot.on('message', function(event) {
   //   var transporter = nodemailer.createTransport({
   //       service: 'gmail',
   //       auth: {
-  //       user: 'asdcpi70914@gmail.com',
-  //       pass: 'asdcpi14',
+  //       user: '',
+  //       pass: '',
   //     },
   // });
   // console.log(uploadEmail2)
   // console.log("uploadEmailing:"+uploadEmailing);
   // var mailOptions = {
-  //   from: 'asdcpi70914@gmail.com',
+  //   from: '',
   //   to: uploadEmail2,
   //   subject: 'line bot 驗證碼',
   //   text: '驗證碼為:'+PW,
@@ -6002,9 +6002,9 @@ bot.on("postback",function(event){
 bot.on("postback",function(event){
   var msg4 = event.postback.data;
   var connection = mysql.createConnection({
-    host     : '35.185.170.234',
+    host     : '',
     user     : 'root',
-    password : 'asdcpi14',
+    password : '',
     database : 'line'
   });
   connection.connect();
@@ -6439,9 +6439,9 @@ bot.on("postback",function(event){
 bot.on("postback",function(event){
   var msg4 = event.postback.data;
   var connection = mysql.createConnection({
-    host     : '35.185.170.234',
+    host     : '',
     user     : 'root',
-    password : 'asdcpi14',
+    password : '',
     database : 'line'
   });
   connection.connect();
@@ -6893,9 +6893,9 @@ bot.on("postback",function(event){
   var msg6 = event.postback.data;
   var replyMsg4 = "";
   var connection = mysql.createConnection({
-    host     : '35.185.170.234',
+    host     : '',
     user     : 'root',
-    password : 'asdcpi14',
+    password : '',
     database : 'line'
   });
     connection.connect();
@@ -7143,9 +7143,9 @@ bot.on("postback",function(event){
         console.log("error")
       });
   var connection = mysql.createConnection({
-    host     : '35.185.170.234',
+    host     : '',
     user     : 'root',
-    password : 'asdcpi14',
+    password : '',
     database : 'line'
   });
     connection.connect();
@@ -7174,9 +7174,9 @@ bot.on("postback",function(event){
 bot.on("postback",function(event){
   var msg7 = event.postback.data;
     var connection = mysql.createConnection({
-    host     : '35.185.170.234',
+    host     : '',
     user     : 'root',
-    password : 'asdcpi14',
+    password : '',
     database : 'line'
   });
   connection.connect();
@@ -7198,9 +7198,9 @@ bot.on("postback",function(event){
           console.log("formate"+formate)
           console.log("coursename"+coursename)
           var connection = mysql.createConnection({
-            host     : '35.185.170.234',
+            host     : '',
             user     : 'root',
-            password : 'asdcpi14',
+            password : '',
             database : 'line'
           });
           connection.connect();
@@ -7245,9 +7245,9 @@ bot.on("message",function(event){
     return;
   var msg7 = event.message.text;
   var connection = mysql.createConnection({
-    host     : '35.185.170.234',
+    host     : '',
     user     : 'root',
-    password : 'asdcpi14',
+    password : '',
     database : 'line'
   });
   connection.connect();
